@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/EasyCC.iml" filepath="$PROJECT_DIR$/.idea/modules/EasyCC.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lexical-analysis/lexical-analysis.iml" filepath="$PROJECT_DIR$/.idea/modules/lexical-analysis/lexical-analysis.iml" group="lexical-analysis" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lexical-analysis/lexical-analysis_main.iml" filepath="$PROJECT_DIR$/.idea/modules/lexical-analysis/lexical-analysis_main.iml" group="lexical-analysis" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lexical-analysis/lexical-analysis_test.iml" filepath="$PROJECT_DIR$/.idea/modules/lexical-analysis/lexical-analysis_test.iml" group="lexical-analysis" />
     </modules>
   </component>
 </project>
