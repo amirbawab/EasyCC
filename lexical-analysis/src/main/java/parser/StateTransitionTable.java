@@ -1,5 +1,7 @@
 package parser;
 
+import com.bethecoder.ascii_table.ASCIITable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -117,29 +119,30 @@ public class StateTransitionTable {
      * Formatted table
      */
     public String toString() {
-        String output = "\t";
 
-        for(int col = 0; col < header.length; col++)
-            output += header[col] + "\t";
+        // Store data
+        String[] modHeader = new String[header.length + 4];
+        String[][] data = new String[states.length][header.length+4];
 
-        output += "Bt\t";
-        output += "Final [token]";
-
-        output += "\n";
-        for(int row = 0; row < states.length; row++) {
-            output += row + "\t";
-            for(int col = 0; col < header.length; col++) {
-                output += transitionTable[row][col] + "\t";
-            }
-            output += (states[row].shouldBacktrack() ? "yes" : "no") + "\t";
-
-            if(states[row].getType() == State.Type.FINAL)
-                output += "yes [" + states[row].getToken() +"]";
-            else
-                output += "no";
-
-            output += "\n";
+        // Create header
+        modHeader[0] = "";
+        for(int i=0; i < header.length; i++) {
+            modHeader[i+1] = header[i];
         }
-        return output;
+        modHeader[header.length+1] = "Backtrack";
+        modHeader[header.length+2] = "Final";
+        modHeader[header.length+3] = "Token";
+
+        for(int row=0; row < states.length; row++) {
+            data[row][0] = row+1+"";
+            for(int col=0; col < header.length; col++) {
+                data[row][col+1] = transitionTable[row][col]+"";
+            }
+            data[row][header.length+1] = states[row].shouldBacktrack() ? "Yes" : "No";
+            data[row][header.length+2] = states[row].getType() == State.Type.FINAL ? "Yes" : "No";
+            data[row][header.length+3] = states[row].getType() == State.Type.FINAL ? states[row].getToken() : "";
+        }
+
+        return ASCIITable.getInstance().getTable(modHeader, data);
     }
 }
