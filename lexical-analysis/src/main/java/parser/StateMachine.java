@@ -1,8 +1,5 @@
 package parser;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 
@@ -12,15 +9,21 @@ import java.util.*;
 
 public class StateMachine {
 
+    // Variables
     private final org.apache.logging.log4j.Logger l = LogManager.getLogger();
     private Lexical_Analysis lexical_analysis;
     private Map<String, State> statesMap;
+    private Set<String> tokens;
+    private Set<String> characters;
+    private State initialState;
 
     public StateMachine(String filename) {
         try {
 
             // Init variables
             statesMap = new HashMap<>();
+            tokens = new HashSet<>();
+            characters = new HashSet<>();
 
             // Parse JSON
             ObjectMapper mapper = new ObjectMapper();
@@ -28,17 +31,26 @@ public class StateMachine {
             lexical_analysis = mapper.readValue(file, Lexical_Analysis.class);
 
             // Store states in a map
-            for(int i = 0; i < lexical_analysis.states.size(); i++) {
-                statesMap.put(lexical_analysis.states.get(i).name, lexical_analysis.states.get(i));
-                lexical_analysis.states.get(i).id = i;
+            for(int i = 0; i < lexical_analysis.getStates().size(); i++) {
+                State current = lexical_analysis.getStates().get(i);
+                statesMap.put(current.getName(), current);
+                current.setId(i);
+                if(current.getType() == State.Type.FINAL)
+                    tokens.add(current.getToken());
+                else if(current.getType() == State.Type.INITIAL)
+                    initialState = current;
             }
 
             // Create graph
-            for (Edge edge : lexical_analysis.edges) {
-                edge.fromState = statesMap.get(edge.from);
-                edge.toState = statesMap.get(edge.to);
-                edge.fromState.outEdges.add(edge);
+            for (Edge edge : lexical_analysis.getEdges()) {
+                edge.setFromState(statesMap.get(edge.getFrom()));
+                edge.setToState(statesMap.get(edge.getTo()));
+                edge.getFromState().getOutEdges().add(edge);
+                characters.add(edge.getValue());
             }
+
+            // Verify that the state machine is structured correctly
+            verify();
 
         } catch (IOException e) {
             l.error(e.getMessage());
@@ -53,89 +65,71 @@ public class StateMachine {
         return statesMap.values();
     }
 
+    /**
+     * Get all tokens
+     * @return set of tokens
+     */
+    public Set<String> getTokens() { return tokens; }
+
+    /**
+     * Get all characters
+     * @return characters
+     */
+    public Set<String> getCharacters() {
+        return characters;
+    }
+
+    /**
+     * Get initial state
+     * @return initial state
+     */
+    public State getInitialState() {
+        return initialState;
+    }
+
     @Override
     public String toString() {
         return lexical_analysis.toString();
     }
-}
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-class Lexical_Analysis {
-
-    @JsonProperty("states")
-    public List<State> states;
-
-    @JsonProperty("edges")
-    public List<Edge> edges;
-
-    @Override
-    public String toString() {
-        String result = "";
-        for (State state : states)
-            result += state + "\n";
-        return result;
-    }
-}
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-class State {
-
-    @JsonProperty("name")
-    public String name;
-
-    @JsonProperty("type")
-    public String type;
-
-    @JsonProperty("token")
-    public String token;
-
-    @JsonProperty("backtrack")
-    public String backtrack;
-
-    // Unique id
-    public int id;
-
-    // List of outgoing edges
-    public List<Edge> outEdges = new ArrayList<>();
 
     /**
-     * Get state when reading a value
-     * @param value
-     * @return new state
+     * Verify that the state machine is valid
+     * Note: This state machine has custom rules
      */
-    public State getStateOn(String value) {
-        for(Edge edge : outEdges)
-            if(edge.value.equals(value))
-                return edge.toState;
-        return null;
-    }
+    private void verify() {
 
-    @Override
-    public String toString() {
-        String result = String.format("%s - %s\n", name, type);
-        for(Edge edge : outEdges)
-            result += String.format("\t%s\n", edge.toString());
-        return result;
+        // One initial state only
+        boolean hasInitial = false;
+        for(State state : getAllStates()) {
+            if(state.getType() == State.Type.INITIAL) {
+                if(hasInitial) {
+                    throw new StateMachineException("A state machine should have exactly one initial state");
+                } else {
+                    hasInitial = true;
+                }
+            }
+
+            if(state.getType() == State.Type.FINAL && state.getToken() == null) {
+                throw new StateMachineException("Each final state should have a token value");
+            }
+
+            if(state.getType() != State.Type.FINAL && state.getToken() != null) {
+                throw new StateMachineException("A non final state should not have a token value");
+            }
+
+            if(state.getType() == State.Type.FINAL && state.getOutEdges().size() > 0) {
+                throw new StateMachineException("A final state should not have outgoing edges");
+            }
+
+            if(state.getType() != State.Type.FINAL && state.getStateOn(Edge.Special.OTHER.getValue()) == null) {
+                throw new StateMachineException("Each non final state should have a move on: " + Edge.Special.OTHER.getValue());
+            }
+        }
+
+        // If no initial state
+        if(!hasInitial) {
+            throw new StateMachineException("One state should be of type: initial");
+        }
     }
 }
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-class Edge {
-    @JsonProperty("from")
-    public String from;
-
-    @JsonProperty("to")
-    public String to;
-
-    @JsonProperty("value")
-    public String value;
-
-    // States
-    public State fromState;
-    public State toState;
-
-    @Override
-    public String toString() {
-        return String.format("%s => %s (%s)", from, to, value);
-    }
-}

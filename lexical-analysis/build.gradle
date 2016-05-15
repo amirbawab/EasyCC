@@ -6,7 +6,7 @@ plugins {
 
 version = '1.0'
 
-mainClassName = "Application"
+mainClassName = "LexicalAnalyzer"
 
 dependencies {
     compile project(':common')
