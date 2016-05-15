@@ -1,5 +1,9 @@
+import Utils.StringUtilsPlus;
+import parser.Parser;
+
 public class Application {
     public static void main(String[] args) {
-        System.out.println("Lexical analysis");
+        Parser parser = new Parser();
+        System.out.println(StringUtilsPlus.ObjectToJson(parser));
     }
 }
