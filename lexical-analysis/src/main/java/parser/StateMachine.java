@@ -124,6 +124,10 @@ public class StateMachine {
             if(state.getType() != State.Type.FINAL && state.getStateOn(Edge.Special.OTHER.getValue()) == null) {
                 throw new StateMachineException("Each non final state should have a move on: " + Edge.Special.OTHER.getValue());
             }
+
+            if(!Arrays.asList(State.Type.values()).contains(state.getType())) {
+                throw new StateMachineException("State type should be: initial, normal or final");
+            }
         }
 
         // If no initial state

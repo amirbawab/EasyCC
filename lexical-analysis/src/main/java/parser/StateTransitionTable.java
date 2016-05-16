@@ -134,7 +134,7 @@ public class StateTransitionTable {
         modHeader[header.length+3] = "Token";
 
         for(int row=0; row < states.length; row++) {
-            data[row][0] = row+1+"";
+            data[row][0] = row+"";
             for(int col=0; col < header.length; col++) {
                 data[row][col+1] = transitionTable[row][col]+"";
             }
