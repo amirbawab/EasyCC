@@ -1,4 +1,4 @@
-package parser;
+package parser.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Created by amir on 5/15/16.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-class Edge {
+public class Edge {
 
     public enum Special {
         OTHER("OTHER"), // Any other character in the language

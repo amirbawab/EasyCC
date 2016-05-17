@@ -51,3 +51,7 @@ jar {
     from sourceSets.main.runtimeClasspath
     from configurations.compile.collect { zipTree it }
 }
+
+run {
+    args System.getProperty("args").split(',')
+}

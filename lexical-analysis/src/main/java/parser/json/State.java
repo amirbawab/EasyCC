@@ -1,4 +1,4 @@
-package parser;
+package parser.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class State {
+public class State {
 
     public enum Type {
         INITIAL("initial"),

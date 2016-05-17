@@ -1,12 +1,20 @@
 package token;
 
-public class Token {
+/**
+ * This class is a template for a token, each type of token should inherit this file.
+ *
+ * Some examples:
+ * @see LexicalToken
+ * @see ErrorToken
+ */
+
+public abstract class AbstractToken {
     private String token;
     private String value;
     private int row, col;
     private int position;
 
-    public Token(String token, String value, int row, int col, int position) {
+    public AbstractToken(String token, String value, int row, int col, int position) {
         this.token = token;
         this.value = value;
         this.row = row;
@@ -52,5 +60,10 @@ public class Token {
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    @Override
+    public String toString() {
+        return token + " : " + value;
     }
 }

@@ -1,6 +1,9 @@
 package parser;
 
 import com.bethecoder.ascii_table.ASCIITable;
+import helper.LexicalHelper;
+import parser.json.Edge;
+import parser.json.State;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +42,15 @@ public class StateTransitionTable {
 
         // Construct machine
         construct();
+    }
+
+    /**
+     * Get state a given row
+     * @param row
+     * @return state
+     */
+    public State getStateAtRow(int row) {
+        return states[row];
     }
 
     /**
@@ -96,12 +108,12 @@ public class StateTransitionTable {
 
         // New line character
         // Note: All possible new lines will be replaced by \n. No need to cover other cases
-        if(c == '\n')
+        if(c == LexicalHelper.EOL)
             return transitionTable[state][headerIndexMap.get(Edge.Special.END_OF_LINE)];
 
         // End of file character
         // Note: The lexical analyzer will automatically inject \0 at the end of the input
-        if(c == '\0')
+        if(c == LexicalHelper.EOF)
             return transitionTable[state][headerIndexMap.get(Edge.Special.END_OF_FILE)];
 
         // Other characters
@@ -131,7 +143,7 @@ public class StateTransitionTable {
         }
         modHeader[header.length+1] = "Backtrack";
         modHeader[header.length+2] = "Final";
-        modHeader[header.length+3] = "Token";
+        modHeader[header.length+3] = "AbstractToken";
 
         for(int row=0; row < states.length; row++) {
             data[row][0] = row+"";

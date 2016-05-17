@@ -2,6 +2,9 @@ package parser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
+import parser.json.Edge;
+import parser.json.Lexical_Analysis;
+import parser.json.State;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,44 +20,38 @@ public class StateMachine {
     private Set<String> characters;
     private State initialState;
 
-    public StateMachine(String filename) {
-        try {
+    public StateMachine(String filename) throws IOException {
+        // Init variables
+        statesMap = new HashMap<>();
+        tokens = new HashSet<>();
+        characters = new HashSet<>();
 
-            // Init variables
-            statesMap = new HashMap<>();
-            tokens = new HashSet<>();
-            characters = new HashSet<>();
+        // Parse JSON
+        ObjectMapper mapper = new ObjectMapper();
+        InputStream file = getClass().getResourceAsStream(filename);
+        lexical_analysis = mapper.readValue(file, Lexical_Analysis.class);
 
-            // Parse JSON
-            ObjectMapper mapper = new ObjectMapper();
-            InputStream file = getClass().getResourceAsStream(filename);
-            lexical_analysis = mapper.readValue(file, Lexical_Analysis.class);
-
-            // Store states in a map
-            for(int i = 0; i < lexical_analysis.getStates().size(); i++) {
-                State current = lexical_analysis.getStates().get(i);
-                statesMap.put(current.getName(), current);
-                current.setId(i);
-                if(current.getType() == State.Type.FINAL)
-                    tokens.add(current.getToken());
-                else if(current.getType() == State.Type.INITIAL)
-                    initialState = current;
-            }
-
-            // Create graph
-            for (Edge edge : lexical_analysis.getEdges()) {
-                edge.setFromState(statesMap.get(edge.getFrom()));
-                edge.setToState(statesMap.get(edge.getTo()));
-                edge.getFromState().getOutEdges().add(edge);
-                characters.add(edge.getValue());
-            }
-
-            // Verify that the state machine is structured correctly
-            verify();
-
-        } catch (IOException e) {
-            l.error(e.getMessage());
+        // Store states in a map
+        for(int i = 0; i < lexical_analysis.getStates().size(); i++) {
+            State current = lexical_analysis.getStates().get(i);
+            statesMap.put(current.getName(), current);
+            current.setId(i);
+            if(current.getType() == State.Type.FINAL)
+                tokens.add(current.getToken());
+            else if(current.getType() == State.Type.INITIAL)
+                initialState = current;
         }
+
+        // Create graph
+        for (Edge edge : lexical_analysis.getEdges()) {
+            edge.setFromState(statesMap.get(edge.getFrom()));
+            edge.setToState(statesMap.get(edge.getTo()));
+            edge.getFromState().getOutEdges().add(edge);
+            characters.add(edge.getValue());
+        }
+
+        // Verify that the state machine is structured correctly
+        verify();
     }
 
     /**
