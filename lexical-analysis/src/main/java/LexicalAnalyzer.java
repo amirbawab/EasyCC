@@ -53,7 +53,7 @@ public class LexicalAnalyzer {
      * @param args
      */
     public static void main(String[] args) {
-        new LexicalAnalyzer(args[0],args[1]);
+        new LexicalAnalyzer(System.getProperty("easycc.machine"), System.getProperty("easycc.config"));
     }
 
     /**
@@ -72,7 +72,7 @@ public class LexicalAnalyzer {
             stateTransitionTable = new StateTransitionTable(stateMachine);
 
             // Print the state transition table
-            l.info(stateTransitionTable);
+            l.info("\n" + stateTransitionTable);
 
             // Load configuration
             LexicalConfig.getInstance().load(configurationFilename);

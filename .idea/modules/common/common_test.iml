@@ -4,6 +4,7 @@
     <output-test url="file://$MODULE_DIR$/../../../common/build/classes/test" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../../common/src/test">
+      <sourceFolder url="file://$MODULE_DIR$/../../../common/src/test/groovy" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/../../../common/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/../../../common/src/test/resources" type="java-test-resource" />
     </content>
@@ -27,12 +28,7 @@
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.7.4" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.7.4" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-annotations:2.7.4" level="project" />
-    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.7.4" level="project" />
-    <orderEntry type="library" name="Gradle: org.codehaus.woodstox:woodstox-core-asl:4.4.1" level="project" />
     <orderEntry type="library" name="Gradle: junit:junit:4.12" level="project" />
-    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.7.4" level="project" />
-    <orderEntry type="library" name="Gradle: org.codehaus.woodstox:stax2-api:3.1.4" level="project" />
-    <orderEntry type="library" name="Gradle: javax.xml.stream:stax-api:1.0-2" level="project" />
     <orderEntry type="library" name="Gradle: org.hamcrest:hamcrest-core:1.3" level="project" />
   </component>
   <component name="TestModuleProperties" production-module="common_main" />

@@ -4,12 +4,19 @@ plugins {
     id "jacoco"
 }
 
+apply plugin: LexicalAnalysisPlugin
+
 version = '1.0'
 
 mainClassName = "LexicalAnalyzer"
 
 dependencies {
     compile project(':common')
+}
+
+lexicalAnalyzer {
+    DFAPath = "/state-machine.json"
+    configPath = "/lexical-analysis.config"
 }
 
 jacocoTestReport {
@@ -43,6 +50,7 @@ task applicationCodeCoverageReport(type:JacocoReport){
 }
 
 jar {
+    zip64 true
     manifest {
         attributes  'Implementation-Title': name,
                 'Implementation-Version': version,
@@ -50,8 +58,4 @@ jar {
     }
     from sourceSets.main.runtimeClasspath
     from configurations.compile.collect { zipTree it }
-}
-
-run {
-    args System.getProperty("args").split(',')
 }
