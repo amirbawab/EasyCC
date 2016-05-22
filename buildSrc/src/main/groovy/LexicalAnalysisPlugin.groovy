@@ -1,8 +1,6 @@
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
-import java.lang.reflect.Field
-
 public class LexicalAnalysisPlugin implements Plugin<Project> {
     void apply(Project project) {
 

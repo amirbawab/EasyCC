@@ -3,9 +3,17 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/EasyCC.iml" filepath="$PROJECT_DIR$/.idea/modules/EasyCC.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/EasyCC_main.iml" filepath="$PROJECT_DIR$/.idea/modules/EasyCC_main.iml" group="EasyCC" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/EasyCC_test.iml" filepath="$PROJECT_DIR$/.idea/modules/EasyCC_test.iml" group="EasyCC" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/buildSrc.iml" filepath="$PROJECT_DIR$/.idea/modules/buildSrc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/buildSrc_main.iml" filepath="$PROJECT_DIR$/.idea/modules/buildSrc_main.iml" group="buildSrc" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/buildSrc_test.iml" filepath="$PROJECT_DIR$/.idea/modules/buildSrc_test.iml" group="buildSrc" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/common.iml" filepath="$PROJECT_DIR$/.idea/modules/common/common.iml" group="common" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/common_main.iml" filepath="$PROJECT_DIR$/.idea/modules/common/common_main.iml" group="common" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/common_test.iml" filepath="$PROJECT_DIR$/.idea/modules/common/common_test.iml" group="common" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/easycc/easycc.iml" filepath="$PROJECT_DIR$/.idea/modules/easycc/easycc.iml" group="easycc" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/easycc/easycc_main.iml" filepath="$PROJECT_DIR$/.idea/modules/easycc/easycc_main.iml" group="easycc" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/easycc/easycc_test.iml" filepath="$PROJECT_DIR$/.idea/modules/easycc/easycc_test.iml" group="easycc" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/lexical-analysis/lexical-analysis.iml" filepath="$PROJECT_DIR$/.idea/modules/lexical-analysis/lexical-analysis.iml" group="lexical-analysis" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/lexical-analysis/lexical-analysis_main.iml" filepath="$PROJECT_DIR$/.idea/modules/lexical-analysis/lexical-analysis_main.iml" group="lexical-analysis" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/lexical-analysis/lexical-analysis_test.iml" filepath="$PROJECT_DIR$/.idea/modules/lexical-analysis/lexical-analysis_test.iml" group="lexical-analysis" />

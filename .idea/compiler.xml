@@ -19,8 +19,14 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="buildSrc_main" target="1.8" />
+      <module name="buildSrc_test" target="1.8" />
       <module name="common_main" target="1.8" />
       <module name="common_test" target="1.8" />
+      <module name="easycc_main" target="1.8" />
+      <module name="EasyCC_main" target="1.8" />
+      <module name="EasyCC_test" target="1.8" />
+      <module name="easycc_test" target="1.8" />
       <module name="lexical-analysis_main" target="1.8" />
       <module name="lexical-analysis_test" target="1.8" />
     </bytecodeTargetLevel>

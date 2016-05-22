@@ -50,7 +50,6 @@ task applicationCodeCoverageReport(type:JacocoReport){
 }
 
 jar {
-    zip64 true
     manifest {
         attributes  'Implementation-Title': name,
                 'Implementation-Version': version,

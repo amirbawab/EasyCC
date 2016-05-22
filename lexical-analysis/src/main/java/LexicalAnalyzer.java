@@ -1,11 +1,11 @@
 import java.io.IOException;
 import java.util.*;
 
-import Utils.StringUtilsPlus;
 import config.LexicalConfig;
 import config.json.ErrorTokensConfig;
 import config.json.ReservedConfig;
 import helper.LexicalHelper;
+import jvm.LexicalArgs;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import machine.json.State;
@@ -54,7 +54,7 @@ public class LexicalAnalyzer {
      * @param args
      */
     public static void main(String[] args) {
-        new LexicalAnalyzer(System.getProperty("easycc.machine"), System.getProperty("easycc.config"));
+        new LexicalAnalyzer(System.getProperty(LexicalArgs.MACHINE), System.getProperty(LexicalArgs.CONFIG));
     }
 
     /**
