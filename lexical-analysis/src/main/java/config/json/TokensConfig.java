@@ -8,10 +8,10 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TokensConfig {
 
-    @JsonProperty("errorTokensConfig")
+    @JsonProperty("errorTokens")
     private ErrorTokensConfig errorTokensConfig;
 
-    @JsonProperty("reservedConfig")
+    @JsonProperty("reserved")
     private List<ReservedConfig> reservedConfig;
 
     public ErrorTokensConfig getErrorTokensConfig() {

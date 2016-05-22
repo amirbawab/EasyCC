@@ -1,7 +1,7 @@
 package config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import config.json.ConfigWrapper;
+import config.json.MachineConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,7 +22,7 @@ public class LexicalConfig {
     private static LexicalConfig instance = new LexicalConfig();
 
     // Components
-    private ConfigWrapper configWrapper;
+    private MachineConfig machineConfig;
 
     /**
      * Private constructor
@@ -38,7 +38,7 @@ public class LexicalConfig {
             // Parse JSON
             ObjectMapper mapper = new ObjectMapper();
             InputStream file = getClass().getResourceAsStream(filename);
-            configWrapper = mapper.readValue(file, ConfigWrapper.class);
+            machineConfig = mapper.readValue(file, MachineConfig.class);
         } catch (IOException e) {
             l.error(e.getMessage());
         }
@@ -48,8 +48,8 @@ public class LexicalConfig {
      * Get configuration
      * @return configuration
      */
-    public ConfigWrapper getConfigWrapper() {
-        return configWrapper;
+    public MachineConfig getMachineConfig() {
+        return machineConfig;
     }
 
     /**

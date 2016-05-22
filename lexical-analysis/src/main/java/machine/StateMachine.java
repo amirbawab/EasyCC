@@ -1,10 +1,10 @@
-package parser;
+package machine;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
-import parser.json.Edge;
-import parser.json.Lexical_Analysis;
-import parser.json.State;
+import machine.json.Edge;
+import machine.json.Lexical_Analysis;
+import machine.json.State;
 
 import java.io.IOException;
 import java.io.InputStream;

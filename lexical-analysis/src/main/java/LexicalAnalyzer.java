@@ -1,15 +1,16 @@
 import java.io.IOException;
 import java.util.*;
 
+import Utils.StringUtilsPlus;
 import config.LexicalConfig;
 import config.json.ErrorTokensConfig;
 import config.json.ReservedConfig;
 import helper.LexicalHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import parser.json.State;
-import parser.StateMachine;
-import parser.StateTransitionTable;
+import machine.json.State;
+import machine.StateMachine;
+import machine.StateTransitionTable;
 import token.AbstractToken;
 import token.ErrorToken;
 import token.LexicalToken;
@@ -196,7 +197,7 @@ public class LexicalAnalyzer {
                 String tokenStr = currentState.getToken();
 
                 // Check if the word is a reserved one
-                for(ReservedConfig reservedConfig : LexicalConfig.getInstance().getConfigWrapper().getTokensConfig().getReservedConfig()) {
+                for(ReservedConfig reservedConfig : LexicalConfig.getInstance().getMachineConfig().getTokensConfig().getReservedConfig()) {
                     if(reservedConfig.getValue().equals(word)) {
                         tokenStr = reservedConfig.getToken();
                         break;
@@ -204,7 +205,7 @@ public class LexicalAnalyzer {
                 }
 
                 // Create token
-                ErrorTokensConfig errorTokensConfig = LexicalConfig.getInstance().getConfigWrapper().getTokensConfig().getErrorTokensConfig();
+                ErrorTokensConfig errorTokensConfig = LexicalConfig.getInstance().getMachineConfig().getTokensConfig().getErrorTokensConfig();
                 if((tokenStr.startsWith(errorTokensConfig.getPrefix()) ||
                         errorTokensConfig.getInclude().contains(tokenStr)) &&
                         !errorTokensConfig.getExclude().contains(tokenStr)

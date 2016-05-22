@@ -1,9 +1,9 @@
-package parser;
+package machine;
 
 import com.bethecoder.ascii_table.ASCIITable;
 import helper.LexicalHelper;
-import parser.json.Edge;
-import parser.json.State;
+import machine.json.Edge;
+import machine.json.State;
 
 import java.util.HashMap;
 import java.util.Map;
