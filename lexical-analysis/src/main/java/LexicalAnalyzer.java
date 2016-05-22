@@ -145,11 +145,15 @@ public class LexicalAnalyzer {
             // Get next token
             AbstractToken token = nextToken();
 
-            // Log created token
-            l.info(token);
+            // If token found
+            if(token != null) {
 
-            // Add token
-            tokens.add(token);
+                // Log created token
+                l.info(token);
+
+                // Add token
+                tokens.add(token);
+            }
         }
     }
 
