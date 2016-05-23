@@ -13,6 +13,5 @@ public class EasyCC {
 
     public EasyCC() {
         LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer(System.getProperty(LexicalArgs.MACHINE), System.getProperty(LexicalArgs.CONFIG));
-        lexicalAnalyzer.analyzeText("Hello world");
     }
 }

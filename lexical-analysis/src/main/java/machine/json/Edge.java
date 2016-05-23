@@ -11,7 +11,7 @@ public class Edge {
 
     public enum Special {
         OTHER("OTHER"), // Any other character in the language
-        SPACE("SPACE"), // No value is required because the Scanner will handle it
+        SPACE("SPACE"), // Space includes single space and tab
         END_OF_LINE("EOL"), // End of line
         END_OF_FILE("EOF"), // End of file
         LETTER("LETTER"), // A-Za-z

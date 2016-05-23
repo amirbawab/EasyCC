@@ -98,6 +98,9 @@ public class LexicalAnalyzer {
         // Reset row count
         this.line = 0;
 
+        // Reset position
+        this.position = 0;
+
         // Reset state
         this.state = stateMachine.getInitialState().getId();
 
@@ -128,7 +131,7 @@ public class LexicalAnalyzer {
         line += scan.hasNextLine() ? LexicalHelper.EOL : LexicalHelper.EOF;
 
         // Log
-        l.info("Scanning line: %s", line);
+        l.info("Scanning line: %s", line.replaceAll(LexicalHelper.EOL+"", "~EOL~").replaceAll(LexicalHelper.EOF+"", "~EOF~"));
 
         // Store line
         this.currentLine = line;
@@ -176,6 +179,9 @@ public class LexicalAnalyzer {
             // Current char
             char currentChar = currentLine.charAt(index++);
 
+            // Update position
+            position++;
+
             // Move to next state
             state = stateTransitionTable.lookup(state, currentChar);
 
@@ -191,9 +197,12 @@ public class LexicalAnalyzer {
                     // Go back one consumed character
                     index--;
 
+                    // Update position
+                    position--;
+
                 } else {
 
-                    // Add character to the workd
+                    // Add character to the word
                     word += currentChar;
                 }
 
@@ -214,9 +223,9 @@ public class LexicalAnalyzer {
                         errorTokensConfig.getInclude().contains(tokenStr)) &&
                         !errorTokensConfig.getExclude().contains(tokenStr)
                         ) {
-                    token = new ErrorToken(tokenStr, word, wordRow, wordCol, position);
+                    token = new ErrorToken(tokenStr, word, wordRow, wordCol, position - word.length());
                 } else {
-                    token = new LexicalToken(tokenStr, word, wordRow, wordCol, position);
+                    token = new LexicalToken(tokenStr, word, wordRow, wordCol, position - word.length());
                 }
 
                 // Reset word
@@ -239,5 +248,13 @@ public class LexicalAnalyzer {
      */
     public long getProcessTime() {
         return this.lexicalAnalysisProcessTime;
+    }
+
+    /**
+     * Get generated tokens
+     * @return list of all type tokens
+     */
+    public List<AbstractToken> getTokens() {
+        return tokens;
     }
 }

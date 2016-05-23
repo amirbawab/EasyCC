@@ -64,6 +64,6 @@ public abstract class AbstractToken {
 
     @Override
     public String toString() {
-        return token + " : " + value;
+        return "Token: " + token + " - Value: " + value + " - Row: " + row + " - Col: " + col + " - Position: " + position + " - Type: " + getClass().getSimpleName();
     }
 }
