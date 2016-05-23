@@ -6,6 +6,6 @@ package helper;
  */
 
 public class LexicalHelper {
-    public static char EOL = '\n';
-    public static char EOF = '\0';
+    public static final char EOL = '\n';
+    public static final char EOF = '\0';
 }
