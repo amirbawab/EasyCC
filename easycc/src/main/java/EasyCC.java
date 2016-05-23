@@ -12,6 +12,13 @@ public class EasyCC {
     }
 
     public EasyCC() {
-        LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer(System.getProperty(LexicalArgs.MACHINE), System.getProperty(LexicalArgs.CONFIG));
+        startGui();
+    }
+
+    /**
+     * Start application with a GUI
+     */
+    public void startGui() {
+        MainFrame mainFrame = new MainFrame("EasyCC - Dev GUI");
     }
 }

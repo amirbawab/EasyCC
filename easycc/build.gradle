@@ -7,6 +7,7 @@ mainClassName = "EasyCC"
 
 dependencies {
     compile project(':lexical-analysis')
+    compile project(':dev-gui')
 }
 
 lexicalAnalyzer {
