@@ -1,5 +1,7 @@
+import config.LexicalConfig;
 import data.LexicalAnalysisRow;
 import data.structure.ConsoleData;
+import helper.LexicalHelper;
 import jvm.LexicalArgs;
 import listener.DevGuiListener;
 import org.apache.logging.log4j.LogManager;
@@ -68,8 +70,9 @@ public class EasyCC {
                     AbstractToken token = lexicalAnalyzer.getTokens().get(row);
 
                     // If error
-                    if(token instanceof ErrorToken)
-                        rows.add(new LexicalAnalysisRow(token.getToken(), token.getValue(), token.getRow(), token.getCol(), token.getPosition(), ""));
+                    if(token instanceof ErrorToken) {
+                        rows.add(new LexicalAnalysisRow(token.getToken(), token.getValue(), token.getRow(), token.getCol(), token.getPosition(), LexicalHelper.tokenMessage(token)));
+                    }
                 }
 
                 return rows;
