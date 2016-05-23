@@ -1,5 +1,6 @@
 include 'common'
 include 'lexical-analysis'
 include 'easycc'
+include 'dev-gui'
 
 rootProject.name = 'EasyCC'
