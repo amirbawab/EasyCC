@@ -21,8 +21,8 @@ public class CenterPanel extends JPanel {
 	private JSplitPane splitPane;
 	
 	// Headers
-	public static final Object[] SCANNER_OUTPUT_HEADER = {"Token", "Value", "Row", "Col"};
-	public static final Object[] SCANNER_ERROR_HEADER = {"Token", "Value", "Row", "Col", "Comment"};
+	public static final Object[] SCANNER_OUTPUT_HEADER = {"Token", "Value", "Row", "Col", "Position"};
+	public static final Object[] SCANNER_ERROR_HEADER = {"Token", "Value", "Row", "Col", "Position", "Comment"};
 	public static final Object[] PARSER_OUTPUT_HEADER = {"Step", "Stack", "Input", "Production", "Derivation"};
 	public static final Object[] PARSER_ERROR_HEADER = {"Step", "Stack", "Input", "Comment"};
 	public static final Object[] SYMBOL_TABLE_HEADER = {"Name", "Kind", "Structure", "Type", "Parameter", "Properly defined", "Address", "Label","Size (Byte)", "Link"};

@@ -11,8 +11,8 @@ dependencies {
 }
 
 lexicalAnalyzer {
-    DFAPath = "/state-machine.json"
-    configPath = "/lexical-analysis.config"
+    DFAPath = "/moon/state-machine.json"
+    configPath = "/moon/lexical-analysis.config"
 }
 
 jar {

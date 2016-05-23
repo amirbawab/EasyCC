@@ -1,17 +1,20 @@
 package listener;
 
+import data.LexicalAnalysisRow;
+import data.structure.ConsoleData;
+
 import javax.swing.*;
 
-public interface ABIDEListener {
+public interface DevGuiListener {
 	
 	// Console
-	public void scan(String string);
-	public Object[][] getScannerOutput();
-	public Object[][] getScannerError();
+	public void lexicalAnalysis(String string);
+	public ConsoleData<LexicalAnalysisRow> getLexicalAnalyzerOutput();
+	public ConsoleData<LexicalAnalysisRow> getLexicalAnalyzerError();
 	public void parse();
 	public Object[][] getParserOutput();
 	public Object[][] getParserError();
-	public long getScannerTime();
+	public long getLexicalAnalysisTime();
 	public long getParserTime();
 	public boolean doesCompile();
 	public Object[][][] getSymbolTables();

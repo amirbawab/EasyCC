@@ -1,6 +1,8 @@
 import bottom.BottomPanel;
 import center.CenterPanel;
-import listener.ABIDEListener;
+import data.LexicalAnalysisRow;
+import data.structure.ConsoleData;
+import listener.DevGuiListener;
 import menu.MainMenu;
 import menu.dialogs.StateMachineDialog;
 import menu.dialogs.FirstFollowDialog;
@@ -27,7 +29,7 @@ public class MainFrame extends JFrame {
 	private static final long serialVersionUID = -8026416994513756565L;
 
 	// Listener
-	private ABIDEListener abIDElistener;
+	private DevGuiListener devGuilistener;
 	
 	// Components
 	private CenterPanel centerPanel;
@@ -71,7 +73,7 @@ public class MainFrame extends JFrame {
 					break;
 					
 				case COMPILE:
-					if(abIDElistener != null) {
+					if(devGuilistener != null) {
 						
 						// Prepare message
 						String message = "";
@@ -88,37 +90,37 @@ public class MainFrame extends JFrame {
 						} else {
 							
 							// Analyze input
-							abIDElistener.scan(content);
+							devGuilistener.lexicalAnalysis(content);
 							
-							// Scanner output
-							Object[][] scannerOutputData = abIDElistener.getScannerOutput();
+							// Lexical analysis output
+							ConsoleData<LexicalAnalysisRow> lexicalAnalysisRowConsoleData = devGuilistener.getLexicalAnalyzerOutput();
+							Object[][] scannerOutputData = lexicalAnalysisRowConsoleData.convertToObjectTable();
 							centerPanel.setTableData(CenterPanel.SCANNER_OUTPUT_TITLE, scannerOutputData);
-							
+
 							// Error error
-							Object[][] scannerErrorData = abIDElistener.getScannerError();
+							ConsoleData<LexicalAnalysisRow> lexicalAnalysisRowConsoleError = devGuilistener.getLexicalAnalyzerError();
+							Object[][] scannerErrorData = lexicalAnalysisRowConsoleError.convertToObjectTable();
 							centerPanel.setTableData(CenterPanel.SCANNER_ERROR_TITLE, scannerErrorData);
-							
+
 							// Compilation time
-							long compilationTime = abIDElistener.getScannerTime();
-							
+							long compilationTime = devGuilistener.getLexicalAnalysisTime();
+
 							// Scanner error
 							if(scannerErrorData.length > 0)
-								
-								// Update compiler message
-								message += String.format("Scanner: %d error(s) found! ", scannerErrorData.length);
+								message += String.format("Lexical analysis: %d error(s) found! ", scannerErrorData.length);
 
 							// Parse token
-							abIDElistener.parse();
+							devGuilistener.parse();
 							
 							// Update time
-							compilationTime += abIDElistener.getParserTime();
+							compilationTime += devGuilistener.getParserTime();
 							
 							// Parser output
-							Object[][] parserOutputData = abIDElistener.getParserOutput();
+							Object[][] parserOutputData = devGuilistener.getParserOutput();
 							centerPanel.setTableData(CenterPanel.PARSER_OUTPUT_TITLE, parserOutputData);
 							
 							// Parser error
-							Object[][] parserErrorData = abIDElistener.getParserError();
+							Object[][] parserErrorData = devGuilistener.getParserError();
 							centerPanel.setTableData(CenterPanel.PARSER_ERROR_TITLE, parserErrorData);
 							
 							// If parser error found, update compiler message
@@ -126,7 +128,7 @@ public class MainFrame extends JFrame {
 								message += String.format("Parser: %d error(s) found! ", parserErrorData.length);
 
 							// Get tree
-							centerPanel.setPanel(CenterPanel.PARSER_TREE_TITLE, abIDElistener.getParserTree());
+							centerPanel.setPanel(CenterPanel.PARSER_TREE_TITLE, devGuilistener.getParserTree());
 
 							// Clear symbol tables
 							centerPanel.removeTablesInNavigationTable(CenterPanel.SYMBOL_TABLE_TITLE);
@@ -139,19 +141,19 @@ public class MainFrame extends JFrame {
 
 							// If no parsing errors
 							if(parserErrorData.length == 0){
-								Object[][][] symbolTables = abIDElistener.getSymbolTables();
+								Object[][][] symbolTables = devGuilistener.getSymbolTables();
 								for(int i=0; i < symbolTables.length; i++) {
-									String subTableName = abIDElistener.getSymbolTableName(i);
+									String subTableName = devGuilistener.getSymbolTableName(i);
 									centerPanel.addTableToNavigationTable(CenterPanel.SYMBOL_TABLE_TITLE, subTableName, CenterPanel.SYMBOL_TABLE_HEADER);
 									centerPanel.setTableOfTableData(CenterPanel.SYMBOL_TABLE_TITLE, subTableName, symbolTables[i]);
 								}
 
 								// Semantic errors
-								Object[][] semanticErrorData = abIDElistener.getSemanticErrors();
+								Object[][] semanticErrorData = devGuilistener.getSemanticErrors();
 								centerPanel.setTableData(CenterPanel.SEMANTIC_ERROR_TITLE, semanticErrorData);
 
 								// Code generation
-								centerPanel.setText(CenterPanel.CODE_GENERATION_TITLE, abIDElistener.getGeneratedCode());
+								centerPanel.setText(CenterPanel.CODE_GENERATION_TITLE, devGuilistener.getGeneratedCode());
 
 								// If semantic errors, update compiler message
 								if(semanticErrorData.length > 0)
@@ -165,7 +167,7 @@ public class MainFrame extends JFrame {
 							bottomPanel.setCompilerMessageText(message);
 							
 							// Change color
-							if(abIDElistener.doesCompile())
+							if(devGuilistener.doesCompile())
 								bottomPanel.setStyle(BottomPanel.Style.SUCCESS);
 							else
 								bottomPanel.setStyle(BottomPanel.Style.ERROR);
@@ -190,10 +192,10 @@ public class MainFrame extends JFrame {
 
 				case FIRST_FOLLOW:
 					
-					if(abIDElistener != null) {
+					if(devGuilistener != null) {
 						
 						// Get data
-						Object[][] firstFollowData = abIDElistener.getFirstAndFollowSets();
+						Object[][] firstFollowData = devGuilistener.getFirstAndFollowSets();
 						
 						if(firstFollowData.length > 0)
 							new FirstFollowDialog(MainFrame.this, firstFollowData);
@@ -201,12 +203,12 @@ public class MainFrame extends JFrame {
 					break;
 
 				case PARSING_TABLE:
-					if(abIDElistener != null) {
+					if(devGuilistener != null) {
 						
 						// Get data
-						Object[][] parsingData = abIDElistener.getParsingTable();
-						Object[][] parsingRulesData = abIDElistener.getParsingTableRules();
-						Object[][] parsingErrorData = abIDElistener.getParsingTableErrors();
+						Object[][] parsingData = devGuilistener.getParsingTable();
+						Object[][] parsingRulesData = devGuilistener.getParsingTableRules();
+						Object[][] parsingErrorData = devGuilistener.getParsingTableErrors();
 						
 						if(parsingData.length > 0) {
 							new ParsingTableDialog(MainFrame.this, parsingData);
@@ -218,10 +220,10 @@ public class MainFrame extends JFrame {
 
 				case STATE_TABLE:
 					
-					if(abIDElistener != null) {
+					if(devGuilistener != null) {
 						
 						// Get data
-						Object[][] stateTableData = abIDElistener.getStateTable();
+						Object[][] stateTableData = devGuilistener.getStateTable();
 						
 						if(stateTableData.length > 0) {
 							new StateTableDialog(MainFrame.this, stateTableData);
@@ -261,7 +263,7 @@ public class MainFrame extends JFrame {
 	 * Set listener
 	 * @param abIDElistener
 	 */
-	public void setABIDEListener(ABIDEListener abIDElistener) {
-		this.abIDElistener = abIDElistener;
+	public void setDevGUIListener(DevGuiListener abIDElistener) {
+		this.devGuilistener = abIDElistener;
 	}
 }

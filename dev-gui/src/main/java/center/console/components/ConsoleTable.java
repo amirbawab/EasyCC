@@ -1,7 +1,9 @@
 package center.console.components;
 
-import javax.swing.JTable;
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 
 public class ConsoleTable extends JTable {
 
@@ -10,6 +12,18 @@ public class ConsoleTable extends JTable {
 	public ConsoleTable(Object[][] data, Object[] header) {
 		setModel(new ConsoleTableModel(data, header));
 		getTableHeader().setReorderingAllowed(false);
+	}
+
+	/**
+	 * Color a row
+	 * @param row
+	 * @param color
+     */
+	public void colorRow(int row, Color color) {
+		for(int col=0; col < getColumnCount(); col++) {
+			JLabel l = (JLabel) getCellRenderer(row, col).getTableCellRendererComponent(this, null, false, false, row, col);
+			l.setBackground(color);
+		}
 	}
 	
 	/**
@@ -52,4 +66,6 @@ public class ConsoleTable extends JTable {
 			return false;
 		}
 	}
+
+
 }
