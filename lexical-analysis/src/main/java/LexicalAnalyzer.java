@@ -219,7 +219,7 @@ public class LexicalAnalyzer {
 
                 // Create token
                 ErrorTokensConfig errorTokensConfig = LexicalConfig.getInstance().getMachineConfig().getTokensConfig().getErrorTokensConfig();
-                if((tokenStr.startsWith(errorTokensConfig.getPrefix()) ||
+                if(((errorTokensConfig.getPrefix() != null && !errorTokensConfig.getPrefix().isEmpty() && tokenStr.startsWith(errorTokensConfig.getPrefix())) ||
                         errorTokensConfig.getInclude().contains(tokenStr)) &&
                         !errorTokensConfig.getExclude().contains(tokenStr)
                         ) {
