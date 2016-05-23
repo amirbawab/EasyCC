@@ -28,4 +28,13 @@ public class ErrorTokensConfig {
     public List<String> getExclude() {
         return exclude;
     }
+
+    /**
+     * Checks the type of a token
+     * @param tokenName
+     * @return true if error token
+     */
+    public boolean isErrorToken(String tokenName) {
+        return ((prefix != null && !prefix.isEmpty() && tokenName.startsWith(prefix)) || include.contains(tokenName)) && !exclude.contains(tokenName);
+    }
 }

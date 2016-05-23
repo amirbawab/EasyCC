@@ -207,22 +207,10 @@ public class LexicalAnalyzer {
                 }
 
                 // AbstractToken value
-                String tokenStr = currentState.getToken();
-
-                // Check if the word is a reserved one
-                for(ReservedConfig reservedConfig : LexicalConfig.getInstance().getMachineConfig().getTokensConfig().getReservedConfig()) {
-                    if(reservedConfig.getValue().equals(word)) {
-                        tokenStr = reservedConfig.getToken();
-                        break;
-                    }
-                }
+                String tokenStr = LexicalConfig.getInstance().getMachineConfig().getTokensConfig().getReservedTokenOrDefault(word, currentState.getToken());
 
                 // Create token
-                ErrorTokensConfig errorTokensConfig = LexicalConfig.getInstance().getMachineConfig().getTokensConfig().getErrorTokensConfig();
-                if(((errorTokensConfig.getPrefix() != null && !errorTokensConfig.getPrefix().isEmpty() && tokenStr.startsWith(errorTokensConfig.getPrefix())) ||
-                        errorTokensConfig.getInclude().contains(tokenStr)) &&
-                        !errorTokensConfig.getExclude().contains(tokenStr)
-                        ) {
+                if(LexicalConfig.getInstance().getMachineConfig().getTokensConfig().getErrorTokensConfig().isErrorToken(tokenStr)) {
                     token = new ErrorToken(tokenStr, word, wordRow, wordCol, position - word.length());
                 } else {
                     token = new LexicalToken(tokenStr, word, wordRow, wordCol, position - word.length());
