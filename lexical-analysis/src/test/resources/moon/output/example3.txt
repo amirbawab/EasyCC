@@ -48,10 +48,10 @@ Token: T_ERR_INVALID_CHAR - Value: # - Row: 8 - Col: 11 - Position: 261 - Type: 
 Token: T_ERR_INVALID_CHAR - Value: % - Row: 8 - Col: 12 - Position: 262 - Type: ErrorToken
 Token: T_OPEN_PAREN - Value: ( - Row: 8 - Col: 13 - Position: 263 - Type: LexicalToken
 Token: T_CLOSE_PAREN - Value: ) - Row: 8 - Col: 14 - Position: 264 - Type: LexicalToken
-Token: T_MINUS - Value: _ - Row: 8 - Col: 15 - Position: 265 - Type: LexicalToken
+Token: T_ERR_INVALID_CHAR - Value: _ - Row: 8 - Col: 15 - Position: 265 - Type: ErrorToken
 Token: T_PLUS - Value: + - Row: 8 - Col: 16 - Position: 266 - Type: LexicalToken
 Token: T_FLOAT - Value: 2.4 - Row: 8 - Col: 17 - Position: 267 - Type: LexicalToken
 Token: T_CLOSE_PAREN - Value: ) - Row: 8 - Col: 20 - Position: 270 - Type: LexicalToken
-Token: T_MINUS - Value: _ - Row: 8 - Col: 21 - Position: 271 - Type: LexicalToken
+Token: T_ERR_INVALID_CHAR - Value: _ - Row: 8 - Col: 21 - Position: 271 - Type: ErrorToken
 Token: T_ERR_INVALID_CHAR - Value: # - Row: 8 - Col: 22 - Position: 272 - Type: ErrorToken
 Token: T_ERR_INVALID_CHAR - Value: % - Row: 8 - Col: 23 - Position: 273 - Type: ErrorToken

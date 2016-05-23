@@ -66,7 +66,7 @@ Token: T_SEMICOLON - Value: ; - Row: 13 - Col: 29 - Position: 205 - Type: Lexica
 Token: T_IDENTIFIER - Value: idx - Row: 13 - Col: 31 - Position: 207 - Type: LexicalToken
 Token: T_ASSIGN - Value: = - Row: 13 - Col: 35 - Position: 211 - Type: LexicalToken
 Token: T_IDENTIFIER - Value: idx - Row: 13 - Col: 37 - Position: 213 - Type: LexicalToken
-Token: T_ERR_INVALID_CHAR - Value: - - Row: 13 - Col: 41 - Position: 217 - Type: ErrorToken
+Token: T_MINUS - Value: - - Row: 13 - Col: 41 - Position: 217 - Type: LexicalToken
 Token: T_INTEGER - Value: 1 - Row: 13 - Col: 43 - Position: 219 - Type: LexicalToken
 Token: T_CLOSE_PAREN - Value: ) - Row: 13 - Col: 45 - Position: 221 - Type: LexicalToken
 Token: T_OPEN_CURLY - Value: { - Row: 13 - Col: 47 - Position: 223 - Type: LexicalToken
@@ -384,7 +384,7 @@ Token: T_FLOAT - Value: 2.04 - Row: 68 - Col: 19 - Position: 1119 - Type: Lexica
 Token: T_MULTIPLY - Value: * - Row: 68 - Col: 24 - Position: 1124 - Type: LexicalToken
 Token: T_FLOAT - Value: 2.47 - Row: 68 - Col: 26 - Position: 1126 - Type: LexicalToken
 Token: T_CLOSE_PAREN - Value: ) - Row: 68 - Col: 30 - Position: 1130 - Type: LexicalToken
-Token: T_ERR_INVALID_CHAR - Value: - - Row: 68 - Col: 32 - Position: 1132 - Type: ErrorToken
+Token: T_MINUS - Value: - - Row: 68 - Col: 32 - Position: 1132 - Type: LexicalToken
 Token: T_FLOAT - Value: 3.0 - Row: 68 - Col: 34 - Position: 1134 - Type: LexicalToken
 Token: T_CLOSE_PAREN - Value: ) - Row: 68 - Col: 37 - Position: 1137 - Type: LexicalToken
 Token: T_PLUS - Value: + - Row: 68 - Col: 39 - Position: 1139 - Type: LexicalToken

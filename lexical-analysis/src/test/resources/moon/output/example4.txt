@@ -9,7 +9,7 @@ Token: T_SEMICOLON - Value: ; - Row: 8 - Col: 1 - Position: 18 - Type: LexicalTo
 Token: T_COMMA - Value: , - Row: 9 - Col: 1 - Position: 20 - Type: LexicalToken
 Token: T_DOT - Value: . - Row: 10 - Col: 1 - Position: 22 - Type: LexicalToken
 Token: T_PLUS - Value: + - Row: 11 - Col: 1 - Position: 24 - Type: LexicalToken
-Token: T_ERR_INVALID_CHAR - Value: - - Row: 12 - Col: 1 - Position: 26 - Type: ErrorToken
+Token: T_MINUS - Value: - - Row: 12 - Col: 1 - Position: 26 - Type: LexicalToken
 Token: T_MULTIPLY - Value: * - Row: 13 - Col: 1 - Position: 28 - Type: LexicalToken
 Token: T_DIVIDE - Value: / - Row: 14 - Col: 1 - Position: 30 - Type: LexicalToken
 Token: T_OPEN_PAREN - Value: ( - Row: 15 - Col: 1 - Position: 32 - Type: LexicalToken

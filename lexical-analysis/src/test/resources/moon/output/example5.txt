@@ -41,16 +41,16 @@ Token: T_ERR_FLOAT_FORMAT - Value: 1. - Row: 10 - Col: 7 - Position: 63 - Type: 
 Token: T_DOT - Value: . - Row: 10 - Col: 9 - Position: 65 - Type: LexicalToken
 Token: T_INTEGER - Value: 1 - Row: 10 - Col: 10 - Position: 66 - Type: LexicalToken
 Token: T_PLUS - Value: + - Row: 11 - Col: 1 - Position: 68 - Type: LexicalToken
-Token: T_ERR_INVALID_CHAR - Value: - - Row: 11 - Col: 2 - Position: 69 - Type: ErrorToken
+Token: T_MINUS - Value: - - Row: 11 - Col: 2 - Position: 69 - Type: LexicalToken
 Token: T_PLUS - Value: + - Row: 11 - Col: 3 - Position: 70 - Type: LexicalToken
-Token: T_ERR_INVALID_CHAR - Value: - - Row: 11 - Col: 4 - Position: 71 - Type: ErrorToken
+Token: T_MINUS - Value: - - Row: 11 - Col: 4 - Position: 71 - Type: LexicalToken
 Token: T_PLUS - Value: + - Row: 11 - Col: 5 - Position: 72 - Type: LexicalToken
-Token: T_ERR_INVALID_CHAR - Value: - - Row: 12 - Col: 1 - Position: 74 - Type: ErrorToken
-Token: T_MINUS - Value: _ - Row: 12 - Col: 2 - Position: 75 - Type: LexicalToken
-Token: T_ERR_INVALID_CHAR - Value: - - Row: 12 - Col: 3 - Position: 76 - Type: ErrorToken
-Token: T_MINUS - Value: _ - Row: 12 - Col: 4 - Position: 77 - Type: LexicalToken
-Token: T_ERR_INVALID_CHAR - Value: - - Row: 12 - Col: 5 - Position: 78 - Type: ErrorToken
-Token: T_MINUS - Value: _ - Row: 12 - Col: 6 - Position: 79 - Type: LexicalToken
+Token: T_MINUS - Value: - - Row: 12 - Col: 1 - Position: 74 - Type: LexicalToken
+Token: T_ERR_INVALID_CHAR - Value: _ - Row: 12 - Col: 2 - Position: 75 - Type: ErrorToken
+Token: T_MINUS - Value: - - Row: 12 - Col: 3 - Position: 76 - Type: LexicalToken
+Token: T_ERR_INVALID_CHAR - Value: _ - Row: 12 - Col: 4 - Position: 77 - Type: ErrorToken
+Token: T_MINUS - Value: - - Row: 12 - Col: 5 - Position: 78 - Type: LexicalToken
+Token: T_ERR_INVALID_CHAR - Value: _ - Row: 12 - Col: 6 - Position: 79 - Type: ErrorToken
 Token: T_INTEGER - Value: 1 - Row: 13 - Col: 1 - Position: 81 - Type: LexicalToken
 Token: T_MULTIPLY - Value: * - Row: 13 - Col: 2 - Position: 82 - Type: LexicalToken
 Token: T_INTEGER - Value: 4 - Row: 13 - Col: 3 - Position: 83 - Type: LexicalToken
@@ -84,7 +84,7 @@ Token: T_COMMA - Value: , - Row: 20 - Col: 3 - Position: 127 - Type: LexicalToke
 Token: T_DOT - Value: . - Row: 20 - Col: 4 - Position: 128 - Type: LexicalToken
 Token: T_CLOSE_SQUARE - Value: ] - Row: 20 - Col: 5 - Position: 129 - Type: LexicalToken
 Token: T_IDENTIFIER - Value: x - Row: 21 - Col: 1 - Position: 131 - Type: LexicalToken
-Token: T_ERR_INVALID_CHAR - Value: - - Row: 21 - Col: 2 - Position: 132 - Type: ErrorToken
+Token: T_MINUS - Value: - - Row: 21 - Col: 2 - Position: 132 - Type: LexicalToken
 Token: T_IDENTIFIER - Value: x - Row: 21 - Col: 3 - Position: 133 - Type: LexicalToken
 Token: T_ASSIGN - Value: = - Row: 21 - Col: 4 - Position: 134 - Type: LexicalToken
 Token: T_INTEGER - Value: 0 - Row: 21 - Col: 5 - Position: 135 - Type: LexicalToken
@@ -109,7 +109,7 @@ Token: T_OPEN_PAREN - Value: ( - Row: 23 - Col: 17 - Position: 192 - Type: Lexic
 Token: T_CLOSE_PAREN - Value: ) - Row: 23 - Col: 18 - Position: 193 - Type: LexicalToken
 Token: T_CLOSE_CURLY - Value: } - Row: 23 - Col: 20 - Position: 195 - Type: LexicalToken
 Token: T_INTEGER - Value: 1234 - Row: 24 - Col: 1 - Position: 197 - Type: LexicalToken
-Token: T_ERR_INVALID_CHAR - Value: - - Row: 24 - Col: 5 - Position: 201 - Type: ErrorToken
+Token: T_MINUS - Value: - - Row: 24 - Col: 5 - Position: 201 - Type: LexicalToken
 Token: T_INTEGER - Value: 4321 - Row: 24 - Col: 6 - Position: 202 - Type: LexicalToken
 Token: T_IS_NOT_EQUAL - Value: <> - Row: 24 - Col: 11 - Position: 207 - Type: LexicalToken
 Token: T_INTEGER - Value: 0 - Row: 24 - Col: 14 - Position: 210 - Type: LexicalToken
@@ -146,7 +146,7 @@ Token: T_ERR_INVALID_CHAR - Value: @ - Row: 35 - Col: 2 - Position: 298 - Type: 
 Token: T_ERR_INVALID_CHAR - Value: # - Row: 35 - Col: 3 - Position: 299 - Type: ErrorToken
 Token: T_ERR_INVALID_CHAR - Value: $ - Row: 35 - Col: 4 - Position: 300 - Type: ErrorToken
 Token: T_ERR_INVALID_CHAR - Value: % - Row: 35 - Col: 5 - Position: 301 - Type: ErrorToken
-Token: T_MINUS - Value: _ - Row: 35 - Col: 6 - Position: 302 - Type: LexicalToken
+Token: T_ERR_INVALID_CHAR - Value: _ - Row: 35 - Col: 6 - Position: 302 - Type: ErrorToken
 Token: T_BLOCK_COMMENT - Value: /*
 // in the block comment
  */ - Row: 36 - Col: 1 - Position: 304 - Type: LexicalToken
