@@ -17,7 +17,7 @@ dependencies {
 
 lexicalAnalyzer {
     DFAPath = "/state-machine.json"
-    configPath = "/lexical-analysis.config"
+    configPath = "/lexical-analysis.json"
 }
 
 jacocoTestReport {

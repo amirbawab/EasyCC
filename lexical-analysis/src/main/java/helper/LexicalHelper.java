@@ -9,6 +9,8 @@ import token.AbstractToken;
  */
 
 public class LexicalHelper {
+
+    // Define End Of Line and End Of File symbols
     public static final char EOL = '\n';
     public static final char EOF = '\0';
 

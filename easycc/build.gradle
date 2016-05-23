@@ -12,7 +12,7 @@ dependencies {
 
 lexicalAnalyzer {
     DFAPath = "/moon/state-machine.json"
-    configPath = "/moon/lexical-analysis.config"
+    configPath = "/moon/lexical-analysis.json"
 }
 
 jar {
@@ -23,4 +23,14 @@ jar {
     }
     from sourceSets.main.runtimeClasspath
     from configurations.compile.collect { zipTree it }
+}
+
+task copyResrouces << {
+    println "Copying resources"
+    copy {
+        from project(":lexical-analysis").getProjectDir().toString() + '/src/test/resources/moon/'
+        into 'src/main/resources/moon/'
+        include 'state-machine.json'
+        include 'lexical-analysis.json'
+    }
 }

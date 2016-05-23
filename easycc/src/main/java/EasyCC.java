@@ -1,4 +1,3 @@
-import config.LexicalConfig;
 import data.LexicalAnalysisRow;
 import data.structure.ConsoleData;
 import helper.LexicalHelper;
@@ -95,7 +94,7 @@ public class EasyCC {
 
             @Override
             public long getLexicalAnalysisTime() {
-                return 0;
+                return lexicalAnalyzer.getProcessTime();
             }
 
             @Override
