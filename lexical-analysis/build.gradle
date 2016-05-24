@@ -16,7 +16,7 @@ dependencies {
 }
 
 lexicalAnalyzer {
-    DFAPath = "/state-machine.json"
+    machinePath = "/state-machine.json"
     configPath = "/lexical-analysis.json"
 }
 

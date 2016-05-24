@@ -20,7 +20,7 @@ public class LexicalAnalyzerMoonTest {
 
     @BeforeClass
     public static void initLexicalAnalyzer() {
-        lexicalAnalyzer = new LexicalAnalyzer("/moon/state-machine.json", "/moon/lexical-analysis.config");
+        lexicalAnalyzer = new LexicalAnalyzer("/moon/state-machine.json", "/moon/lexical-analysis.json");
     }
 
     @Test

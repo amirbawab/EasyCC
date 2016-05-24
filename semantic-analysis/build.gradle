@@ -1,0 +1,28 @@
+plugins {
+    id 'application'
+}
+
+apply plugin: SemanticAnalysisPlugin
+
+version = '1.0'
+
+mainClassName = "SemanticAnalyzer"
+
+dependencies {
+    compile project(':lexical-analysis')
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+semanticAnalyzer {
+    grammarPath = ""
+}
+
+jar {
+    manifest {
+        attributes  'Implementation-Title': name,
+                'Implementation-Version': version,
+                'Main-Class': mainClassName
+    }
+    from sourceSets.main.runtimeClasspath
+    from configurations.compile.collect { zipTree it }
+}

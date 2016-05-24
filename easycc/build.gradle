@@ -1,18 +1,23 @@
 apply plugin: 'application'
 apply plugin: LexicalAnalysisPlugin
+apply plugin: SemanticAnalysisPlugin
 
 version = '1.0'
 
 mainClassName = "EasyCC"
 
 dependencies {
-    compile project(':lexical-analysis')
+    compile project(':semantic-analysis')
     compile project(':dev-gui')
 }
 
 lexicalAnalyzer {
-    DFAPath = "/moon/state-machine.json"
+    machinePath = "/moon/state-machine.json"
     configPath = "/moon/lexical-analysis.json"
+}
+
+semanticAnalyzer {
+
 }
 
 jar {
