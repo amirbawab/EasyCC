@@ -21,8 +21,3 @@ sourceSets {
         }
     }
 }
-
-jar {
-    from sourceSets.main.runtimeClasspath
-    from configurations.compile.collect { zipTree it }
-}

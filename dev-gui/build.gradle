@@ -6,8 +6,3 @@ dependencies {
     compile 'org.apache.commons:commons-collections4:4.1'
     compile 'org.apache.commons:commons-lang3:3.0'
 }
-
-jar {
-    from sourceSets.main.runtimeClasspath
-    from configurations.compile.collect { zipTree it }
-}

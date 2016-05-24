@@ -16,13 +16,3 @@ dependencies {
 semanticAnalyzer {
     grammarPath = ""
 }
-
-jar {
-    manifest {
-        attributes  'Implementation-Title': name,
-                'Implementation-Version': version,
-                'Main-Class': mainClassName
-    }
-    from sourceSets.main.runtimeClasspath
-    from configurations.compile.collect { zipTree it }
-}
