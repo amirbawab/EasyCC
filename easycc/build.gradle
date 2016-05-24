@@ -1,13 +1,13 @@
 apply plugin: 'application'
 apply plugin: LexicalAnalysisPlugin
-apply plugin: SemanticAnalysisPlugin
+apply plugin: SyntaxAnalysisPlugin
 
 version = '1.0'
 
 mainClassName = "EasyCC"
 
 dependencies {
-    compile project(':semantic-analysis')
+    compile project(':syntax-analysis')
     compile project(':dev-gui')
 }
 
@@ -16,7 +16,7 @@ lexicalAnalyzer {
     configPath = "/moon/lexical-analysis.json"
 }
 
-semanticAnalyzer {
+syntaxAnalyzer {
 
 }
 

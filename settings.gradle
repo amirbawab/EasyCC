@@ -1,6 +1,6 @@
 include 'common'
 include 'lexical-analysis'
-include 'semantic-analysis'
+include 'syntax-analysis'
 include 'easycc'
 include 'dev-gui'
 
