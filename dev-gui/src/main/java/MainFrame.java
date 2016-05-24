@@ -1,5 +1,6 @@
 import bottom.BottomPanel;
 import center.CenterPanel;
+import data.GenericTable;
 import data.LexicalAnalysisRow;
 import data.structure.ConsoleData;
 import listener.DevGuiListener;
@@ -10,7 +11,6 @@ import menu.dialogs.ParsingTableDialog;
 import menu.dialogs.ParsingTableErrorsDialog;
 import menu.dialogs.ParsingTableRulesDialog;
 import menu.dialogs.StateTableDialog;
-import menu.dialogs.StateTableInfoDialog;
 import menu.listeners.MainMenuListener;
 import tool.ToolBarPanel;
 import tool.ToolBarPanel.Button;
@@ -223,12 +223,9 @@ public class MainFrame extends JFrame {
 					if(devGuilistener != null) {
 						
 						// Get data
-						Object[][] stateTableData = devGuilistener.getStateTable();
-						
-						if(stateTableData.length > 0) {
-							new StateTableDialog(MainFrame.this, stateTableData);
-							new StateTableInfoDialog(MainFrame.this);
-						}
+						GenericTable stateTransitionTable = new GenericTable();
+						devGuilistener.setStateTable(stateTransitionTable);
+						new StateTableDialog(MainFrame.this, stateTransitionTable.getHeader(), stateTransitionTable.getData());
 					}
 					break;
 					

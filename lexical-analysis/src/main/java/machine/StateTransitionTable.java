@@ -128,22 +128,47 @@ public class StateTransitionTable {
     }
 
     /**
-     * Formatted table
+     * Get number of rows in the state transition table
+     * @return number of rows
      */
-    public String toString() {
+    public int getNumOfRow() {
+        return transitionTable.length;
+    }
 
+    /**
+     * Get number of columns in the state transition table
+     * @return number of columns
+     */
+    public int getNumOfCol() {
+        return header.length;
+    }
+
+    /**
+     * Get the header value at a specific position
+     * @param col
+     * @return header value
+     */
+    public String getHeaderAtCol(int col) {
+        return header[col];
+    }
+
+    /**
+     * Get a state id given a row and col
+     * @param row
+     * @param col
+     * @return state id
+     */
+    public int getStateIdAt(int row, int col) {
+        return transitionTable[row][col];
+    }
+
+    /**
+     * Prettify state transition table data
+     * @return Object table data
+     */
+    public String[][] prettifyStateTransitionTableData() {
         // Store data
-        String[] modHeader = new String[header.length + 4];
         String[][] data = new String[states.length][header.length+4];
-
-        // Create header
-        modHeader[0] = "";
-        for(int i=0; i < header.length; i++) {
-            modHeader[i+1] = header[i];
-        }
-        modHeader[header.length+1] = "Backtrack";
-        modHeader[header.length+2] = "Final";
-        modHeader[header.length+3] = "AbstractToken";
 
         for(int row=0; row < states.length; row++) {
             data[row][0] = row+"";
@@ -155,6 +180,31 @@ public class StateTransitionTable {
             data[row][header.length+3] = states[row].getType() == State.Type.FINAL ? states[row].getToken() : "";
         }
 
-        return ASCIITable.getInstance().getTable(modHeader, data);
+        return data;
+    }
+
+    /**
+     * Prettify state transition table header
+     * @return Object table header
+     */
+    public String[] prettifyStateTransitionTableHeader() {
+        String[] modHeader = new String[header.length + 4];
+
+        // Create header
+        modHeader[0] = "";
+        for(int i=0; i < header.length; i++) {
+            modHeader[i+1] = header[i];
+        }
+        modHeader[header.length+1] = "Backtrack";
+        modHeader[header.length+2] = "Final";
+        modHeader[header.length+3] = "AbstractToken";
+        return modHeader;
+    }
+
+    /**
+     * Formatted table
+     */
+    public String toString() {
+        return ASCIITable.getInstance().getTable(prettifyStateTransitionTableHeader(), prettifyStateTransitionTableData());
     }
 }

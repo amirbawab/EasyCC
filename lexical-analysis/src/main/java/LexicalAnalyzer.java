@@ -245,4 +245,12 @@ public class LexicalAnalyzer {
     public List<AbstractToken> getTokens() {
         return tokens;
     }
+
+    /**
+     * Get the state transition table
+     * @return state transition table
+     */
+    public StateTransitionTable getStateTransitionTable() {
+        return stateTransitionTable;
+    }
 }

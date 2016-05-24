@@ -12,13 +12,13 @@ public class StateTableDialog extends JDialog {
 
 	private static final long serialVersionUID = -7402407159765350532L;
 	
-	public StateTableDialog(JFrame parent, Object[][] stateTableData) {
+	public StateTableDialog(JFrame parent, Object[] stateTableHeader, Object[][] stateTableData) {
 		
 		// Set title
 		setTitle("State transition table");
 		
 		// Init components
-		StateTableModel stateTableModel = new StateTableModel(stateTableData, new Object[stateTableData[0].length]);
+		StateTableModel stateTableModel = new StateTableModel(stateTableData, stateTableHeader);
 		JTable stateTable = new JTable(stateTableModel);
 		
 		// Config table

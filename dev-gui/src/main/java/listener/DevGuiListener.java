@@ -1,5 +1,6 @@
 package listener;
 
+import data.GenericTable;
 import data.LexicalAnalysisRow;
 import data.structure.ConsoleData;
 
@@ -24,7 +25,7 @@ public interface DevGuiListener {
 	public String getGeneratedCode();
 	
 	// Menu
-	public Object[][] getStateTable();
+	public void setStateTable(GenericTable genericTable);
 	public Object[][] getParsingTable();
 	public Object[][] getParsingTableRules();
 	public Object[][] getParsingTableErrors();

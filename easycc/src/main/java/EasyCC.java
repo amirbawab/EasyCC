@@ -1,3 +1,4 @@
+import data.GenericTable;
 import data.LexicalAnalysisRow;
 import data.structure.ConsoleData;
 import helper.LexicalHelper;
@@ -8,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import token.AbstractToken;
 import token.ErrorToken;
 import token.LexicalToken;
+import utils.StringUtilsPlus;
 
 import javax.swing.*;
 
@@ -133,8 +135,9 @@ public class EasyCC {
             }
 
             @Override
-            public Object[][] getStateTable() {
-                return new Object[0][];
+            public void setStateTable(GenericTable genericTable) {
+                genericTable.setHeader(StringUtilsPlus.convertStringArrayToObjectArray(lexicalAnalyzer.getStateTransitionTable().prettifyStateTransitionTableHeader()));
+                genericTable.setData(StringUtilsPlus.convertStringTableToObjectTable(lexicalAnalyzer.getStateTransitionTable().prettifyStateTransitionTableData()));
             }
 
             @Override
