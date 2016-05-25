@@ -9,6 +9,8 @@ mainClassName = "EasyCC"
 dependencies {
     compile project(':syntax-analysis')
     compile project(':dev-gui')
+    testCompile project(':lexical-analysis')
+    testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
 lexicalAnalyzer {
@@ -18,14 +20,4 @@ lexicalAnalyzer {
 
 syntaxAnalyzer {
 
-}
-
-task copyResrouces << {
-    println "Copying resources"
-    copy {
-        from project(":lexical-analysis").getProjectDir().toString() + '/src/test/resources/moon/'
-        into 'src/main/resources/moon/'
-        include 'state-machine.json'
-        include 'lexical-analysis.json'
-    }
 }

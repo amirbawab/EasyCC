@@ -2,10 +2,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import token.AbstractToken;
 
 import java.io.IOException;
-import java.util.List;
 
 import static org.junit.Assert.*;
 
