@@ -3,6 +3,7 @@ import data.LexicalAnalysisRow;
 import data.structure.ConsoleData;
 import helper.LexicalHelper;
 import jvm.LexicalArgs;
+import jvm.SyntaxArgs;
 import listener.DevGuiListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,7 +31,7 @@ public class EasyCC {
 
         // Init components
         lexicalAnalyzer = new LexicalAnalyzer(System.getProperty(LexicalArgs.MACHINE), System.getProperty(LexicalArgs.CONFIG));
-        semanticAnalyzer = new SyntaxAnalyzer(lexicalAnalyzer);
+        semanticAnalyzer = new SyntaxAnalyzer(lexicalAnalyzer, System.getProperty(SyntaxArgs.GRAMMAR));
 
         startGui();
     }
