@@ -3,6 +3,7 @@ import data.LexicalAnalysisRow;
 import data.structure.ConsoleData;
 import helper.LexicalHelper;
 import listener.DevGuiListener;
+import org.apache.commons.lang3.StringUtils;
 import token.AbstractToken;
 import token.ErrorToken;
 import token.LexicalToken;
@@ -13,9 +14,11 @@ import javax.swing.*;
 public class GuiIntegration implements DevGuiListener {
 
     private LexicalAnalyzer lexicalAnalyzer;
+    private SyntaxAnalyzer syntaxAnalyzer;
 
-    public GuiIntegration(LexicalAnalyzer lexicalAnalyzer){
+    public GuiIntegration(LexicalAnalyzer lexicalAnalyzer, SyntaxAnalyzer syntaxAnalyzer){
         this.lexicalAnalyzer = lexicalAnalyzer;
+        this.syntaxAnalyzer = syntaxAnalyzer;
     }
 
     @Override
@@ -135,7 +138,16 @@ public class GuiIntegration implements DevGuiListener {
     }
 
     @Override
-    public Object[][] getFirstAndFollowSets() {
-        return new Object[0][];
+    public void setFirstAndFollowSets(GenericTable genericTable) {
+        genericTable.setHeader(new Object[] {"Non terminal", "First set", "Follow set"});
+        Object[][] data = new Object[syntaxAnalyzer.getGrammar().getNonTerminals().size()][3];
+        int index=0;
+        for(String nonTerminal : syntaxAnalyzer.getGrammar().getNonTerminals()) {
+            data[index][0] = nonTerminal;
+            data[index][1] = StringUtils.join(syntaxAnalyzer.getGrammar().getFirstSetMap().get(nonTerminal), ", ");
+            data[index][2] = StringUtils.join(syntaxAnalyzer.getGrammar().getFollowSetMap().get(nonTerminal), ", ");
+            index++;
+        }
+        genericTable.setData(data);
     }
 }

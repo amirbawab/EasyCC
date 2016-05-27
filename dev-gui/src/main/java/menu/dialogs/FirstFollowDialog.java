@@ -13,17 +13,14 @@ public class FirstFollowDialog extends JDialog {
 
 	private static final long serialVersionUID = -1965488402878339634L;
 
-	public FirstFollowDialog(JFrame parent, Object[][] data) {
+	public FirstFollowDialog(JFrame parent, Object[] header, Object[][] data) {
 		
 		// Set title
 		setTitle("First and Follow sets");
 				
 		// Set layout
 		setLayout(new BorderLayout());
-		
-		// Data
-		Object[] header = {"Non terminal", "First set", "Follow set"};
-		
+
 		// Init components
 		FirstFollowModel firstFollowModel = new FirstFollowModel(data, header);
 		JTable firstFollowTable = new JTable(firstFollowModel);

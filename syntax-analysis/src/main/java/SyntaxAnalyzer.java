@@ -16,4 +16,12 @@ public class SyntaxAnalyzer {
         this.lexicalAnalyzer = lexicalAnalyzer;
         grammar = new Grammar(grammarPath);
     }
+
+    /**
+     * Get parsed grammar
+     * @return grammar
+     */
+    public Grammar getGrammar() {
+        return grammar;
+    }
 }

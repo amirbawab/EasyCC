@@ -29,6 +29,6 @@ public interface DevGuiListener {
 	public Object[][] getParsingTable();
 	public Object[][] getParsingTableRules();
 	public Object[][] getParsingTableErrors();
-	public Object[][] getFirstAndFollowSets();
+	public void setFirstAndFollowSets(GenericTable genericTable);
 	
 }

@@ -193,12 +193,9 @@ public class MainFrame extends JFrame {
 				case FIRST_FOLLOW:
 					
 					if(devGuilistener != null) {
-						
-						// Get data
-						Object[][] firstFollowData = devGuilistener.getFirstAndFollowSets();
-						
-						if(firstFollowData.length > 0)
-							new FirstFollowDialog(MainFrame.this, firstFollowData);
+						GenericTable firstAndFollowSetTable = new GenericTable();
+						devGuilistener.setFirstAndFollowSets(firstAndFollowSetTable);
+						new FirstFollowDialog(MainFrame.this, firstAndFollowSetTable.getHeader(), firstAndFollowSetTable.getData());
 					}
 					break;
 
