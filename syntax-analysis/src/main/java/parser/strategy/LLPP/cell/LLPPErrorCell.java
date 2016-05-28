@@ -29,4 +29,9 @@ public class LLPPErrorCell extends LLPPAbstractTableCell {
     public String getId() {
         return "E" + id;
     }
+
+    @Override
+    public String toString() {
+        return getId() + " - " + (decision == POP ? "Pop" : "Scan");
+    }
 }

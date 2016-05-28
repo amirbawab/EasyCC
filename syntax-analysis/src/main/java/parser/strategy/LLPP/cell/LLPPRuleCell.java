@@ -27,4 +27,9 @@ public class LLPPRuleCell extends LLPPAbstractTableCell {
     public String getId() {
         return "R" + id;
     }
+
+    @Override
+    public String toString() {
+        return getId();
+    }
 }

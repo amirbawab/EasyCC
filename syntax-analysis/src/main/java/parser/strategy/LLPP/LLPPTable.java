@@ -1,5 +1,6 @@
 package parser.strategy.LLPP;
 
+import com.bethecoder.ascii_table.ASCIITable;
 import grammar.Grammar;
 import helper.SyntaxHelper;
 import org.apache.logging.log4j.LogManager;
@@ -33,6 +34,7 @@ public class LLPPTable {
         nonTerminalIndexMap = new HashMap<>();
         ruleCellList = new ArrayList<>();
         errorCellList = new ArrayList<>();
+        this.grammar = grammar;
 
         // Cache terminal index
         for(String terminal : grammar.getTerminals())
@@ -145,5 +147,45 @@ public class LLPPTable {
      */
     public LLPPAbstractTableCell getCell(String nonTerminal, String terminal) {
         return table[nonTerminalIndexMap.get(nonTerminal)][terminalIndexMap.get(terminal)];
+    }
+
+    /**
+     * Prettify predictive parser table data
+     * @return Object table data
+     */
+    public String[][] prettifyPPTableData() {
+        String[][] data = new String[table.length][grammar.getTerminals().size()+1];
+
+        for(String nonTerminal : grammar.getNonTerminals()) {
+            data[nonTerminalIndexMap.get(nonTerminal)][0] = nonTerminal;
+            for(String terminal : grammar.getTerminals()) {
+                int row = nonTerminalIndexMap.get(nonTerminal);
+                int col = terminalIndexMap.get(terminal)+1;
+                data[row][col] = table[row][col-1].toString();
+            }
+        }
+        return data;
+    }
+
+    /**
+     * Prettify predictive parser table header
+     * @return Object table header
+     */
+    public String[] prettifyPPTableHeader() {
+        String[] modHeader = new String[grammar.getTerminals().size() + 1];
+
+        // Create header
+        modHeader[0] = "";
+        for(String terminal : grammar.getTerminals()) {
+            modHeader[terminalIndexMap.get(terminal)+1] = terminal;
+        }
+        return modHeader;
+    }
+
+    /**
+     * Formatted table
+     */
+    public String toString() {
+        return ASCIITable.getInstance().getTable(prettifyPPTableHeader(), prettifyPPTableData());
     }
 }

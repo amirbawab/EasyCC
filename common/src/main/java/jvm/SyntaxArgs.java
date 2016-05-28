@@ -6,4 +6,5 @@ package jvm;
 
 public class SyntaxArgs {
     public static final String GRAMMAR = "easycc.syntax.grammar";
+    public static final String PARSE_STRATEGY = "easycc.syntax.parseStrategy";
 }
