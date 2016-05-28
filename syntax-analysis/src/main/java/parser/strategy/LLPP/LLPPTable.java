@@ -97,29 +97,53 @@ public class LLPPTable {
                     terminalsSet.addAll(followSet);
                 }
 
+                // Prepare new rule
+                LLPPRuleCell ruleCell = new LLPPRuleCell(production);
+                ruleCellList.add(ruleCell);
+
                 // Add cells
                 for(String terminal : terminalsSet){
 
                     // Log
-                    if(!nonTerminalIndexMap.containsKey(nonTerminal))
+                    if(!nonTerminalIndexMap.containsKey(nonTerminal)) {
                         l.error("Non terminal '%s' not found in table", nonTerminal);
+                    }
 
                     // Log
-                    if(!terminalIndexMap.containsKey(terminal))
+                    if(!terminalIndexMap.containsKey(terminal)) {
                         l.error("Terminal '%s' not found in table", terminal);
+                    }
 
-                    table[nonTerminalIndexMap.get(nonTerminal)][terminalIndexMap.get(terminal)] = new LLPPRuleCell(production);
+                    table[nonTerminalIndexMap.get(nonTerminal)][terminalIndexMap.get(terminal)] = ruleCell;
                 }
             }
         }
 
         // Put error message for all the remaining cells
-        for(int row=0; row < table.length; row++) {
-            for(int col=0; col < grammar.getTerminals().size(); col++) {
-                if(table[row][col] == null) {
-                    table[row][col] = new LLPPErrorCell();
+        for(String nonTerminal : grammar.getNonTerminals()) {
+            for(String terminal : grammar.getTerminals()) {
+                if(table[nonTerminalIndexMap.get(nonTerminal)][terminalIndexMap.get(terminal)] == null) {
+
+                    int decision = LLPPErrorCell.SCAN;
+
+                    // If terminal is in the follow set or it's EOS, then it's a pop
+                    if(terminal.equals(SyntaxHelper.END_OF_STACK) || grammar.getFollowSetMap().get(nonTerminal).contains(terminal))
+                        decision = LLPPErrorCell.POP;
+
+                    LLPPErrorCell errorCell = new LLPPErrorCell(decision);
+                    table[nonTerminalIndexMap.get(nonTerminal)][terminalIndexMap.get(terminal)] = errorCell;
                 }
             }
         }
+    }
+
+    /**
+     * Get table cell at [nonterminal] [terminal]
+     * @param nonTerminal
+     * @param terminal
+     * @return Table cell
+     */
+    public LLPPAbstractTableCell getCell(String nonTerminal, String terminal) {
+        return table[nonTerminalIndexMap.get(nonTerminal)][terminalIndexMap.get(terminal)];
     }
 }

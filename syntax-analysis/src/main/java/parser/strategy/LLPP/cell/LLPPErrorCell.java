@@ -9,8 +9,20 @@ public class LLPPErrorCell extends LLPPAbstractTableCell {
     // Assign a unique id for each cell
     private static int uniqueId = 0;
 
-    public LLPPErrorCell() {
+    // Constants
+    public static final int POP = 1;
+    public static final int SCAN = 2;
+
+    // POP | SCAN
+    private int decision;
+
+    public LLPPErrorCell(int decision) {
         super(uniqueId++);
+        this.decision = decision;
+    }
+
+    public int getDecision() {
+        return decision;
     }
 
     @Override
