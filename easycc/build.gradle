@@ -1,3 +1,8 @@
+plugins {
+    id "org.sonarqube" version "2.0.1"
+    id "jacoco"
+}
+
 apply plugin: 'application'
 apply plugin: LexicalAnalysisPlugin
 apply plugin: SyntaxAnalysisPlugin
@@ -5,6 +10,8 @@ apply plugin: SyntaxAnalysisPlugin
 version = '1.0'
 
 mainClassName = "EasyCC"
+
+def xmlReport =
 
 dependencies {
     compile project(':syntax-analysis')
@@ -22,3 +29,26 @@ syntaxAnalyzer {
     messagesPath = "/moon/syntax-messages.json"
     parseStrategy = "parser.strategy.LLPP.LLPP"
 }
+
+jacoco {
+    toolVersion = "0.7.6.201602180812"
+}
+
+jacocoTestReport {
+    additionalSourceDirs = files(sourceSets.main.allSource.srcDirs)
+    sourceDirectories = files(sourceSets.main.allSource.srcDirs)
+    classDirectories =  files(sourceSets.main.output)
+    reports {
+        html.enabled = true
+        xml.enabled = true
+        csv.enabled = false
+    }
+}
+
+sonarqube {
+    properties {
+        property "sonar.jacoco.reportPath", "$buildDir/reports/jacoco/test/jacocoTest.exec"
+    }
+}
+
+
