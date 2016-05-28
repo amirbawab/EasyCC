@@ -25,10 +25,8 @@ public class SyntaxAnalyzer {
         // Init components
         this.lexicalAnalyzer = lexicalAnalyzer;
         grammar = new Grammar(grammarPath);
-        syntaxParser = new SyntaxParser(grammar, parseStrategyClass);
-
-        // Load configuration
         SyntaxConfig.getInstance().loadMessages(messagesPath);
+        syntaxParser = new SyntaxParser(grammar, parseStrategyClass);
     }
 
 

@@ -33,6 +33,10 @@ public class SyntaxConfig {
         messagesMap = new HashMap<>();
     }
 
+    /**
+     * Load message from file
+     * @param filename
+     */
     public void loadMessages(String filename) {
         try {
             // Parse JSON
@@ -54,7 +58,7 @@ public class SyntaxConfig {
      * @param terminal
      * @return key
      */
-    public String getMessageKey(String nonTerminal, String terminal) {
+    private String getMessageKey(String nonTerminal, String terminal) {
         if(nonTerminal == null) {
             l.error("Non terminal cannot be null");
             return null;
@@ -76,13 +80,20 @@ public class SyntaxConfig {
     }
 
     /**
-     * Get message
-     * @return message
+     * Get message based on non-terminal and terminal
+     * @param nonTerminal
+     * @param terminal
+     * @return custom message
      */
     public String getMessage(String nonTerminal, String terminal) {
+
         String key = getMessageKey(nonTerminal, terminal);
         if(messagesMap.containsKey(key))
             return messagesMap.get(key);
+
+        if(messagesMap.containsKey(nonTerminal))
+            return messagesMap.get(nonTerminal);
+
         return syntaxMessageConfig.getDefaultMessage();
     }
 

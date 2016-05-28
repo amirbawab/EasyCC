@@ -1,6 +1,7 @@
 package parser.strategy.LLPP;
 
 import com.bethecoder.ascii_table.ASCIITable;
+import config.SyntaxConfig;
 import grammar.Grammar;
 import helper.SyntaxHelper;
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +27,7 @@ public class LLPPTable {
     private LLPPAbstractTableCell table[][];
     private Map<String, Integer> terminalIndexMap, nonTerminalIndexMap;
     private List<LLPPRuleCell> ruleCellList;
-    private List<LLPPErrorCell> errorCellList;
+    private Map<String, Integer> errorCellMap;
     private Grammar grammar;
 
     public LLPPTable(Grammar grammar) {
@@ -34,7 +35,7 @@ public class LLPPTable {
         terminalIndexMap = new HashMap<>();
         nonTerminalIndexMap = new HashMap<>();
         ruleCellList = new ArrayList<>();
-        errorCellList = new ArrayList<>();
+        errorCellMap = new LinkedHashMap<>();
         this.grammar = grammar;
 
         // Cache terminal index
@@ -122,6 +123,9 @@ public class LLPPTable {
             }
         }
 
+        // Create entry for the default message
+        errorCellMap.put(SyntaxConfig.getInstance().getSyntaxMessageConfig().getDefaultMessage(), 0);
+
         // Put error message for all the remaining cells
         for(String nonTerminal : grammar.getNonTerminals()) {
             for(String terminal : grammar.getTerminals()) {
@@ -133,8 +137,10 @@ public class LLPPTable {
                     if(terminal.equals(SyntaxHelper.END_OF_STACK) || grammar.getFollowSetMap().get(nonTerminal).contains(terminal))
                         decision = LLPPErrorCell.POP;
 
-                    LLPPErrorCell errorCell = new LLPPErrorCell(decision);
-                    table[nonTerminalIndexMap.get(nonTerminal)][terminalIndexMap.get(terminal)] = errorCell;
+                    String message = SyntaxConfig.getInstance().getMessage(nonTerminal, terminal);
+                    errorCellMap.putIfAbsent(message, errorCellMap.size());
+
+                    table[nonTerminalIndexMap.get(nonTerminal)][terminalIndexMap.get(terminal)] = new LLPPErrorCell(decision, message);
                 }
             }
         }
@@ -162,7 +168,15 @@ public class LLPPTable {
             for(String terminal : grammar.getTerminals()) {
                 int row = nonTerminalIndexMap.get(nonTerminal);
                 int col = terminalIndexMap.get(terminal)+1;
-                data[row][col] = table[row][col-1].toString();
+
+                if(table[row][col-1] instanceof LLPPRuleCell) {
+                    LLPPRuleCell cell = (LLPPRuleCell) table[row][col-1];
+                    data[row][col] = "R" + cell.getId();
+
+                } else if(table[row][col-1] instanceof LLPPErrorCell) {
+                    LLPPErrorCell cell = (LLPPErrorCell) table[row][col-1];
+                    data[row][col] = "E" + errorCellMap.get(cell.getMessage()) + " - " + (cell.getDecision() == LLPPErrorCell.POP ? "Pop" : "Scan");
+                }
             }
         }
         return data;
@@ -192,6 +206,11 @@ public class LLPPTable {
         output += "RULES:\n";
         for(LLPPRuleCell ruleCell : ruleCellList) {
             output += ruleCell.getId() + ": " + ruleCell.getNonTerminal() + " => " + StringUtils.join(ruleCell.getProduction(), " ") + "\n";
+        }
+
+        output += "\nERRORS:\n";
+        for(String message : errorCellMap.keySet()) {
+            output += errorCellMap.get(message) + ": " + message + "\n";
         }
 
         return output;

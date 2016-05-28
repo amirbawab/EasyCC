@@ -14,9 +14,10 @@ public class LLPPRuleCell extends LLPPAbstractTableCell {
     private static int uniqueId = 0;
     private List<AbstractSyntaxToken> production;
     private String nonTerminal;
+    private int id;
 
     public LLPPRuleCell(String nonTerminal, List<AbstractSyntaxToken> production) {
-        super(uniqueId++);
+        id = uniqueId++;
         this.production = production;
         this.nonTerminal = nonTerminal;
     }
@@ -25,17 +26,19 @@ public class LLPPRuleCell extends LLPPAbstractTableCell {
         return production;
     }
 
+    /**
+     * Get the LHS non-terminal
+     * @return LHS non-terminal
+     */
     public String getNonTerminal() {
         return nonTerminal;
     }
 
-    @Override
-    public String getId() {
-        return "R" + id;
-    }
-
-    @Override
-    public String toString() {
-        return getId();
+    /**
+     * Get rule id
+     * @return id
+     */
+    public int getId() {
+        return id;
     }
 }
