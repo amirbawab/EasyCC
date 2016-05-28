@@ -16,4 +16,9 @@ public abstract class AbstractSyntaxToken {
     final public String getOriginalValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return getOriginalValue();
+    }
 }

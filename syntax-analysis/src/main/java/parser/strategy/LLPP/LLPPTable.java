@@ -3,6 +3,7 @@ package parser.strategy.LLPP;
 import com.bethecoder.ascii_table.ASCIITable;
 import grammar.Grammar;
 import helper.SyntaxHelper;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import parser.strategy.LLPP.cell.LLPPAbstractTableCell;
@@ -100,7 +101,7 @@ public class LLPPTable {
                 }
 
                 // Prepare new rule
-                LLPPRuleCell ruleCell = new LLPPRuleCell(production);
+                LLPPRuleCell ruleCell = new LLPPRuleCell(nonTerminal, production);
                 ruleCellList.add(ruleCell);
 
                 // Add cells
@@ -186,6 +187,13 @@ public class LLPPTable {
      * Formatted table
      */
     public String toString() {
-        return ASCIITable.getInstance().getTable(prettifyPPTableHeader(), prettifyPPTableData());
+        String output = ASCIITable.getInstance().getTable(prettifyPPTableHeader(), prettifyPPTableData());
+
+        output += "RULES:\n";
+        for(LLPPRuleCell ruleCell : ruleCellList) {
+            output += ruleCell.getId() + ": " + ruleCell.getNonTerminal() + " => " + StringUtils.join(ruleCell.getProduction(), " ") + "\n";
+        }
+
+        return output;
     }
 }

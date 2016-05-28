@@ -73,7 +73,7 @@ public class LexicalAnalyzer {
             stateTransitionTable = new StateTransitionTable(stateMachine);
 
             // Print the state transition table
-            l.info("\n" + stateTransitionTable);
+            l.info("Printing state transition table:\n" + stateTransitionTable);
 
             // Load configuration
             LexicalConfig.getInstance().load(configurationFilename);

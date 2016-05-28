@@ -13,14 +13,20 @@ public class LLPPRuleCell extends LLPPAbstractTableCell {
     // Assign a unique id for each cell
     private static int uniqueId = 0;
     private List<AbstractSyntaxToken> production;
+    private String nonTerminal;
 
-    public LLPPRuleCell(List<AbstractSyntaxToken> production) {
+    public LLPPRuleCell(String nonTerminal, List<AbstractSyntaxToken> production) {
         super(uniqueId++);
         this.production = production;
+        this.nonTerminal = nonTerminal;
     }
 
     public List<AbstractSyntaxToken> getProduction() {
         return production;
+    }
+
+    public String getNonTerminal() {
+        return nonTerminal;
     }
 
     @Override
