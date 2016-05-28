@@ -28,7 +28,7 @@ public class Grammar {
         try {
 
             // Init variables
-            productions = new HashMap<>();
+            productions = new LinkedHashMap<>();
             firstSetMap = new HashMap<>();
             followSetMap = new HashMap<>();
             terminals = new HashSet<>();
