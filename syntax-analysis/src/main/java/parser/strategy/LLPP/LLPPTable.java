@@ -27,7 +27,7 @@ public class LLPPTable {
     private LLPPAbstractTableCell table[][];
     private Map<String, Integer> terminalIndexMap, nonTerminalIndexMap;
     private List<LLPPRuleCell> ruleCellList;
-    private Map<String, Integer> errorCellMap;
+    private Map<String, Integer> messageCellMap;
     private Grammar grammar;
 
     public LLPPTable(Grammar grammar) {
@@ -35,7 +35,7 @@ public class LLPPTable {
         terminalIndexMap = new HashMap<>();
         nonTerminalIndexMap = new HashMap<>();
         ruleCellList = new ArrayList<>();
-        errorCellMap = new LinkedHashMap<>();
+        messageCellMap = new LinkedHashMap<>();
         this.grammar = grammar;
 
         // Cache terminal index
@@ -124,7 +124,7 @@ public class LLPPTable {
         }
 
         // Create entry for the default message
-        errorCellMap.put(SyntaxConfig.getInstance().getSyntaxMessageConfig().getDefaultMessage(), 0);
+        messageCellMap.put(SyntaxConfig.getInstance().getSyntaxMessageConfig().getDefaultMessage(), 0);
 
         // Put error message for all the remaining cells
         for(String nonTerminal : grammar.getNonTerminals()) {
@@ -138,7 +138,7 @@ public class LLPPTable {
                         decision = LLPPErrorCell.POP;
 
                     String message = SyntaxConfig.getInstance().getMessage(nonTerminal, terminal);
-                    errorCellMap.putIfAbsent(message, errorCellMap.size());
+                    messageCellMap.putIfAbsent(message, messageCellMap.size());
 
                     table[nonTerminalIndexMap.get(nonTerminal)][terminalIndexMap.get(terminal)] = new LLPPErrorCell(decision, message);
                 }
@@ -154,6 +154,22 @@ public class LLPPTable {
      */
     public LLPPAbstractTableCell getCell(String nonTerminal, String terminal) {
         return table[nonTerminalIndexMap.get(nonTerminal)][terminalIndexMap.get(terminal)];
+    }
+
+    /**
+     * Get all rules
+     * @return rules list
+     */
+    public List<LLPPRuleCell> getRulesList() {
+        return ruleCellList;
+    }
+
+    /**
+     * Get all errors
+     * @return errors set
+     */
+    public Set<String> getMessagesSet() {
+        return messageCellMap.keySet();
     }
 
     /**
@@ -175,7 +191,7 @@ public class LLPPTable {
 
                 } else if(table[row][col-1] instanceof LLPPErrorCell) {
                     LLPPErrorCell cell = (LLPPErrorCell) table[row][col-1];
-                    data[row][col] = "E" + errorCellMap.get(cell.getMessage()) + " - " + (cell.getDecision() == LLPPErrorCell.POP ? "Pop" : "Scan");
+                    data[row][col] = "E" + messageCellMap.get(cell.getMessage()) + " - " + (cell.getDecision() == LLPPErrorCell.POP ? "Pop" : "Scan");
                 }
             }
         }
@@ -209,8 +225,8 @@ public class LLPPTable {
         }
 
         output += "\nERRORS:\n";
-        for(String message : errorCellMap.keySet()) {
-            output += errorCellMap.get(message) + ": " + message + "\n";
+        for(String message : messageCellMap.keySet()) {
+            output += messageCellMap.get(message) + ": " + message + "\n";
         }
 
         return output;

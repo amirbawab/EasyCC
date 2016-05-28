@@ -37,4 +37,12 @@ public class SyntaxAnalyzer {
     public Grammar getGrammar() {
         return grammar;
     }
+
+    /**
+     * Get syntax parser
+     * @return syntax parser
+     */
+    public SyntaxParser getSyntaxParser() {
+        return syntaxParser;
+    }
 }

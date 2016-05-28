@@ -201,17 +201,20 @@ public class MainFrame extends JFrame {
 
 				case PARSING_TABLE:
 					if(devGuilistener != null) {
-						
+
+						// Prepare tables
+						GenericTable ppGenericTable = new GenericTable();
+						GenericTable ppGenericTableRule = new GenericTable();
+						GenericTable ppGenericTableError = new GenericTable();
+
 						// Get data
-						Object[][] parsingData = devGuilistener.getParsingTable();
-						Object[][] parsingRulesData = devGuilistener.getParsingTableRules();
-						Object[][] parsingErrorData = devGuilistener.getParsingTableErrors();
-						
-						if(parsingData.length > 0) {
-							new ParsingTableDialog(MainFrame.this, parsingData);
-							new ParsingTableRulesDialog(MainFrame.this, parsingRulesData);
-							new ParsingTableErrorsDialog(MainFrame.this, parsingErrorData);
-						}
+						devGuilistener.setLLPPTable(ppGenericTable);
+						devGuilistener.setLLPPTableRules(ppGenericTableRule);
+						devGuilistener.setLLPPTableErrors(ppGenericTableError);
+
+						new ParsingTableDialog(MainFrame.this, ppGenericTable.getHeader(), ppGenericTable.getData());
+						new ParsingTableRulesDialog(MainFrame.this, ppGenericTableRule.getHeader(), ppGenericTableRule.getData());
+						new ParsingTableErrorsDialog(MainFrame.this, ppGenericTableError.getHeader(), ppGenericTableRule.getData());
 					}
 					break;
 

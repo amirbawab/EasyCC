@@ -12,13 +12,13 @@ public class ParsingTableDialog extends JDialog {
 
 	private static final long serialVersionUID = -7402407159765350532L;
 	
-	public ParsingTableDialog(JFrame parent, Object[][] parsingTableData) {
+	public ParsingTableDialog(JFrame parent, Object[] parsingTableHeader, Object[][] parsingTableData) {
 		
 		// Set title
 		setTitle("Parsing table");
 		
 		// Init components
-		ParsingTableModel stateTableModel = new ParsingTableModel(parsingTableData, new Object[parsingTableData[0].length]);
+		ParsingTableModel stateTableModel = new ParsingTableModel(parsingTableData, parsingTableHeader);
 		JTable stateTable = new JTable(stateTableModel);
 		
 		// Config table

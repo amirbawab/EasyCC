@@ -13,16 +13,13 @@ public class ParsingTableRulesDialog extends JDialog {
 
 	private static final long serialVersionUID = -1965488402878339634L;
 
-	public ParsingTableRulesDialog(JFrame parent, Object[][] data) {
+	public ParsingTableRulesDialog(JFrame parent, Object[] header, Object[][] data) {
 		
 		// Set title
 		setTitle("Parsing table rules");
 				
 		// Set layout
 		setLayout(new BorderLayout());
-		
-		// Data
-		Object[] header = {"Rule", "Production"};
 		
 		// Init components
 		ParsingTableRulesModel tableModel = new ParsingTableRulesModel(data, header);

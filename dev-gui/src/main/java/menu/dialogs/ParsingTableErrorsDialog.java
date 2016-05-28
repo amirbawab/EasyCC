@@ -13,16 +13,13 @@ public class ParsingTableErrorsDialog extends JDialog {
 
 	private static final long serialVersionUID = -1965488402878339634L;
 
-	public ParsingTableErrorsDialog(JFrame parent, Object[][] data) {
+	public ParsingTableErrorsDialog(JFrame parent, Object[] header, Object[][] data) {
 		
 		// Set title
 		setTitle("Parsing table errors");
 				
 		// Set layout
 		setLayout(new BorderLayout());
-		
-		// Data
-		Object[] header = {"Error", "Message"};
 		
 		// Init components
 		ParsingTableErrorsModel tableModel = new ParsingTableErrorsModel(data, header);

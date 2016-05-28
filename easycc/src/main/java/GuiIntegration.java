@@ -4,6 +4,7 @@ import data.structure.ConsoleData;
 import helper.LexicalHelper;
 import listener.DevGuiListener;
 import org.apache.commons.lang3.StringUtils;
+import parser.strategy.LLPP.LLPP;
 import token.AbstractToken;
 import token.ErrorToken;
 import token.LexicalToken;
@@ -123,18 +124,36 @@ public class GuiIntegration implements DevGuiListener {
     }
 
     @Override
-    public Object[][] getParsingTable() {
-        return new Object[0][];
+    public void setLLPPTable(GenericTable genericTable) {
+        LLPP llpp = (LLPP) syntaxAnalyzer.getSyntaxParser().getParseStrategy();
+        genericTable.setHeader(StringUtilsPlus.convertStringArrayToObjectArray(llpp.getLlppTable().prettifyPPTableHeader()));
+        genericTable.setData(StringUtilsPlus.convertStringTableToObjectTable(llpp.getLlppTable().prettifyPPTableData()));
     }
 
     @Override
-    public Object[][] getParsingTableRules() {
-        return new Object[0][];
+    public void setLLPPTableRules(GenericTable genericTable) {
+        LLPP llpp = (LLPP) syntaxAnalyzer.getSyntaxParser().getParseStrategy();
+        Object data[][] = new Object[llpp.getLlppTable().getRulesList().size()][2];
+        for(int i=0; i < data.length; i++) {
+            data[i][0] = llpp.getLlppTable().getRulesList().get(i).getId();
+            data[i][1] = llpp.getLlppTable().getRulesList().get(i).getNonTerminal() + " => " + StringUtils.join(llpp.getLlppTable().getRulesList().get(i).getProduction(), " ");
+        }
+        genericTable.setData(data);
+        genericTable.setHeader(new Object[]{"Rule#","Production"});
     }
 
     @Override
-    public Object[][] getParsingTableErrors() {
-        return new Object[0][];
+    public void setLLPPTableErrors(GenericTable genericTable) {
+        LLPP llpp = (LLPP) syntaxAnalyzer.getSyntaxParser().getParseStrategy();
+        Object data[][] = new Object[llpp.getLlppTable().getMessagesSet().size()][2];
+
+        int i=0;
+        for(String message : llpp.getLlppTable().getMessagesSet()) {
+            data[i][0] = i;
+            data[i][1] = message;
+        }
+        genericTable.setData(data);
+        genericTable.setHeader(new Object[]{"Error#","Message"});
     }
 
     @Override

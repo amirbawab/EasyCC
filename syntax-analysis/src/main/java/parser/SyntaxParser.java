@@ -7,9 +7,6 @@ import parser.strategy.ParseStrategy;
 
 import java.lang.reflect.Constructor;
 
-/**
- * Created by amir on 5/26/16.
- */
 public class SyntaxParser {
     // Logger
     private Logger l = LogManager.getFormatterLogger(getClass());
@@ -27,5 +24,13 @@ public class SyntaxParser {
         } catch (Exception e) {
             l.error(e.getMessage());
         }
+    }
+
+    /**
+     * Get parse strategy
+     * @return parse strategy
+     */
+    public ParseStrategy getParseStrategy() {
+        return parseStrategy;
     }
 }

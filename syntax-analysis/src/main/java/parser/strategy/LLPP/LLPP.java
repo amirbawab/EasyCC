@@ -37,4 +37,12 @@ public class LLPP extends ParseStrategy {
     public void validate() {
 
     }
+
+    /**
+     * Get PP Table
+     * @return PP table
+     */
+    public LLPPTable getLlppTable() {
+        return llppTable;
+    }
 }
