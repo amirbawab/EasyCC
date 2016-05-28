@@ -12,6 +12,7 @@ public class SyntaxAnalysisPlugin implements Plugin<Project> {
             def values = []
             values << "-Deasycc.syntax.grammar=" + project.syntaxAnalyzer.grammarPath
             values << "-Deasycc.syntax.parseStrategy=" + project.syntaxAnalyzer.parseStrategy
+            values << "-Deasycc.syntax.messages=" + project.syntaxAnalyzer.messagesPath
             project.run.jvmArgs = values
         }
     }
@@ -20,4 +21,5 @@ public class SyntaxAnalysisPlugin implements Plugin<Project> {
 class SyntaxAnalysisPluginExtension {
     String grammarPath
     String parseStrategy
+    String messagesPath
 }

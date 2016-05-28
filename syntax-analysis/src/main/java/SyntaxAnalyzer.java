@@ -1,12 +1,10 @@
+import config.SyntaxConfig;
 import grammar.Grammar;
 import jvm.LexicalArgs;
 import jvm.SyntaxArgs;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import parser.SyntaxParser;
-import parser.strategy.ParseStrategy;
-
-import java.lang.reflect.Constructor;
 
 public class SyntaxAnalyzer {
 
@@ -19,14 +17,20 @@ public class SyntaxAnalyzer {
     private SyntaxParser syntaxParser;
 
     public static void main(String[] args) {
-        new SyntaxAnalyzer(new LexicalAnalyzer(System.getProperty(LexicalArgs.MACHINE), System.getProperty(LexicalArgs.CONFIG)), System.getProperty(SyntaxArgs.GRAMMAR), System.getProperty(SyntaxArgs.PARSE_STRATEGY));
+        new SyntaxAnalyzer(new LexicalAnalyzer(System.getProperty(LexicalArgs.MACHINE), System.getProperty(LexicalArgs.CONFIG)), System.getProperty(SyntaxArgs.GRAMMAR), System.getProperty(SyntaxArgs.PARSE_STRATEGY), System.getProperty(SyntaxArgs.MESSAGES));
     }
 
-    public SyntaxAnalyzer(LexicalAnalyzer lexicalAnalyzer, String grammarPath, String parseStrategyClass) {
+    public SyntaxAnalyzer(LexicalAnalyzer lexicalAnalyzer, String grammarPath, String parseStrategyClass, String messagesPath) {
+
+        // Init components
         this.lexicalAnalyzer = lexicalAnalyzer;
         grammar = new Grammar(grammarPath);
         syntaxParser = new SyntaxParser(grammar, parseStrategyClass);
+
+        // Load configuration
+        SyntaxConfig.getInstance().loadMessages(messagesPath);
     }
+
 
     /**
      * Get parsed grammar

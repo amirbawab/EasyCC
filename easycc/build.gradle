@@ -19,5 +19,6 @@ lexicalAnalyzer {
 
 syntaxAnalyzer {
     grammarPath = "/moon/grammar.cfg"
+    messagesPath = "/moon/syntax-messages.json"
     parseStrategy = "parser.strategy.LLPP.LLPP"
 }

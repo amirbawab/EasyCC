@@ -1,0 +1,14 @@
+{
+  "default": "Error found ${value} at line ${line} column ${col}",
+  "messages": [
+    {
+      "non-terminal": "semicolon",
+      "message": "Missing ; at line ${line} column ${col}"
+    },
+    {
+      "non-terminal": "classIden",
+      "terminal": "T_OPEN_CURLY",
+      "message": "Missing class name before { at line ${line} column ${col}"
+    }
+  ]
+}
