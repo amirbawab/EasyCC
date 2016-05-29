@@ -1,4 +1,3 @@
-Token: T_INLINE_COMMENT - Value: // example valid program  - Row: 1 - Col: 1 - Position: 0 - Type: LexicalToken
 Token: T_CLASS - Value: class - Row: 3 - Col: 1 - Position: 27 - Type: LexicalToken
 Token: T_IDENTIFIER - Value: Utility - Row: 3 - Col: 7 - Position: 33 - Type: LexicalToken
 Token: T_OPEN_CURLY - Value: { - Row: 3 - Col: 15 - Position: 41 - Type: LexicalToken

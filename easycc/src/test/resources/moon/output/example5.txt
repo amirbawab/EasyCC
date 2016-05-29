@@ -147,9 +147,6 @@ Token: T_ERR_INVALID_CHAR - Value: # - Row: 35 - Col: 3 - Position: 299 - Type: 
 Token: T_ERR_INVALID_CHAR - Value: $ - Row: 35 - Col: 4 - Position: 300 - Type: ErrorToken
 Token: T_ERR_INVALID_CHAR - Value: % - Row: 35 - Col: 5 - Position: 301 - Type: ErrorToken
 Token: T_ERR_INVALID_CHAR - Value: _ - Row: 35 - Col: 6 - Position: 302 - Type: ErrorToken
-Token: T_BLOCK_COMMENT - Value: /*
-// in the block comment
- */ - Row: 36 - Col: 1 - Position: 304 - Type: LexicalToken
 Token: T_ERR_BLOCK_COMMENT - Value: /*
 
 error here! - Row: 40 - Col: 1 - Position: 336 - Type: ErrorToken

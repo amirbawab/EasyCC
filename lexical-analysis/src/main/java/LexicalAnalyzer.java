@@ -214,7 +214,8 @@ public class LexicalAnalyzer {
                 // Create token
                 if(LexicalConfig.getInstance().getLexicalTokensConfig().getErrorTokensConfig().isErrorToken(tokenStr)) {
                     token = new ErrorToken(tokenStr, word, wordRow, wordCol, position - word.length());
-                } else {
+
+                } else if(!LexicalConfig.getInstance().getLexicalTokensConfig().getIgnoreTokensConfig().isIgnoreToken(tokenStr)) {
                     token = new LexicalToken(tokenStr, word, wordRow, wordCol, position - word.length());
                 }
 
