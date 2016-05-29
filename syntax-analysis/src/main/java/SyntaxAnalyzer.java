@@ -5,6 +5,9 @@ import jvm.SyntaxArgs;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import parser.SyntaxParser;
+import token.LexicalToken;
+
+import java.util.List;
 
 public class SyntaxAnalyzer {
 
@@ -28,6 +31,10 @@ public class SyntaxAnalyzer {
         grammar = new Grammar(grammarPath);
         SyntaxConfig.getInstance().loadMessages(messagesPath);
         syntaxParser = new SyntaxParser(grammar, parseStrategyClass);
+    }
+
+    public void parse(List<LexicalToken> lexicalTokenList) {
+        syntaxParser.getParseStrategy().parse(lexicalTokenList);
     }
 
 

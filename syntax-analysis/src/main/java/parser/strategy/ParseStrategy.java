@@ -1,6 +1,9 @@
 package parser.strategy;
 
 import grammar.Grammar;
+import token.LexicalToken;
+
+import java.util.List;
 
 /**
  * Different parsing strategies should implement this interface
@@ -12,5 +15,5 @@ public abstract class ParseStrategy {
         this.grammar = grammar;
     }
 
-    public abstract boolean parse();
+    public abstract boolean parse(List<LexicalToken> lexicalTokenList);
 }

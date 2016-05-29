@@ -118,6 +118,9 @@ public class LexicalAnalyzer {
 
         // Stop timer
         this.lexicalAnalysisProcessTime = System.currentTimeMillis() - this.lexicalAnalysisProcessTime;
+
+        // Log process time
+        l.info("Lexical-analysis took: " + this.lexicalAnalysisProcessTime + " ms");
     }
 
     /**
@@ -190,7 +193,7 @@ public class LexicalAnalyzer {
             // If current state is final
             if(currentState.getType() == State.Type.FINAL) {
 
-                // If should backup, then backup one char
+                // If should backtrack, then backtrack one char
                 if(currentState.shouldBacktrack()) {
 
                     // Go back one consumed character
