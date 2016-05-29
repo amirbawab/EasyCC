@@ -2,13 +2,110 @@
   "default": "Error found at line ${line} column ${col}",
   "messages": [
     {
-      "non-terminal": "semicolon",
-      "message": "Missing ; at line ${line} column ${col}"
+      "non-terminal" : "semicolon",
+      "message": "Missing ; before '${value.previous}' at line ${line} column ${col}"
+    },
+    {
+      "non-terminal" : "classIden",
+      "message": "Class name expected instead of '${value.previous}' at line ${line} column ${col}"
+    },
+    {
+      "non-terminal" : "classBody",
+      "message": "Expecting a { before '${value.previous}' at line ${line} column ${col}"
+    },
+    {
+      "non-terminal" : "arraySizeInt",
+      "message": "Expecting an integer instead of '${value.previous}' at line ${line} column ${col}"
+    },
+    {
+      "non-terminal" : "arraySizeCloSq",
+      "message": "Missing ] before '${value.previous}' at line ${line} column ${col}"
+    },
+    {
+      "non-terminal" : "varFuncIden",
+      "message": "Expecting an identifier instead of '${value.previous}' at line ${line} column ${col}"
+    },
+    {
+      "non-terminal" : "openParen",
+      "message": "Expecting ( before '${value.previous}' at line ${line} column ${col}"
+    },
+    {
+      "non-terminal" : "closeParen",
+      "message": "Expecting ) before '${value.previous}' at line ${line} column ${col}"
+    },
+    {
+      "non-terminal" : "funcDefIden",
+      "message": "Expecting an identifier instead of '${value.previous}' at line ${line} column ${col}"
+    },
+    {
+      "non-terminal" : "fParamsIden",
+      "message": "Expecting an identifier instead of '${value.previous}' at line ${line} column ${col}"
+    },
+    {
+      "non-terminal" : "identifier",
+      "message": "Expecting an identifier before '${value.previous}' at line ${line} column ${col}"
+    },
+    {
+      "non-terminal" : "then",
+      "message": "Expecting then before '${value.previous}' at line ${line} column ${col}"
+    },
+    {
+      "non-terminal" : "else",
+      "message": "Expecting else before '${value.previous}' at line ${line} column ${col}"
+    },
+    {
+      "non-terminal" : "type",
+      "message": "Expecting a type before '${value.previous}' at line ${line} column ${col}"
+    },
+    {
+      "non-terminal" : "relOp",
+      "message": "Expecting a relational operator before '${value.previous}' at line ${line} column ${col}"
+    },
+    {
+      "non-terminal" : "assignOp",
+      "message": "Expecting = before '${value.previous}' at line ${line} column ${col}"
+    },
+    {
+      "non-terminal" : "closeSquare",
+      "message": "Expecting ] before '${value.previous}' at line ${line} column ${col}"
+    },
+    {
+      "non-terminal" : "sign",
+      "message": "Expecting a sign before '${value.previous}' at line ${line} column ${col}"
     },
     {
       "non-terminal": "classIden",
-      "terminal": "T_OPEN_CURLY",
-      "message": "Missing class name before { at line ${line} column ${col}"
+      "terminal" : "T_OPEN_CURLY",
+      "message" : "Missing class name before '${value.previous}' at line ${line} column ${col}"},
+    {
+      "non-terminal": "arraySizeInt",
+      "terminal" : "T_CLOSE_SQUARE",
+      "message" : "Missing integer before '${value.previous}' at line ${line} column ${col}"
+    },
+    {
+      "non-terminal": "varFuncIden",
+      "terminal" : "T_OPEN_SQUARE",
+      "message" : "Missing identifier before '${value.previous}' at line ${line} column ${col}"
+    },
+    {
+      "non-terminal": "varFuncIden",
+      "terminal" : "T_OPEN_PAREN",
+      "message" : "Missing identifier before '${value.previous}' at line ${line} column ${col}"
+    },
+    {
+      "non-terminal": "funcDefIden",
+      "terminal" : "T_OPEN_PAREN",
+      "message" : "Missing identifier before '${value.previous}' at line ${line} column ${col}"
+    },
+    {
+      "non-terminal": "fParamsIden",
+      "terminal" : "T_OPEN_SQUARE",
+      "message" : "Missing identifier before '${value.previous}' at line ${line} column ${col}"
+    },
+    {
+      "non-terminal": "fParamsIden",
+      "terminal" : "T_COMMA",
+      "message" : "Missing identifier before '${value.previous}' at line ${line} column ${col}"
     }
   ]
 }
