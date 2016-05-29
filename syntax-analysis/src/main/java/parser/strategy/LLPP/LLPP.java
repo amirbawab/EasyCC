@@ -2,11 +2,14 @@ package parser.strategy.LLPP;
 
 import grammar.Grammar;
 import helper.SyntaxHelper;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import parser.strategy.ParseStrategy;
 import token.AbstractSyntaxToken;
 import token.LexicalToken;
+import token.NonTerminalToken;
+import token.TerminalToken;
 
 import java.util.HashSet;
 import java.util.List;
@@ -30,6 +33,9 @@ public class LLPP extends ParseStrategy {
 
         // Check if the grammar is correct
         validate();
+
+        // Check if the grammar can be optimized
+        betterCompiler();
 
         // Print table
         l.info("Printing Predictive parser table:\n" + llppTable);
@@ -71,6 +77,34 @@ public class LLPP extends ParseStrategy {
                 String message = "The first and follow sets of the non-terminal: " + nonTerminal + " intersect at " + uniqueFirstSetValues;
                 l.error(message);
                 throw new LLPPException(message);
+            }
+        }
+    }
+
+    /**
+     * Check if the grammar can be enhanced for better decisions by the compiler
+     * Cond 1: Don't use terminals after the first token of a rule
+     */
+    public void betterCompiler() {
+
+        // Loop on non-terminal
+        for (String nonTerminal : grammar.getProductions().keySet()) {
+
+            // Loop on rules
+            for (List<AbstractSyntaxToken> rule : grammar.getProductions().get(nonTerminal)) {
+
+                // Loop on syntax tokens
+                boolean foundToken = false;
+                for(AbstractSyntaxToken syntaxToken : rule) {
+                    if (syntaxToken instanceof TerminalToken && foundToken) {
+                        l.warn("The compiler will make better decisions if you replace the terminal " + syntaxToken.getOriginalValue() + " by a non-terminal in the following rule:\n" + nonTerminal + " => " + StringUtils.join(rule, " "));
+                        break;
+                    }
+
+                    if(syntaxToken instanceof NonTerminalToken || syntaxToken instanceof TerminalToken) {
+                        foundToken = true;
+                    }
+                }
             }
         }
     }
