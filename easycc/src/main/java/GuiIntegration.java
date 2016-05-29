@@ -151,6 +151,7 @@ public class GuiIntegration implements DevGuiListener {
         for(String message : llpp.getLlppTable().getMessagesSet()) {
             data[i][0] = i;
             data[i][1] = message;
+            i++;
         }
         genericTable.setData(data);
         genericTable.setHeader(new Object[]{"Error#","Message"});
