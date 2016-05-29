@@ -211,12 +211,15 @@ public class LexicalAnalyzer {
                 // AbstractToken value
                 String tokenStr = LexicalConfig.getInstance().getLexicalTokensConfig().getReservedTokenOrDefault(word, currentState.getToken());
 
-                // Create token
-                if(LexicalConfig.getInstance().getLexicalTokensConfig().getErrorTokensConfig().isErrorToken(tokenStr)) {
-                    token = new ErrorToken(tokenStr, word, wordRow, wordCol, position - word.length());
+                // If token shouldn't be ignored
+                if(!LexicalConfig.getInstance().getLexicalTokensConfig().getIgnoreTokensConfig().isIgnoreToken(tokenStr)) {
 
-                } else if(!LexicalConfig.getInstance().getLexicalTokensConfig().getIgnoreTokensConfig().isIgnoreToken(tokenStr)) {
-                    token = new LexicalToken(tokenStr, word, wordRow, wordCol, position - word.length());
+                    if (LexicalConfig.getInstance().getLexicalTokensConfig().getErrorTokensConfig().isErrorToken(tokenStr)) {
+                        token = new ErrorToken(tokenStr, word, wordRow, wordCol, position - word.length());
+
+                    } else {
+                        token = new LexicalToken(tokenStr, word, wordRow, wordCol, position - word.length());
+                    }
                 }
 
                 // Reset word
