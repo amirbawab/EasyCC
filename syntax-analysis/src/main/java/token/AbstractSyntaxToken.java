@@ -5,10 +5,14 @@ package token;
  */
 public abstract class AbstractSyntaxToken {
 
-    private String value;
+    protected String value;
 
     public AbstractSyntaxToken(String value) {
         this.value = value;
+    }
+
+    public AbstractSyntaxToken(AbstractSyntaxToken abstractSyntaxToken) {
+        this.value = abstractSyntaxToken.value;
     }
 
     public abstract String getValue();
@@ -21,4 +25,10 @@ public abstract class AbstractSyntaxToken {
     public String toString() {
         return getOriginalValue();
     }
+
+    /**
+     * Make a copy of a token
+     * @return copy of a token
+     */
+    public abstract AbstractSyntaxToken copy();
 }

@@ -5,15 +5,16 @@ import helper.SyntaxHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import parser.strategy.LLPP.cell.LLPPAbstractTableCell;
+import parser.strategy.LLPP.cell.LLPPErrorCell;
+import parser.strategy.LLPP.cell.LLPPRuleCell;
 import parser.strategy.ParseStrategy;
-import token.AbstractSyntaxToken;
-import token.LexicalToken;
-import token.NonTerminalToken;
-import token.TerminalToken;
+import token.*;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 
 /**
  * Lef to Right - Leftmost Predictive parser
@@ -26,6 +27,12 @@ public class LLPP extends ParseStrategy {
 
     // Components
     LLPPTable llppTable;
+
+    // Long scan process time
+    private long syntaxAnalysisProcessTime;
+
+    // Root of parser
+    private NonTerminalToken treeRoot;
 
     public LLPP(Grammar grammar) {
         super(grammar);
@@ -42,9 +49,162 @@ public class LLPP extends ParseStrategy {
     }
 
     @Override
-    public boolean parse(List<LexicalToken> lexicalTokenList) {
+    public boolean parse(List<LexicalToken> lexicalTokens) {
 
-        return false;
+        // Update time
+        syntaxAnalysisProcessTime = System.currentTimeMillis();
+
+        // Add EOS
+        lexicalTokens.add(new LexicalToken(null, SyntaxHelper.END_OF_STACK, -1, -1, -1));
+
+        // Log
+        l.info("Start parsing input ...");
+
+        // Prepare stack
+        Stack<AbstractSyntaxToken> stackSyntax = new Stack<>();
+
+        // True if error detected
+        boolean error = false;
+
+        // Push EOS
+        stackSyntax.push(SyntaxTokenFactory.createEndOfStackToken());
+
+        // Create start token
+        treeRoot = SyntaxTokenFactory.createNonTerminalToken(grammar.getStart());
+
+        // Int phases
+        int phases = 1;
+
+        // Prepare lexical token
+        LexicalToken lexicalToken = null;
+
+        // Run multiple times
+        for(int phase = 1; phase <= phases; phase++) {
+
+            // Push S
+            stackSyntax.push(treeRoot);
+
+            // Reset input token index
+            int lexicalTokensIndex = 0;
+
+            // Reset input token
+            lexicalToken = lexicalTokens.get(lexicalTokensIndex);
+
+            // While top is not EOS
+            while(!(stackSyntax.peek() instanceof EndOfStackToken)) {
+
+                // Store top
+                AbstractSyntaxToken syntaxToken = stackSyntax.peek();
+
+                if(syntaxToken instanceof ActionToken) {
+
+                    // Cast into action token
+                    ActionToken token = (ActionToken) stackSyntax.pop();
+
+                } else if(syntaxToken instanceof TerminalToken) {
+
+                    // If match
+                    if(syntaxToken.getValue().equals(lexicalToken.getToken())) {
+
+                        // Set terminal value
+                        ((TerminalToken) syntaxToken).setLexicalToken(lexicalToken);
+
+                        // Pop terminal from stack
+                        stackSyntax.pop();
+
+                        // Update inputToken
+                        lexicalToken = lexicalTokens.get(++lexicalTokensIndex);
+
+                    } else {
+
+                        // Prepare message
+                        String errorMessage = SyntaxHelper.tokenDefaultMessage(lexicalToken);
+
+                        // Grammar can be enhacned
+                        l.warn("Compiler couldn't make the best decision because it expected a non-terminal and a terminal instead of two terminals");
+
+                        // Pop a syntax token
+                        // Note: This decision is arbitrary because the behavior is not provided
+                        stackSyntax.pop();
+
+                        // Error found
+                        error = true;
+                    }
+
+                } else if(syntaxToken instanceof NonTerminalToken) {
+
+                    // Get cell
+                    LLPPAbstractTableCell cell = llppTable.getCell(syntaxToken.getValue(), lexicalToken.getToken());
+
+                    // Cast to non-terminal
+                    NonTerminalToken nonTerminalToken = (NonTerminalToken) syntaxToken;
+
+                    // If a rule cell
+                    if(cell instanceof LLPPRuleCell) {
+
+                        // Store production
+                        List<AbstractSyntaxToken> ruleCopy = ((LLPPRuleCell) cell).getRuleCopy();
+
+                        // Pop syntax token
+                        stackSyntax.pop();
+
+                        // Inverse RHS multiple push. Don't push EPSILON
+                        for(int i = ruleCopy.size()-1; i >= 0; --i) {
+                            if(! (ruleCopy.get(i) instanceof EpsilonToken)) {
+                                stackSyntax.push(ruleCopy.get(i));
+                            }
+                            nonTerminalToken.addChild(ruleCopy.get(i));
+                        }
+
+                    } else if(cell instanceof LLPPErrorCell) {
+
+                        // Cast to error cell
+                        LLPPErrorCell errorCell = (LLPPErrorCell) cell;
+
+                        // Prepare message
+                        String errorMessage = SyntaxHelper.tokenMessage(nonTerminalToken, lexicalToken);
+
+                        // Check decision
+                        switch (errorCell.getDecision()) {
+                            case LLPPErrorCell.POP:
+
+                                // Pop the stack
+                                stackSyntax.pop();
+
+                                break;
+                            case LLPPErrorCell.SCAN:
+
+                                // Scan next input token
+                                lexicalToken = lexicalTokens.get(++lexicalTokensIndex);
+
+                                break;
+                            default:
+                                l.error("Undefined behavior for the error cell: non-terminal: " + syntaxToken.getValue() + ", terminal: " + lexicalToken.getToken());
+                                break;
+                        }
+
+                        // Error found
+                        error = true;
+                    }
+                }
+            }
+        }
+
+        // If lexical tokens are not completely consumed
+        if(!lexicalToken.getToken().equals(SyntaxHelper.END_OF_STACK)){
+            error = true;
+        }
+
+        // Update time
+        syntaxAnalysisProcessTime = System.currentTimeMillis() - syntaxAnalysisProcessTime;
+
+        // If there was an error
+        if(error){
+            return false;
+        }
+
+        // No errors
+        return true;
     }
 
     /**

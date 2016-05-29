@@ -196,7 +196,7 @@ public class LLPPTable {
 
         output += "RULES:\n";
         for(LLPPRuleCell ruleCell : ruleCellList) {
-            output += ruleCell.getId() + ": " + ruleCell.getNonTerminal() + " => " + StringUtils.join(ruleCell.getProduction(), " ") + "\n";
+            output += ruleCell.getId() + ": " + ruleCell.getNonTerminal() + " => " + StringUtils.join(ruleCell.getRule(), " ") + "\n";
         }
 
         output += "\nERRORS:\n";

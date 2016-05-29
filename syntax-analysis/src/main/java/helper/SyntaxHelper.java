@@ -1,6 +1,9 @@
 package helper;
 
 import config.SyntaxConfig;
+import token.AbstractSyntaxToken;
+import token.LexicalToken;
+import token.NonTerminalToken;
 import token.TerminalToken;
 
 /**
@@ -14,13 +17,33 @@ public class SyntaxHelper {
 
     /**
      * Get the message of a token
-     * @param nonTerminal
-     * @param terminal
+     * @param nonTerminalToken
+     * @param lexicalToken
      * @return message
      */
-    public static String tokenMessage(String nonTerminal, String terminal, TerminalToken token) {
-        return SyntaxConfig.getInstance().getMessage(nonTerminal, terminal).
-                replace(InputHelper.LINE, Integer.toString(token.getLexicalToken().getRow())).
-                replace(InputHelper.COL, Integer.toString(token.getLexicalToken().getCol()));
+    public static String tokenMessage(NonTerminalToken nonTerminalToken, LexicalToken lexicalToken) {
+        return replaceInString(SyntaxConfig.getInstance().getMessage(nonTerminalToken.getValue(), lexicalToken.getToken()), lexicalToken);
+    }
+
+    /**
+     * Get the default message
+     * @param lexicalToken
+     * @return message
+     */
+    public static String tokenDefaultMessage(LexicalToken lexicalToken) {
+        return replaceInString(SyntaxConfig.getInstance().getSyntaxMessageConfig().getDefaultMessage(), lexicalToken);
+    }
+
+    /**
+     * Replace all the placeholders by meaningful values
+     * @param text
+     * @param lexicalToken
+     * @return meaningful message
+     */
+    private static String replaceInString(String text, LexicalToken lexicalToken) {
+        return text.
+                replace(InputHelper.VALUE, lexicalToken.getValue()).
+                replace(InputHelper.LINE, Integer.toString(lexicalToken.getRow())).
+                replace(InputHelper.COL, Integer.toString(lexicalToken.getCol()));
     }
 }

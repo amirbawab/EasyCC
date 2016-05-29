@@ -1,5 +1,4 @@
 import com.mxgraph.layout.*;
-import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
@@ -147,7 +146,7 @@ public class GuiIntegration implements DevGuiListener {
         Object data[][] = new Object[llpp.getLlppTable().getRulesList().size()][2];
         for(int i=0; i < data.length; i++) {
             data[i][0] = llpp.getLlppTable().getRulesList().get(i).getId();
-            data[i][1] = llpp.getLlppTable().getRulesList().get(i).getNonTerminal() + " => " + StringUtils.join(llpp.getLlppTable().getRulesList().get(i).getProduction(), " ");
+            data[i][1] = llpp.getLlppTable().getRulesList().get(i).getNonTerminal() + " => " + StringUtils.join(llpp.getLlppTable().getRulesList().get(i).getRule(), " ");
         }
         genericTable.setData(data);
         genericTable.setHeader(new Object[]{"Rule#","Production"});

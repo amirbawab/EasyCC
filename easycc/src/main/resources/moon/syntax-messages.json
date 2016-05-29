@@ -1,5 +1,5 @@
 {
-  "default": "Error found ${value} at line ${line} column ${col}",
+  "default": "Error found at line ${line} column ${col}",
   "messages": [
     {
       "non-terminal": "semicolon",
