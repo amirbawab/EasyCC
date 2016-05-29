@@ -175,7 +175,7 @@ public class GuiIntegration implements DevGuiListener {
         int index=0;
         for(String nonTerminal : syntaxAnalyzer.getGrammar().getNonTerminals()) {
             data[index][0] = nonTerminal;
-            data[index][1] = StringUtils.join(syntaxAnalyzer.getGrammar().getFirstSetOf(SyntaxTokenFactory.createNonTerminalToken(nonTerminal)), ", ");
+            data[index][1] = StringUtils.join(syntaxAnalyzer.getGrammar().getFirstSetOfNonTerminal(nonTerminal), ", ");
             data[index][2] = StringUtils.join(syntaxAnalyzer.getGrammar().getFollowSetMap().get(nonTerminal), ", ");
             index++;
         }

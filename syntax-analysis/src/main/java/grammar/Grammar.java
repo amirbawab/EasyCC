@@ -262,16 +262,25 @@ public class Grammar {
         }
 
         if(syntaxToken instanceof NonTerminalToken) {
-            Set<String> firstSet = new HashSet<>();
-            for(List<AbstractSyntaxToken> rule : productions.get(syntaxToken.getValue())) {
-                if(ruleFirstSetMap.containsKey(rule)) {
-                    firstSet.addAll(ruleFirstSetMap.get(rule));
-                }
-            }
-            return firstSet;
+            return getFirstSetOfNonTerminal(syntaxToken.getValue());
         }
 
         return null;
+    }
+
+    /**
+     * Get the first set of a non-terminal
+     * @param nonTerminal
+     * @return first set
+     */
+    public Set<String> getFirstSetOfNonTerminal(String nonTerminal) {
+        Set<String> firstSet = new HashSet<>();
+        for(List<AbstractSyntaxToken> rule : productions.get(nonTerminal)) {
+            if(ruleFirstSetMap.containsKey(rule)) {
+                firstSet.addAll(ruleFirstSetMap.get(rule));
+            }
+        }
+        return firstSet;
     }
 
     /**
@@ -281,9 +290,18 @@ public class Grammar {
      */
     public Set<String> getFollowSetOf(AbstractSyntaxToken syntaxToken) {
         if(syntaxToken instanceof NonTerminalToken) {
-            return this.followSetMap.get(syntaxToken.getValue());
+            return getFollowSetOfNonTerminal(syntaxToken.getValue());
         }
         return null;
+    }
+
+    /**
+     * Get follow set of a non terminal
+     * @param syntaxTokenValue
+     * @return follow set of a non terminal
+     */
+    public Set<String> getFollowSetOfNonTerminal(String syntaxTokenValue) {
+            return this.followSetMap.get(syntaxTokenValue);
     }
 
     /**

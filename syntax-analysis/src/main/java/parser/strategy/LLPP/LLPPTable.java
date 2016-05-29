@@ -105,6 +105,7 @@ public class LLPPTable {
             for(String terminal : grammar.getTerminals()) {
                 if(table[nonTerminalIndexMap.get(nonTerminal)][terminalIndexMap.get(terminal)] == null) {
 
+                    // Scan by default
                     int decision = LLPPErrorCell.SCAN;
 
                     // If terminal is in the follow set or it's EOS, then it's a pop

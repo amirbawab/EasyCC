@@ -22,7 +22,7 @@ public class SyntaxParser {
             Constructor<?> constructor = parseClass.getConstructor(Grammar.class);
             parseStrategy = (ParseStrategy) constructor.newInstance(grammar);
         } catch (Exception e) {
-            l.error(e.getMessage());
+            e.printStackTrace();
         }
     }
 
