@@ -2,6 +2,7 @@ import com.mxgraph.layout.*;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 import data.GenericTable;
 import data.LexicalAnalysisRow;
@@ -215,7 +216,16 @@ public class GuiIntegration implements DevGuiListener {
                 State currentState = statesQueue.poll();
                 Object v1 = stateMap.get(currentState);
 
-                for (int i=currentState.getOutEdges().size()-1; i >= 0; i--) {
+                // If final
+                if(currentState.getType() == State.Type.FINAL) {
+                    graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "green", new Object[]{v1});
+                    graph.setCellStyles(mxConstants.STYLE_FONTCOLOR, "white", new Object[]{v1});
+                    mxCell cell = (mxCell) v1;
+                    cell.setValue(cell.getValue() + "\nToken: " + currentState.getToken() + "\nBacktrack: " + currentState.shouldBacktrack());
+                    graph.updateCellSize(v1);
+                }
+
+                for (int i=0; i < currentState.getOutEdges().size(); i++) {
 
                     // Get token
                     State token = currentState.getOutEdges().get(i).getToState();
@@ -226,6 +236,7 @@ public class GuiIntegration implements DevGuiListener {
 
                         // Add child
                         v2 = graph.insertVertex(parent, null, token.getId(), 240, 150, 80, 30);
+
                         stateMap.put(token, v2);
                         statesQueue.offer(token);
                     } else {
@@ -246,6 +257,7 @@ public class GuiIntegration implements DevGuiListener {
             mxCompactTreeLayout layout = new mxCompactTreeLayout(graph);
             layout.setEdgeRouting(false);
             layout.setNodeDistance(100);
+            layout.setLevelDistance(100);
             layout.execute(parent);
         } finally
         {
