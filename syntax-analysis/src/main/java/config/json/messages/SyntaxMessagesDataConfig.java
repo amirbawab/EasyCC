@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SyntaxMessageDataConfig {
+public class SyntaxMessagesDataConfig {
 
     @JsonProperty("non-terminal")
     private String nonTerminal;
