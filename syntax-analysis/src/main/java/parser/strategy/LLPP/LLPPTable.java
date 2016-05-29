@@ -72,31 +72,16 @@ public class LLPPTable {
                 // Prepare hash set
                 Set<String> terminalsSet = new HashSet<>();
 
-                // Set i
-                int i = 0;
-
-                // Loop on production tokens
-                for(; i < production.size(); ++i) {
-
-                    // Get first set
-                    Set<String> firstSet = grammar.getFirstSetOf(production.get(i));
-
-                    // If first set exists
-                    if(firstSet != null) {
-
-                        // Copy into terminal set
-                        for (String str : firstSet)
-                            if (!str.equals(SyntaxHelper.EPSILON))
-                                terminalsSet.add(str);
-
-                        // If doesn't have epsilon
-                        if (!firstSet.contains(SyntaxHelper.EPSILON))
-                            break;
+                // Copy into terminal set
+                Set<String> ruleFirstSet = grammar.getRuleFirstSetMap().get(production);
+                for (String str : ruleFirstSet) {
+                    if (!str.equals(SyntaxHelper.EPSILON)) {
+                        terminalsSet.add(str);
                     }
                 }
 
-                // If the first(last token) has epsilon
-                if(i == production.size()) {
+                // If has epsilon
+                if(ruleFirstSet.contains(SyntaxHelper.EPSILON)) {
                     Set<String> followSet = grammar.getFollowSetMap().get(pair.getKey());
                     terminalsSet.addAll(followSet);
                 }
@@ -107,17 +92,6 @@ public class LLPPTable {
 
                 // Add cells
                 for(String terminal : terminalsSet){
-
-                    // Log
-                    if(!nonTerminalIndexMap.containsKey(nonTerminal)) {
-                        l.error("Non terminal '%s' not found in table", nonTerminal);
-                    }
-
-                    // Log
-                    if(!terminalIndexMap.containsKey(terminal)) {
-                        l.error("Terminal '%s' not found in table", terminal);
-                    }
-
                     table[nonTerminalIndexMap.get(nonTerminal)][terminalIndexMap.get(terminal)] = ruleCell;
                 }
             }

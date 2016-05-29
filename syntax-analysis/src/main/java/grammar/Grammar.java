@@ -15,7 +15,8 @@ public class Grammar {
 
     // Variables
     private Map<String, List<List<AbstractSyntaxToken>>> productions;
-    private Map<String, Set<String>> firstSetMap, followSetMap;
+    private Map<List<AbstractSyntaxToken>, Set<String>> ruleFirstSetMap;
+    private Map<String, Set<String>> followSetMap;
     private String start;
     private Set<String> terminals;
 
@@ -29,7 +30,7 @@ public class Grammar {
 
             // Init variables
             productions = new LinkedHashMap<>();
-            firstSetMap = new HashMap<>();
+            ruleFirstSetMap = new HashMap<>();
             followSetMap = new HashMap<>();
             terminals = new HashSet<>();
             start = null;
@@ -42,7 +43,7 @@ public class Grammar {
 
             // Computer first
             computeFirst();
-            l.info("First sets: %s", firstSetMap.toString());
+            l.info("First sets: %s", ruleFirstSetMap.toString());
 
             // Computer follow
             computeFollow();
@@ -81,8 +82,8 @@ public class Grammar {
      * Get first set map
      * @return first set map
      */
-    public Map<String, Set<String>> getFirstSetMap() {
-        return this.firstSetMap;
+    public Map<List<AbstractSyntaxToken>, Set<String>> getRuleFirstSetMap() {
+        return this.ruleFirstSetMap;
     }
 
     /**
@@ -115,18 +116,18 @@ public class Grammar {
     private Set<String> computeFirst(AbstractSyntaxToken token) {
 
         // Optimize
-        if(token instanceof NonTerminalToken && firstSetMap.containsKey(token.getValue()))
-            return firstSetMap.get(token.getValue());
-
-        // Prepare set
-        Set<String> firstSet = new HashSet<>();
-        firstSetMap.put(token.getValue(), firstSet);
+        Set<String> tokenFirstSet = getFirstSetOf(token);
+        if(token instanceof NonTerminalToken && !tokenFirstSet.isEmpty())
+            return tokenFirstSet;
 
         // Get RHS
         List<List<AbstractSyntaxToken>> RHS = productions.get(token.getValue());
 
         // Loop on all productions
         for(List<AbstractSyntaxToken> production : RHS) {
+
+            // Calculate first set for each rule
+            Set<String> firstSet = new HashSet<>();
 
             // Loop on production tokens
             for(AbstractSyntaxToken syntaxToken : production) {
@@ -161,12 +162,14 @@ public class Grammar {
                     }
                 }
             }
+
+            // Add first set
+            ruleFirstSetMap.put(production, firstSet);
         }
 
         // Get first set
-        return firstSet;
+        return getFirstSetOf(token);
     }
-
 
 
     /**
@@ -259,7 +262,13 @@ public class Grammar {
         }
 
         if(syntaxToken instanceof NonTerminalToken) {
-            return firstSetMap.get(syntaxToken.getValue());
+            Set<String> firstSet = new HashSet<>();
+            for(List<AbstractSyntaxToken> rule : productions.get(syntaxToken.getValue())) {
+                if(ruleFirstSetMap.containsKey(rule)) {
+                    firstSet.addAll(ruleFirstSetMap.get(rule));
+                }
+            }
+            return firstSet;
         }
 
         return null;

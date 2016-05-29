@@ -13,9 +13,7 @@ import machine.StateMachine;
 import machine.json.State;
 import org.apache.commons.lang3.StringUtils;
 import parser.strategy.LLPP.LLPP;
-import token.AbstractToken;
-import token.ErrorToken;
-import token.LexicalToken;
+import token.*;
 import utils.StringUtilsPlus;
 
 import javax.swing.*;
@@ -177,7 +175,7 @@ public class GuiIntegration implements DevGuiListener {
         int index=0;
         for(String nonTerminal : syntaxAnalyzer.getGrammar().getNonTerminals()) {
             data[index][0] = nonTerminal;
-            data[index][1] = StringUtils.join(syntaxAnalyzer.getGrammar().getFirstSetMap().get(nonTerminal), ", ");
+            data[index][1] = StringUtils.join(syntaxAnalyzer.getGrammar().getFirstSetOf(SyntaxTokenFactory.createNonTerminalToken(nonTerminal)), ", ");
             data[index][2] = StringUtils.join(syntaxAnalyzer.getGrammar().getFollowSetMap().get(nonTerminal), ", ");
             index++;
         }
