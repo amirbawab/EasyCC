@@ -214,7 +214,7 @@ public class MainFrame extends JFrame {
 
 						new ParsingTableDialog(MainFrame.this, ppGenericTable.getHeader(), ppGenericTable.getData());
 						new ParsingTableRulesDialog(MainFrame.this, ppGenericTableRule.getHeader(), ppGenericTableRule.getData());
-						new ParsingTableErrorsDialog(MainFrame.this, ppGenericTableError.getHeader(), ppGenericTableRule.getData());
+						new ParsingTableErrorsDialog(MainFrame.this, ppGenericTableError.getHeader(), ppGenericTableError.getData());
 					}
 					break;
 
