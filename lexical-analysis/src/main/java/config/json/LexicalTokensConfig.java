@@ -15,7 +15,7 @@ public class LexicalTokensConfig {
     private List<ReservedTokensConfig> reservedTokensConfig;
 
     @JsonProperty("ignore")
-    private List<IgnoreTokensConfig> ignoreConfig;
+    private IgnoreTokensConfig ignoreTokensConfig;
 
     public ErrorTokensConfig getErrorTokensConfig() {
         return errorTokensConfig;
@@ -25,8 +25,8 @@ public class LexicalTokensConfig {
         return reservedTokensConfig;
     }
 
-    public List<IgnoreTokensConfig> getIgnoreConfig() {
-        return ignoreConfig;
+    public IgnoreTokensConfig getIgnoreTokensConfig() {
+        return ignoreTokensConfig;
     }
 
     /**

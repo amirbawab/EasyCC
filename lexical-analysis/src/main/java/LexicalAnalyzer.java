@@ -2,8 +2,6 @@ import java.io.IOException;
 import java.util.*;
 
 import config.LexicalConfig;
-import config.json.ErrorTokensConfig;
-import config.json.ReservedConfig;
 import helper.LexicalHelper;
 import jvm.LexicalArgs;
 import org.apache.logging.log4j.LogManager;
@@ -54,15 +52,15 @@ public class LexicalAnalyzer {
      * @param args
      */
     public static void main(String[] args) {
-        new LexicalAnalyzer(System.getProperty(LexicalArgs.MACHINE), System.getProperty(LexicalArgs.CONFIG));
+        new LexicalAnalyzer(System.getProperty(LexicalArgs.MACHINE), System.getProperty(LexicalArgs.TOKENS), System.getProperty(LexicalArgs.MESSAGES));
     }
 
     /**
      * Constructor
      * @param stateMachineFilename
-     * @param configurationFilename
+     * @param tokenConfigFile
      */
-    public LexicalAnalyzer(String stateMachineFilename, String configurationFilename) {
+    public LexicalAnalyzer(String stateMachineFilename, String tokenConfigFile, String messageConfigFile) {
 
         try {
 
@@ -76,7 +74,8 @@ public class LexicalAnalyzer {
             l.info("Printing state transition table:\n" + stateTransitionTable);
 
             // Load configuration
-            LexicalConfig.getInstance().load(configurationFilename);
+            LexicalConfig.getInstance().loadTokens(tokenConfigFile);
+            LexicalConfig.getInstance().loadMessages(messageConfigFile);
 
             // Initialize variables
             tokens = new ArrayList<>();
@@ -207,10 +206,10 @@ public class LexicalAnalyzer {
                 }
 
                 // AbstractToken value
-                String tokenStr = LexicalConfig.getInstance().getMachineConfig().getTokensConfig().getReservedTokenOrDefault(word, currentState.getToken());
+                String tokenStr = LexicalConfig.getInstance().getLexicalTokensConfig().getReservedTokenOrDefault(word, currentState.getToken());
 
                 // Create token
-                if(LexicalConfig.getInstance().getMachineConfig().getTokensConfig().getErrorTokensConfig().isErrorToken(tokenStr)) {
+                if(LexicalConfig.getInstance().getLexicalTokensConfig().getErrorTokensConfig().isErrorToken(tokenStr)) {
                     token = new ErrorToken(tokenStr, word, wordRow, wordCol, position - word.length());
                 } else {
                     token = new LexicalToken(tokenStr, word, wordRow, wordCol, position - word.length());

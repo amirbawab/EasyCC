@@ -11,7 +11,8 @@ public class LexicalAnalysisPlugin implements Plugin<Project> {
         project.afterEvaluate {
             def values = []
             values << "-Deasycc.lexical.machine=" + project.lexicalAnalyzer.machinePath
-            values << "-Deasycc.lexical.config=" + project.lexicalAnalyzer.configPath
+            values << "-Deasycc.lexical.tokens=" + project.lexicalAnalyzer.tokensPath
+            values << "-Deasycc.lexical.messages=" + project.lexicalAnalyzer.messagesPath
             project.run.jvmArgs = values
         }
     }
@@ -19,5 +20,6 @@ public class LexicalAnalysisPlugin implements Plugin<Project> {
 
 class LexicalAnalysisPluginExtension {
     String machinePath
-    String configPath
+    String tokensPath
+    String messagesPath
 }

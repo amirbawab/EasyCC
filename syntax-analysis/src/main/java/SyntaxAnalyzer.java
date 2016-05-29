@@ -17,7 +17,8 @@ public class SyntaxAnalyzer {
     private SyntaxParser syntaxParser;
 
     public static void main(String[] args) {
-        new SyntaxAnalyzer(new LexicalAnalyzer(System.getProperty(LexicalArgs.MACHINE), System.getProperty(LexicalArgs.CONFIG)), System.getProperty(SyntaxArgs.GRAMMAR), System.getProperty(SyntaxArgs.PARSE_STRATEGY), System.getProperty(SyntaxArgs.MESSAGES));
+        LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer(System.getProperty(LexicalArgs.MACHINE), System.getProperty(LexicalArgs.TOKENS), System.getProperty(LexicalArgs.MESSAGES) );
+        new SyntaxAnalyzer(lexicalAnalyzer, System.getProperty(SyntaxArgs.GRAMMAR), System.getProperty(SyntaxArgs.PARSE_STRATEGY), System.getProperty(SyntaxArgs.MESSAGES));
     }
 
     public SyntaxAnalyzer(LexicalAnalyzer lexicalAnalyzer, String grammarPath, String parseStrategyClass, String messagesPath) {

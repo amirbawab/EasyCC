@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ErrorTokensConfig {
+public class IgnoreTokensConfig {
 
     @JsonProperty("prefix")
     private String prefix;
@@ -39,9 +39,9 @@ public class ErrorTokensConfig {
     /**
      * Checks the type of a token
      * @param tokenName
-     * @return true if error token
+     * @return true if ignore token
      */
-    public boolean isErrorToken(String tokenName) {
+    public boolean isIgnoreToken(String tokenName) {
         return (
                 (prefix != null && !prefix.isEmpty() && tokenName.startsWith(prefix)) ||
                         (suffix != null && !suffix.isEmpty() && tokenName.endsWith(suffix)) ||

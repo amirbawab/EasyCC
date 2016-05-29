@@ -18,7 +18,7 @@ public class LexicalAnalyzerMoonTest {
 
     @BeforeClass
     public static void initLexicalAnalyzer() {
-        lexicalAnalyzer = new LexicalAnalyzer("/moon/state-machine.json", "/moon/lexical-analysis.json");
+        lexicalAnalyzer = new LexicalAnalyzer("/moon/lexical-machine.json", "/moon/lexical-tokens.json", "/moon/lexical-messages.json");
     }
 
     @Test
@@ -56,7 +56,7 @@ public class LexicalAnalyzerMoonTest {
         String code = IOUtils.toString(getClass().getResource(input));
         String expectedOutput = IOUtils.toString(getClass().getResource(output));
 
-        // Analyze the inpu text
+        // Analyze the input text
         lexicalAnalyzer.analyzeText(code);
 
         assertEquals(expectedOutput, StringUtils.join(lexicalAnalyzer.getTokens(), "\n"));

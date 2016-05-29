@@ -12,13 +12,13 @@ public class SyntaxMessagesConfig {
     private String defaultMessage;
 
     @JsonProperty("messages")
-    private List<SyntaxMessageDataConfig> messages;
+    private List<SyntaxMessagesDataConfig> messages;
 
     public String getDefaultMessage() {
         return defaultMessage;
     }
 
-    public List<SyntaxMessageDataConfig> getMessages() {
+    public List<SyntaxMessagesDataConfig> getMessages() {
         return messages;
     }
 }

@@ -1,8 +1,8 @@
 package config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import config.json.messages.SyntaxMessageConfig;
-import config.json.messages.SyntaxMessageDataConfig;
+import config.json.messages.SyntaxMessagesConfig;
+import config.json.messages.SyntaxMessagesDataConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,7 +22,7 @@ public class SyntaxConfig {
 
     public static SyntaxConfig instance = new SyntaxConfig();
 
-    private SyntaxMessageConfig syntaxMessageConfig;
+    private SyntaxMessagesConfig syntaxMessageConfig;
 
     private Map<String, String> messagesMap;
 
@@ -42,12 +42,12 @@ public class SyntaxConfig {
             // Parse JSON
             ObjectMapper mapper = new ObjectMapper();
             InputStream file = getClass().getResourceAsStream(filename);
-            syntaxMessageConfig = mapper.readValue(file, SyntaxMessageConfig.class);
+            syntaxMessageConfig = mapper.readValue(file, SyntaxMessagesConfig.class);
         } catch (IOException e) {
             l.error(e.getMessage());
         }
 
-        for(SyntaxMessageDataConfig data : syntaxMessageConfig.getMessages()) {
+        for(SyntaxMessagesDataConfig data : syntaxMessageConfig.getMessages()) {
             messagesMap.put(getMessageKey(data.getNonTerminal(), data.getTerminal()), data.getMessage());
         }
     }
@@ -101,7 +101,7 @@ public class SyntaxConfig {
      * Get message config
      * @return message config
      */
-    public SyntaxMessageConfig getSyntaxMessageConfig() {
+    public SyntaxMessagesConfig getSyntaxMessageConfig() {
         return syntaxMessageConfig;
     }
 }

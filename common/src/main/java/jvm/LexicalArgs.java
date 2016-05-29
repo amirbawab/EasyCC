@@ -6,5 +6,6 @@ package jvm;
 
 public class LexicalArgs {
     public static final String MACHINE = "easycc.lexical.machine";
-    public static final String CONFIG = "easycc.lexical.config";
+    public static final String TOKENS = "easycc.lexical.tokens";
+    public static final String MESSAGES = "easycc.lexical.messages";
 }

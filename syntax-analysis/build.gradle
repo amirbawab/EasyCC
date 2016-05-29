@@ -2,8 +2,6 @@ plugins {
     id 'application'
 }
 
-apply plugin: SyntaxAnalysisPlugin
-
 version = '1.0'
 
 mainClassName = "SyntaxAnalyzer"
@@ -11,8 +9,4 @@ mainClassName = "SyntaxAnalyzer"
 dependencies {
     compile project(':lexical-analysis')
     testCompile group: 'junit', name: 'junit', version: '4.12'
-}
-
-syntaxAnalyzer {
-
 }

@@ -1,7 +1,8 @@
 package config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import config.json.MachineConfig;
+import config.json.LexicalMessagesConfig;
+import config.json.LexicalTokensConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,7 +23,8 @@ public class LexicalConfig {
     private static LexicalConfig instance = new LexicalConfig();
 
     // Components
-    private MachineConfig machineConfig;
+    private LexicalTokensConfig lexicalTokensConfig;
+    private LexicalMessagesConfig lexicalMessagesConfig;
 
     /**
      * Private constructor
@@ -30,26 +32,49 @@ public class LexicalConfig {
     private LexicalConfig(){};
 
     /**
-     * Load configuration file
+     * Load tokens configuration file
      * @param filename
      */
-    public void load(String filename) {
+    public void loadTokens(String filename) {
         try {
             // Parse JSON
             ObjectMapper mapper = new ObjectMapper();
             InputStream file = getClass().getResourceAsStream(filename);
-            machineConfig = mapper.readValue(file, MachineConfig.class);
+            lexicalTokensConfig = mapper.readValue(file, LexicalTokensConfig.class);
         } catch (IOException e) {
             l.error(e.getMessage());
         }
     }
 
     /**
-     * Get configuration
+     * Load messages configuration file
+     * @param filename
+     */
+    public void loadMessages(String filename) {
+        try {
+            // Parse JSON
+            ObjectMapper mapper = new ObjectMapper();
+            InputStream file = getClass().getResourceAsStream(filename);
+            lexicalMessagesConfig = mapper.readValue(file, LexicalMessagesConfig.class);
+        } catch (IOException e) {
+            l.error(e.getMessage());
+        }
+    }
+
+    /**
+     * Get tokens configuration
      * @return configuration
      */
-    public MachineConfig getMachineConfig() {
-        return machineConfig;
+    public LexicalTokensConfig getLexicalTokensConfig() {
+        return lexicalTokensConfig;
+    }
+
+    /**
+     * Get message configuration
+     * @return message configuration
+     */
+    public LexicalMessagesConfig getLexicalMessagesConfig() {
+        return lexicalMessagesConfig;
     }
 
     /**

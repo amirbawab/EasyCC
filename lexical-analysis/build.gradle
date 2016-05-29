@@ -2,8 +2,6 @@ plugins {
     id 'application'
 }
 
-apply plugin: LexicalAnalysisPlugin
-
 version = '1.0'
 
 mainClassName = "LexicalAnalyzer"
