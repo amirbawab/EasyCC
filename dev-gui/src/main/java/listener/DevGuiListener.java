@@ -30,5 +30,6 @@ public interface DevGuiListener {
 	void setLLPPTableRules(GenericTable genericTable);
 	void setLLPPTableErrors(GenericTable genericTable);
 	void setFirstAndFollowSets(GenericTable genericTable);
+	JPanel getStateMachineGraph();
 	
 }

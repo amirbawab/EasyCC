@@ -187,7 +187,9 @@ public class MainFrame extends JFrame {
 				case STATE_MACHINE:
 					
 					// Open dialog
-					new StateMachineDialog(MainFrame.this);
+					if(devGuilistener != null) {
+						new StateMachineDialog(MainFrame.this, devGuilistener.getStateMachineGraph());
+					}
 					break;
 
 				case FIRST_FOLLOW:

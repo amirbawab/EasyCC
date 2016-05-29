@@ -252,4 +252,12 @@ public class LexicalAnalyzer {
     public StateTransitionTable getStateTransitionTable() {
         return stateTransitionTable;
     }
+
+    /**
+     * Get state machine
+     * @return state machine
+     */
+    public StateMachine getStateMachine() {
+        return stateMachine;
+    }
 }

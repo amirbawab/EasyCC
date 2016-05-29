@@ -2,24 +2,19 @@ package menu.dialogs;
 
 import java.awt.Dimension;
 
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 
 public class StateMachineDialog extends JDialog {
 
 	private static final long serialVersionUID = 4722229452456233559L;
 
-	public StateMachineDialog(JFrame parent) {
+	public StateMachineDialog(JFrame parent, JPanel panel) {
 		
 		// Set title
 		setTitle("State machine");
 		
 		// Init components
-		JLabel dfaLabel = new JLabel();
-		JScrollPane dfaScrollPane = new JScrollPane(dfaLabel);
+		JScrollPane dfaScrollPane = new JScrollPane(panel);
 		
 		// Config scroll
 		dfaScrollPane.getVerticalScrollBar().setUnitIncrement(16);

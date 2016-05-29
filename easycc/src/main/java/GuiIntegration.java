@@ -1,8 +1,15 @@
+import com.mxgraph.layout.*;
+import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
+import com.mxgraph.model.mxCell;
+import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.view.mxGraph;
 import data.GenericTable;
 import data.LexicalAnalysisRow;
 import data.structure.ConsoleData;
 import helper.LexicalHelper;
 import listener.DevGuiListener;
+import machine.StateMachine;
+import machine.json.State;
 import org.apache.commons.lang3.StringUtils;
 import parser.strategy.LLPP.LLPP;
 import token.AbstractToken;
@@ -11,6 +18,11 @@ import token.LexicalToken;
 import utils.StringUtilsPlus;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.InputEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.util.*;
 
 public class GuiIntegration implements DevGuiListener {
 
@@ -169,5 +181,103 @@ public class GuiIntegration implements DevGuiListener {
             index++;
         }
         genericTable.setData(data);
+    }
+
+    @Override
+    public JPanel getStateMachineGraph() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+
+        mxGraph graph = new mxGraph();
+        Object parent = graph.getDefaultParent();
+
+        // Configure graph
+        graph.setAutoSizeCells(true);
+
+        // Start drawing
+        graph.getModel().beginUpdate();
+
+        StateMachine stateMachine = lexicalAnalyzer.getStateMachine();
+
+        // Create nodes
+        Queue<State> statesQueue = new LinkedList<>();
+
+        // Add root
+        Map<State, Object> stateMap = new HashMap<>();
+        statesQueue.offer(stateMachine.getInitialState());
+        stateMap.put(statesQueue.peek(), graph.insertVertex(parent, null, statesQueue.peek().getId(), 20, 20, 80,30));
+
+        try
+        {
+            while(!statesQueue.isEmpty()) {
+
+                // Peek
+                State currentState = statesQueue.poll();
+                Object v1 = stateMap.get(currentState);
+
+                for (int i=currentState.getOutEdges().size()-1; i >= 0; i--) {
+
+                    // Get token
+                    State token = currentState.getOutEdges().get(i).getToState();
+
+                    // If not already visited
+                    Object v2;
+                    if(!stateMap.containsKey(token)) {
+
+                        // Add child
+                        v2 = graph.insertVertex(parent, null, token.getId(), 240, 150, 80, 30);
+                        stateMap.put(token, v2);
+                        statesQueue.offer(token);
+                    } else {
+                        v2 = stateMap.get(token);
+                    }
+
+                    Object[] edges = graph.getEdgesBetween(v1, v2);
+                    if(edges.length == 0) {
+                        graph.insertEdge(parent, null, currentState.getOutEdges().get(i).getValue(), v1, v2);
+                    } else {
+                        mxCell cell = (mxCell) edges[0];
+                        cell.setValue(cell.getValue() + ", " + currentState.getOutEdges().get(i).getValue());
+                    }
+
+                }
+            }
+
+            mxCompactTreeLayout layout = new mxCompactTreeLayout(graph);
+            layout.setEdgeRouting(false);
+            layout.setNodeDistance(100);
+            layout.execute(parent);
+        } finally
+        {
+            graph.getModel().endUpdate();
+        }
+
+        final mxGraphComponent graphComponent = new mxGraphComponent(graph);
+        graphComponent.setEnabled(true);
+
+        // Add wheel listener
+        graphComponent.addMouseWheelListener(new MouseWheelListener() {
+            final int MAX_ZOOM = 10;
+            final int MIN_ZOOM = -10;
+            int zoomValue = 0;
+
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                if((e.getModifiers() & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK) {
+                    if (e.getWheelRotation() < 0 && zoomValue < MAX_ZOOM) {
+                        graphComponent.zoomIn();
+                        zoomValue++;
+
+                    } else if(e.getWheelRotation() > 0 && zoomValue > MIN_ZOOM) {
+                        graphComponent.zoomOut();
+                        zoomValue--;
+                    }
+                }
+            }
+        });
+
+        // Add component
+        panel.add(graphComponent, BorderLayout.CENTER);
+        return panel;
     }
 }
