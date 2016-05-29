@@ -254,8 +254,8 @@ public class GuiIntegration implements DevGuiListener {
 
             mxCompactTreeLayout layout = new mxCompactTreeLayout(graph);
             layout.setEdgeRouting(false);
-            layout.setNodeDistance(100);
-            layout.setLevelDistance(100);
+            layout.setNodeDistance(50);
+            layout.setLevelDistance(200);
             layout.execute(parent);
         } finally
         {
