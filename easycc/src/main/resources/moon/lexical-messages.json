@@ -1,9 +1,9 @@
 {
   "messages": {
-    "T_ERR_INVALID_CHAR" : "Invalid character '${value}' at line ${line} col ${col}",
-    "T_ERR_FLOAT_FORMAT" : "Wrong float numer '${value}' at line ${line} col ${col}",
-    "T_ERR_BLOCK_COMMENT" : "Block comment '${value}' at line ${line} col ${col} is not closed",
-    "T_ERR_TRAILING_ZERO" : "Float number '${value}' at line ${line} col ${col} cannot end with a zero",
-    "T_ERR_LEADING_ZERO" : "Number '${value}' at line ${line} col ${col} cannot start with a zero"
+    "T_ERR_INVALID_CHAR" : "Invalid character '${lexical.value}' at line ${lexical.line} col ${lexical.column}",
+    "T_ERR_FLOAT_FORMAT" : "Wrong float number '${lexical.value}' at line ${lexical.line} col ${lexical.column}",
+    "T_ERR_BLOCK_COMMENT" : "Block comment '${lexical.value}' at line ${lexical.line} col ${lexical.column} is not closed",
+    "T_ERR_TRAILING_ZERO" : "Float number '${lexical.value}' at line ${lexical.line} col ${lexical.column} cannot end with a zero",
+    "T_ERR_LEADING_ZERO" : "Number '${lexical.value}' at line ${lexical.line} col ${lexical.column} cannot start with a zero"
   }
 }

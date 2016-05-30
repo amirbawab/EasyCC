@@ -1,6 +1,7 @@
 package machine;
 
 import com.bethecoder.ascii_table.ASCIITable;
+import config.LexicalConfig;
 import helper.LexicalHelper;
 import machine.json.Edge;
 import machine.json.State;
@@ -205,6 +206,12 @@ public class StateTransitionTable {
      * Formatted table
      */
     public String toString() {
-        return ASCIITable.getInstance().getTable(prettifyStateTransitionTableHeader(), prettifyStateTransitionTableData());
+        String output = ASCIITable.getInstance().getTable(prettifyStateTransitionTableHeader(), prettifyStateTransitionTableData());
+
+        output += "Errors:\n";
+        for(String messageKey : LexicalConfig.getInstance().getLexicalMessagesConfig().getMessages().keySet()) {
+            output += messageKey + ": " + LexicalConfig.getInstance().getLexicalMessagesConfig().getMessage(messageKey) + "\n";
+        }
+        return output;
     }
 }

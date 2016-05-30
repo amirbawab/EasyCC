@@ -22,7 +22,7 @@ public class SyntaxHelper {
      * @return message
      */
     public static String tokenMessage(NonTerminalToken nonTerminalToken, LexicalToken lexicalToken) {
-        return replaceInString(SyntaxConfig.getInstance().getMessage(nonTerminalToken.getValue(), lexicalToken.getToken()), lexicalToken);
+        return LexicalHelper.messageReplace(SyntaxConfig.getInstance().getMessage(nonTerminalToken.getValue(), lexicalToken.getToken()), lexicalToken);
     }
 
     /**
@@ -31,19 +31,6 @@ public class SyntaxHelper {
      * @return message
      */
     public static String tokenDefaultMessage(LexicalToken lexicalToken) {
-        return replaceInString(SyntaxConfig.getInstance().getSyntaxMessageConfig().getDefaultMessage(), lexicalToken);
-    }
-
-    /**
-     * Replace all the placeholders by meaningful values
-     * @param text
-     * @param lexicalToken
-     * @return meaningful message
-     */
-    private static String replaceInString(String text, LexicalToken lexicalToken) {
-        return text.
-                replace(InputHelper.VALUE, lexicalToken.getValue()).
-                replace(InputHelper.LINE, Integer.toString(lexicalToken.getRow())).
-                replace(InputHelper.COL, Integer.toString(lexicalToken.getCol()));
+        return LexicalHelper.messageReplace(SyntaxConfig.getInstance().getSyntaxMessageConfig().getDefaultMessage(), lexicalToken);
     }
 }

@@ -59,6 +59,7 @@ public class LexicalAnalyzer {
      * Constructor
      * @param stateMachineFilename
      * @param tokenConfigFile
+     * @param messageConfigFile
      */
     public LexicalAnalyzer(String stateMachineFilename, String tokenConfigFile, String messageConfigFile) {
 
@@ -70,12 +71,12 @@ public class LexicalAnalyzer {
             // Build state transition table
             stateTransitionTable = new StateTransitionTable(stateMachine);
 
-            // Print the state transition table
-            l.info("Printing state transition table:\n" + stateTransitionTable);
-
             // Load configuration
             LexicalConfig.getInstance().loadTokens(tokenConfigFile);
             LexicalConfig.getInstance().loadMessages(messageConfigFile);
+
+            // Print the state transition table
+            l.info("Printing state transition table:\n" + stateTransitionTable);
 
             // Initialize variables
             tokens = new ArrayList<>();

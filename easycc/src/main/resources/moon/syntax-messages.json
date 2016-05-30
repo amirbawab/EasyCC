@@ -1,111 +1,111 @@
 {
-  "default": "Error found at line ${line} column ${col}",
+  "default": "Error found at line ${lexical.line} column ${lexical.column}",
   "messages": [
     {
       "non-terminal" : "semicolon",
-      "message": "Missing ; before '${value.previous}' at line ${line} column ${col}"
+      "message": "Missing ; before '${lexical.value}' at line ${lexical.line} column ${lexical.column}"
     },
     {
       "non-terminal" : "classIden",
-      "message": "Class name expected instead of '${value.previous}' at line ${line} column ${col}"
+      "message": "Class name expected instead of '${lexical.value}' at line ${lexical.line} column ${lexical.column}"
     },
     {
       "non-terminal" : "classBody",
-      "message": "Expecting a { before '${value.previous}' at line ${line} column ${col}"
+      "message": "Expecting a { before '${lexical.value}' at line ${lexical.line} column ${lexical.column}"
     },
     {
       "non-terminal" : "arraySizeInt",
-      "message": "Expecting an integer instead of '${value.previous}' at line ${line} column ${col}"
+      "message": "Expecting an integer instead of '${lexical.value}' at line ${lexical.line} column ${lexical.column}"
     },
     {
       "non-terminal" : "arraySizeCloSq",
-      "message": "Missing ] before '${value.previous}' at line ${line} column ${col}"
+      "message": "Missing ] before '${lexical.value}' at line ${lexical.line} column ${lexical.column}"
     },
     {
       "non-terminal" : "varFuncIden",
-      "message": "Expecting an identifier instead of '${value.previous}' at line ${line} column ${col}"
+      "message": "Expecting an identifier instead of '${lexical.value}' at line ${lexical.line} column ${lexical.column}"
     },
     {
       "non-terminal" : "openParen",
-      "message": "Expecting ( before '${value.previous}' at line ${line} column ${col}"
+      "message": "Expecting ( before '${lexical.value}' at line ${lexical.line} column ${lexical.column}"
     },
     {
       "non-terminal" : "closeParen",
-      "message": "Expecting ) before '${value.previous}' at line ${line} column ${col}"
+      "message": "Expecting ) before '${lexical.value}' at line ${lexical.line} column ${lexical.column}"
     },
     {
       "non-terminal" : "funcDefIden",
-      "message": "Expecting an identifier instead of '${value.previous}' at line ${line} column ${col}"
+      "message": "Expecting an identifier instead of '${lexical.value}' at line ${lexical.line} column ${lexical.column}"
     },
     {
       "non-terminal" : "fParamsIden",
-      "message": "Expecting an identifier instead of '${value.previous}' at line ${line} column ${col}"
+      "message": "Expecting an identifier instead of '${lexical.value}' at line ${lexical.line} column ${lexical.column}"
     },
     {
       "non-terminal" : "identifier",
-      "message": "Expecting an identifier before '${value.previous}' at line ${line} column ${col}"
+      "message": "Expecting an identifier before '${lexical.value}' at line ${lexical.line} column ${lexical.column}"
     },
     {
       "non-terminal" : "then",
-      "message": "Expecting then before '${value.previous}' at line ${line} column ${col}"
+      "message": "Expecting then before '${lexical.value}' at line ${lexical.line} column ${lexical.column}"
     },
     {
       "non-terminal" : "else",
-      "message": "Expecting else before '${value.previous}' at line ${line} column ${col}"
+      "message": "Expecting else before '${lexical.value}' at line ${lexical.line} column ${lexical.column}"
     },
     {
       "non-terminal" : "type",
-      "message": "Expecting a type before '${value.previous}' at line ${line} column ${col}"
+      "message": "Expecting a type before '${lexical.value}' at line ${lexical.line} column ${lexical.column}"
     },
     {
       "non-terminal" : "relOp",
-      "message": "Expecting a relational operator before '${value.previous}' at line ${line} column ${col}"
+      "message": "Expecting a relational operator before '${lexical.value}' at line ${lexical.line} column ${lexical.column}"
     },
     {
       "non-terminal" : "assignOp",
-      "message": "Expecting = before '${value.previous}' at line ${line} column ${col}"
+      "message": "Expecting = before '${lexical.value}' at line ${lexical.line} column ${lexical.column}"
     },
     {
       "non-terminal" : "closeSquare",
-      "message": "Expecting ] before '${value.previous}' at line ${line} column ${col}"
+      "message": "Expecting ] before '${lexical.value}' at line ${lexical.line} column ${lexical.column}"
     },
     {
       "non-terminal" : "sign",
-      "message": "Expecting a sign before '${value.previous}' at line ${line} column ${col}"
+      "message": "Expecting a sign before '${lexical.value}' at line ${lexical.line} column ${lexical.column}"
     },
     {
       "non-terminal": "classIden",
       "terminal" : "T_OPEN_CURLY",
-      "message" : "Missing class name before '${value.previous}' at line ${line} column ${col}"},
+      "message" : "Missing class name before '${lexical.value}' at line ${lexical.line} column ${lexical.column}"},
     {
       "non-terminal": "arraySizeInt",
       "terminal" : "T_CLOSE_SQUARE",
-      "message" : "Missing integer before '${value.previous}' at line ${line} column ${col}"
+      "message" : "Missing integer before '${lexical.value}' at line ${lexical.line} column ${lexical.column}"
     },
     {
       "non-terminal": "varFuncIden",
       "terminal" : "T_OPEN_SQUARE",
-      "message" : "Missing identifier before '${value.previous}' at line ${line} column ${col}"
+      "message" : "Missing identifier before '${lexical.value}' at line ${lexical.line} column ${lexical.column}"
     },
     {
       "non-terminal": "varFuncIden",
       "terminal" : "T_OPEN_PAREN",
-      "message" : "Missing identifier before '${value.previous}' at line ${line} column ${col}"
+      "message" : "Missing identifier before '${lexical.value}' at line ${lexical.line} column ${lexical.column}"
     },
     {
       "non-terminal": "funcDefIden",
       "terminal" : "T_OPEN_PAREN",
-      "message" : "Missing identifier before '${value.previous}' at line ${line} column ${col}"
+      "message" : "Missing identifier before '${lexical.value}' at line ${lexical.line} column ${lexical.column}"
     },
     {
       "non-terminal": "fParamsIden",
       "terminal" : "T_OPEN_SQUARE",
-      "message" : "Missing identifier before '${value.previous}' at line ${line} column ${col}"
+      "message" : "Missing identifier before '${lexical.value}' at line ${lexical.line} column ${lexical.column}"
     },
     {
       "non-terminal": "fParamsIden",
       "terminal" : "T_COMMA",
-      "message" : "Missing identifier before '${value.previous}' at line ${line} column ${col}"
+      "message" : "Missing identifier before '${lexical.value}' at line ${lexical.line} column ${lexical.column}"
     }
   ]
 }
