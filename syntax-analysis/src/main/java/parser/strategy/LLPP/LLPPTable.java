@@ -11,6 +11,8 @@ import parser.strategy.LLPP.cell.LLPPAbstractTableCell;
 import parser.strategy.LLPP.cell.LLPPErrorCell;
 import parser.strategy.LLPP.cell.LLPPRuleCell;
 import token.AbstractSyntaxToken;
+import token.AbstractToken;
+import token.EndOfFileToken;
 
 import java.util.*;
 
@@ -127,8 +129,11 @@ public class LLPPTable {
      * @param terminal
      * @return Table cell
      */
-    public LLPPAbstractTableCell getCell(String nonTerminal, String terminal) {
-        return table[nonTerminalIndexMap.get(nonTerminal)][terminalIndexMap.get(terminal)];
+    public LLPPAbstractTableCell getCell(AbstractSyntaxToken nonTerminal, AbstractToken terminal) {
+        if(terminal instanceof EndOfFileToken) {
+            return table[nonTerminalIndexMap.get(nonTerminal.getValue())][terminalIndexMap.get(SyntaxHelper.END_OF_STACK)];
+        }
+        return table[nonTerminalIndexMap.get(nonTerminal.getValue())][terminalIndexMap.get(terminal.getToken())];
     }
 
     /**

@@ -396,3 +396,4 @@ Token: T_CLOSE_PAREN - Value: ) - Row: 69 - Col: 15 - Position: 1164 - Type: Lex
 Token: T_SEMICOLON - Value: ; - Row: 69 - Col: 16 - Position: 1165 - Type: LexicalToken
 Token: T_CLOSE_CURLY - Value: } - Row: 70 - Col: 1 - Position: 1167 - Type: LexicalToken
 Token: T_SEMICOLON - Value: ; - Row: 70 - Col: 2 - Position: 1168 - Type: LexicalToken
+Token: End of file - Value: End of file - Row: 70 - Col: 3 - Position: 1169 - Type: EndOfFileToken

@@ -1,6 +1,7 @@
 package parser.strategy.LLPP;
 
 import grammar.Grammar;
+import helper.LexicalHelper;
 import helper.SyntaxHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -53,9 +54,6 @@ public class LLPP extends ParseStrategy {
 
         // Update time
         syntaxAnalysisProcessTime = System.currentTimeMillis();
-
-        // Add EOS
-        lexicalTokens.add(new LexicalToken(null, SyntaxHelper.END_OF_STACK, -1, -1, -1));
 
         // Log
         l.info("Start parsing input ...");
@@ -120,6 +118,9 @@ public class LLPP extends ParseStrategy {
                         // Prepare message
                         String errorMessage = SyntaxHelper.tokenDefaultMessage(lexicalToken);
 
+                        // Print message
+                        l.error(errorMessage);
+
                         // Grammar can be enhacned
                         l.warn("Compiler couldn't make the best decision because it expected a non-terminal and a terminal instead of two terminals");
 
@@ -134,7 +135,7 @@ public class LLPP extends ParseStrategy {
                 } else if(syntaxToken instanceof NonTerminalToken) {
 
                     // Get cell
-                    LLPPAbstractTableCell cell = llppTable.getCell(syntaxToken.getValue(), lexicalToken.getToken());
+                    LLPPAbstractTableCell cell = llppTable.getCell(syntaxToken, lexicalToken);
 
                     // Cast to non-terminal
                     NonTerminalToken nonTerminalToken = (NonTerminalToken) syntaxToken;
@@ -164,6 +165,9 @@ public class LLPP extends ParseStrategy {
                         // Prepare message
                         String errorMessage = SyntaxHelper.tokenMessage(nonTerminalToken, lexicalToken);
 
+                        // Print message
+                        l.error(errorMessage);
+
                         // Check decision
                         switch (errorCell.getDecision()) {
                             case LLPPErrorCell.POP:
@@ -191,7 +195,7 @@ public class LLPP extends ParseStrategy {
         }
 
         // If lexical tokens are not completely consumed
-        if(!lexicalToken.getToken().equals(SyntaxHelper.END_OF_STACK)){
+        if(!(lexicalToken instanceof EndOfFileToken)){
             error = true;
         }
 

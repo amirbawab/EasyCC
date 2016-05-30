@@ -150,3 +150,4 @@ Token: T_ERR_INVALID_CHAR - Value: _ - Row: 35 - Col: 6 - Position: 302 - Type: 
 Token: T_ERR_BLOCK_COMMENT - Value: /*
 
 error here! - Row: 40 - Col: 1 - Position: 336 - Type: ErrorToken
+Token: End of file - Value: End of file - Row: 40 - Col: 16 - Position: 351 - Type: EndOfFileToken

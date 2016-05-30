@@ -41,3 +41,4 @@ Token: T_ERR_INVALID_CHAR - Value: @ - Row: 37 - Col: 2 - Position: 123 - Type: 
 Token: T_ERR_INVALID_CHAR - Value: # - Row: 37 - Col: 3 - Position: 124 - Type: ErrorToken
 Token: T_ERR_INVALID_CHAR - Value: $ - Row: 37 - Col: 4 - Position: 125 - Type: ErrorToken
 Token: T_ERR_INVALID_CHAR - Value: % - Row: 37 - Col: 5 - Position: 126 - Type: ErrorToken
+Token: End of file - Value: End of file - Row: 37 - Col: 6 - Position: 127 - Type: EndOfFileToken

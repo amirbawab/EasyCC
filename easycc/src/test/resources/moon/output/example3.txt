@@ -52,3 +52,4 @@ Token: T_CLOSE_PAREN - Value: ) - Row: 8 - Col: 20 - Position: 270 - Type: Lexic
 Token: T_ERR_INVALID_CHAR - Value: _ - Row: 8 - Col: 21 - Position: 271 - Type: ErrorToken
 Token: T_ERR_INVALID_CHAR - Value: # - Row: 8 - Col: 22 - Position: 272 - Type: ErrorToken
 Token: T_ERR_INVALID_CHAR - Value: % - Row: 8 - Col: 23 - Position: 273 - Type: ErrorToken
+Token: End of file - Value: End of file - Row: 8 - Col: 24 - Position: 274 - Type: EndOfFileToken

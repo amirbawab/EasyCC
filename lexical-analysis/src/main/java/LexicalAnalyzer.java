@@ -10,6 +10,7 @@ import machine.json.State;
 import machine.StateMachine;
 import machine.StateTransitionTable;
 import token.AbstractToken;
+import token.AbstractTokenFactory;
 import token.ErrorToken;
 import token.LexicalToken;
 
@@ -117,6 +118,17 @@ public class LexicalAnalyzer {
         // Close scanner
         scan.close();
 
+        // Add END_OF_FILE lexical token
+        if(tokens.isEmpty()) {
+            tokens.add(AbstractTokenFactory.createEndOfFileToken(0, 0, 0));
+        } else {
+            AbstractToken lastToken = tokens.get(tokens.size()-1);
+            AbstractToken endOfFileToken = AbstractTokenFactory.createEndOfFileToken(lastToken.getRow(), lastToken.getCol() + lastToken.getValue().length(), lastToken.getPosition() + lastToken.getValue().length());
+            lastToken.setNext(endOfFileToken);
+            endOfFileToken.setPrevious(lastToken);
+            tokens.add(endOfFileToken);
+        }
+
         // Stop timer
         this.lexicalAnalysisProcessTime = System.currentTimeMillis() - this.lexicalAnalysisProcessTime;
 
@@ -222,11 +234,12 @@ public class LexicalAnalyzer {
                 // If token shouldn't be ignored
                 if(!LexicalConfig.getInstance().getLexicalTokensConfig().getIgnoreTokensConfig().isIgnoreToken(tokenStr)) {
 
+                    // If token is an error one
                     if (LexicalConfig.getInstance().getLexicalTokensConfig().getErrorTokensConfig().isErrorToken(tokenStr)) {
-                        token = new ErrorToken(tokenStr, word, wordRow, wordCol, position - word.length());
+                        token = AbstractTokenFactory.createErrorToken(tokenStr, word, wordRow, wordCol, position - word.length());
 
                     } else {
-                        token = new LexicalToken(tokenStr, word, wordRow, wordCol, position - word.length());
+                        token = AbstractTokenFactory.createLexicalToken(tokenStr, word, wordRow, wordCol, position - word.length());
                     }
                 }
 
