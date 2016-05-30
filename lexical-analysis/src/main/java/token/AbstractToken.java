@@ -13,6 +13,7 @@ public abstract class AbstractToken {
     private String value;
     private int row, col;
     private int position;
+    private AbstractToken next, previous;
 
     public AbstractToken(String token, String value, int row, int col, int position) {
         this.token = token;
@@ -60,6 +61,22 @@ public abstract class AbstractToken {
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    public AbstractToken getNext() {
+        return next;
+    }
+
+    public void setNext(AbstractToken next) {
+        this.next = next;
+    }
+
+    public AbstractToken getPrevious() {
+        return previous;
+    }
+
+    public void setPrevious(AbstractToken previous) {
+        this.previous = previous;
     }
 
     @Override

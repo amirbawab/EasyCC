@@ -156,6 +156,13 @@ public class LexicalAnalyzer {
                 // Log created token
                 l.info(token);
 
+                // Chain tokens
+                if(!tokens.isEmpty()) {
+                    AbstractToken currentLast = tokens.get(tokens.size()-1);
+                    currentLast.setNext(token);
+                    token.setPrevious(currentLast);
+                }
+
                 // Add token
                 tokens.add(token);
             }
