@@ -5,7 +5,7 @@ package token;
  */
 
 public class TerminalToken extends AbstractSyntaxToken {
-    private LexicalToken lexicalToken;
+    private AbstractToken lexicalToken;
 
     public TerminalToken(String value) {
         super(value);
@@ -20,11 +20,11 @@ public class TerminalToken extends AbstractSyntaxToken {
         this.lexicalToken = terminalToken.lexicalToken;
     }
 
-    public LexicalToken getLexicalToken() {
+    public AbstractToken getLexicalToken() {
         return lexicalToken;
     }
 
-    public void setLexicalToken(LexicalToken lexicalToken) {
+    public void setLexicalToken(AbstractToken lexicalToken) {
         this.lexicalToken = lexicalToken;
     }
 

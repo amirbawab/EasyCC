@@ -1,10 +1,7 @@
 package helper;
 
 import config.SyntaxConfig;
-import token.AbstractSyntaxToken;
-import token.LexicalToken;
-import token.NonTerminalToken;
-import token.TerminalToken;
+import token.*;
 
 /**
  * Common syntax variables.
@@ -21,7 +18,7 @@ public class SyntaxHelper {
      * @param lexicalToken
      * @return message
      */
-    public static String tokenMessage(NonTerminalToken nonTerminalToken, LexicalToken lexicalToken) {
+    public static String tokenMessage(NonTerminalToken nonTerminalToken, AbstractToken lexicalToken) {
         return LexicalHelper.messageReplace(SyntaxConfig.getInstance().getMessage(nonTerminalToken.getValue(), lexicalToken.getToken()), lexicalToken);
     }
 
@@ -30,7 +27,7 @@ public class SyntaxHelper {
      * @param lexicalToken
      * @return message
      */
-    public static String tokenDefaultMessage(LexicalToken lexicalToken) {
+    public static String tokenDefaultMessage(AbstractToken lexicalToken) {
         return LexicalHelper.messageReplace(SyntaxConfig.getInstance().getSyntaxMessageConfig().getDefaultMessage(), lexicalToken);
     }
 }

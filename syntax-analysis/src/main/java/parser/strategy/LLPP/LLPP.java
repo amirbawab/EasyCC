@@ -26,7 +26,7 @@ public class LLPP extends ParseStrategy {
     private Logger l = LogManager.getFormatterLogger(getClass());
 
     // Components
-    LLPPTable llppTable;
+    private LLPPTable llppTable;
 
     // Long scan process time
     private long syntaxAnalysisProcessTime;
@@ -49,7 +49,7 @@ public class LLPP extends ParseStrategy {
     }
 
     @Override
-    public boolean parse(List<LexicalToken> lexicalTokens) {
+    public boolean parse(List<AbstractToken> lexicalTokens) {
 
         // Update time
         syntaxAnalysisProcessTime = System.currentTimeMillis();
@@ -76,7 +76,7 @@ public class LLPP extends ParseStrategy {
         int phases = 1;
 
         // Prepare lexical token
-        LexicalToken lexicalToken = null;
+        AbstractToken lexicalToken = null;
 
         // Run multiple times
         for(int phase = 1; phase <= phases; phase++) {
@@ -267,6 +267,22 @@ public class LLPP extends ParseStrategy {
                 }
             }
         }
+    }
+
+    /**
+     * Get process time
+     * @return process time in ms
+     */
+    public long getSyntaxAnalysisProcessTime() {
+        return syntaxAnalysisProcessTime;
+    }
+
+    /**
+     * Get parse tree root
+     * @return parse tree root
+     */
+    public NonTerminalToken getTreeRoot() {
+        return treeRoot;
     }
 
     /**

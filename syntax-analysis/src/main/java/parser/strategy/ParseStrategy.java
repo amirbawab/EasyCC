@@ -1,7 +1,7 @@
 package parser.strategy;
 
 import grammar.Grammar;
-import token.LexicalToken;
+import token.AbstractToken;
 
 import java.util.List;
 
@@ -15,5 +15,5 @@ public abstract class ParseStrategy {
         this.grammar = grammar;
     }
 
-    public abstract boolean parse(List<LexicalToken> lexicalTokenList);
+    public abstract boolean parse(List<AbstractToken> lexicalTokenList);
 }
