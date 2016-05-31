@@ -11,8 +11,6 @@ version = '1.0'
 
 mainClassName = "EasyCC"
 
-def xmlReport =
-
 dependencies {
     compile project(':semantic-analysis')
     compile project(':dev-gui')
@@ -32,7 +30,7 @@ syntaxAnalyzer {
 }
 
 jacoco {
-    toolVersion = "0.7.6.201602180812"
+    toolVersion = jacocoToolVersion
 }
 
 jacocoTestReport {
@@ -48,7 +46,7 @@ jacocoTestReport {
 
 sonarqube {
     properties {
-        property "sonar.jacoco.reportPath", "$buildDir/reports/jacoco/test/jacocoTest.exec"
+        property "sonar.jacoco.reportPath", "$buildDir/$sonarReportPath"
     }
 }
 

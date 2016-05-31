@@ -1,6 +1,9 @@
 plugins {
-    id 'application'
+    id "org.sonarqube" version "2.0.1"
+    id "jacoco"
 }
+
+apply plugin: 'application'
 
 version = '1.0'
 
@@ -9,4 +12,25 @@ mainClassName = "LexicalAnalyzer"
 dependencies {
     compile project(':common')
     testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+jacoco {
+    toolVersion = jacocoToolVersion
+}
+
+jacocoTestReport {
+    additionalSourceDirs = files(sourceSets.main.allSource.srcDirs)
+    sourceDirectories = files(sourceSets.main.allSource.srcDirs)
+    classDirectories =  files(sourceSets.main.output)
+    reports {
+        html.enabled = true
+        xml.enabled = true
+        csv.enabled = false
+    }
+}
+
+sonarqube {
+    properties {
+        property "sonar.jacoco.reportPath", "$buildDir/$sonarReportPath"
+    }
 }

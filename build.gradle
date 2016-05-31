@@ -5,6 +5,11 @@ dependencies {
     compile localGroovy()
 }
 
+ext{
+    sonarReportPath = "reports/jacoco/test/jacocoTest.exec"
+    jacocoToolVersion = "0.7.6.201602180812"
+}
+
 subprojects {
     apply plugin: 'java'
 
