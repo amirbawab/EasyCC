@@ -1,0 +1,12 @@
+plugins {
+    id 'application'
+}
+
+version = '1.0'
+
+mainClassName = "SemanticAnalysis"
+
+dependencies {
+    compile project(':syntax-analysis')
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
