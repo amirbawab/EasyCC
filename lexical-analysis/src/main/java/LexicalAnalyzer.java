@@ -146,7 +146,7 @@ public class LexicalAnalyzer {
         line += scan.hasNextLine() ? LexicalHelper.EOL : LexicalHelper.EOF;
 
         // Log
-        l.info("Scanning line: %s", line.replaceAll(LexicalHelper.EOL+"", "~EOL~").replaceAll(LexicalHelper.EOF+"", "~EOF~"));
+        l.debug("Scanning line: %s", line.replaceAll(LexicalHelper.EOL+"", "~EOL~").replaceAll(LexicalHelper.EOF+"", "~EOF~"));
 
         // Store line
         this.currentLine = line;
@@ -167,7 +167,7 @@ public class LexicalAnalyzer {
             if(token != null) {
 
                 // Log created token
-                l.info(token);
+                l.debug(token);
 
                 // Chain tokens
                 if(!tokens.isEmpty()) {
@@ -287,5 +287,13 @@ public class LexicalAnalyzer {
      */
     public StateMachine getStateMachine() {
         return stateMachine;
+    }
+
+    /**
+     * Get the first lexical token
+     * @return lexical token | null
+     */
+    public AbstractToken getFirstToken() {
+        return tokens.size() > 0 ? tokens.get(0) : null;
     }
 }

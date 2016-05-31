@@ -33,4 +33,4 @@ Token: T_ERR_INVALID_CHAR - Value: ~ - Row: 21 - Col: 5 - Position: 91 - Type: E
 Token: T_MULTIPLY - Value: * - Row: 36 - Col: 1 - Position: 167 - Type: LexicalToken
 Token: T_DIVIDE - Value: / - Row: 36 - Col: 2 - Position: 168 - Type: LexicalToken
 Token: T_ERR_BLOCK_COMMENT - Value: /* bla - Row: 38 - Col: 1 - Position: 171 - Type: ErrorToken
-Token: End of file - Value: End of file - Row: 38 - Col: 7 - Position: 177 - Type: EndOfFileToken
+Token: $ - Value: $ - Row: 38 - Col: 7 - Position: 177 - Type: EndOfFileToken

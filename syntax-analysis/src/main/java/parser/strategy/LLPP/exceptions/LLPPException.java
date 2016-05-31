@@ -1,4 +1,4 @@
-package parser.strategy.LLPP;
+package parser.strategy.LLPP.exceptions;
 
 /**
  * Exception for LL Predictive parser

@@ -7,7 +7,9 @@ package token;
 
 public class EndOfFileToken extends AbstractToken{
 
+    // $ in lexical and syntax analyzer are not related
+    // It can be renamed to anything
     public EndOfFileToken(int row, int col, int position) {
-        super("End of file", "End of file", row, col, position);
+        super("$", "$", row, col, position);
     }
 }

@@ -3,7 +3,7 @@ package token;
 import helper.SyntaxHelper;
 
 /**
- * Class representing end of stack token
+ * Class representing end of data token
  */
 
 public class EndOfStackToken extends AbstractSyntaxToken {

@@ -1,5 +1,6 @@
 package token;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,6 +12,7 @@ public class NonTerminalToken extends AbstractSyntaxToken {
 
     public NonTerminalToken(String value) {
         super(value);
+        children = new ArrayList<>();
     }
 
     /**

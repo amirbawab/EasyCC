@@ -7,8 +7,6 @@ import org.apache.logging.log4j.Logger;
 import parser.SyntaxParser;
 import token.AbstractToken;
 
-import java.util.List;
-
 public class SyntaxAnalyzer {
 
     // Logger
@@ -18,6 +16,9 @@ public class SyntaxAnalyzer {
     private LexicalAnalyzer lexicalAnalyzer;
     private Grammar grammar;
     private SyntaxParser syntaxParser;
+
+    // Process time
+    private long syntaxAnalysisProcessTime;
 
     public static void main(String[] args) {
         LexicalAnalyzer lexicalAnalyzer = new LexicalAnalyzer(System.getProperty(LexicalArgs.MACHINE), System.getProperty(LexicalArgs.TOKENS), System.getProperty(LexicalArgs.MESSAGES) );
@@ -33,8 +34,17 @@ public class SyntaxAnalyzer {
         syntaxParser = new SyntaxParser(grammar, parseStrategyClass);
     }
 
-    public void parse(List<AbstractToken> lexicalTokenList) {
-        syntaxParser.getParseStrategy().parse(lexicalTokenList);
+    /**
+     * Parse using the chosen parsing method
+     * @param lexicalToken
+     */
+    public void parse(AbstractToken lexicalToken) {
+        syntaxAnalysisProcessTime = System.currentTimeMillis();
+        syntaxParser.getParseStrategy().parse(lexicalToken);
+        syntaxAnalysisProcessTime = System.currentTimeMillis() - syntaxAnalysisProcessTime;
+
+        // Log process time
+        l.info("Syntax-analysis took: " + this.syntaxAnalysisProcessTime+ " ms");
     }
 
     /**
@@ -51,5 +61,13 @@ public class SyntaxAnalyzer {
      */
     public SyntaxParser getSyntaxParser() {
         return syntaxParser;
+    }
+
+    /**
+     * Get process time
+     * @return process time in ms
+     */
+    public long getSyntaxAnalysisProcessTime() {
+        return syntaxAnalysisProcessTime;
     }
 }

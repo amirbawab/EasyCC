@@ -7,8 +7,8 @@ package token;
 public class SyntaxTokenFactory {
 
     /**
-     * Create end of stack syntax token
-     * @return A new end of stack syntax token
+     * Create end of data syntax token
+     * @return A new end of data syntax token
      */
     public static EndOfStackToken createEndOfStackToken() {
         return new EndOfStackToken();

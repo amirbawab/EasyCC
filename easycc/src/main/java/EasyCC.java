@@ -23,7 +23,7 @@ public class EasyCC {
         syntaxAnalyzer = new SyntaxAnalyzer(lexicalAnalyzer, System.getProperty(SyntaxArgs.GRAMMAR), System.getProperty(SyntaxArgs.PARSE_STRATEGY), System.getProperty(SyntaxArgs.MESSAGES));
 
         lexicalAnalyzer.analyzeText("Hello world");
-        syntaxAnalyzer.parse(lexicalAnalyzer.getTokens());
+        syntaxAnalyzer.parse(lexicalAnalyzer.getFirstToken());
 
         // startGui();
     }

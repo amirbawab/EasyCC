@@ -15,5 +15,5 @@ public abstract class ParseStrategy {
         this.grammar = grammar;
     }
 
-    public abstract boolean parse(List<AbstractToken> lexicalTokenList);
+    public abstract boolean parse(AbstractToken lexicalTokenList);
 }
