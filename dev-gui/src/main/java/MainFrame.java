@@ -2,7 +2,9 @@ import bottom.BottomPanel;
 import center.CenterPanel;
 import data.GenericTable;
 import data.LexicalAnalysisRow;
+import data.SyntaxAnalysisRow;
 import data.structure.ConsoleData;
+import data.structure.ConsoleDataRow;
 import listener.DevGuiListener;
 import menu.MainMenu;
 import menu.dialogs.StateMachineDialog;
@@ -20,6 +22,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -116,16 +119,13 @@ public class MainFrame extends JFrame {
 							compilationTime += devGuilistener.getParserTime();
 							
 							// Parser output
-							Object[][] parserOutputData = devGuilistener.getParserOutput();
-							centerPanel.setTableData(CenterPanel.PARSER_OUTPUT_TITLE, parserOutputData);
-							
-							// Parser error
-							Object[][] parserErrorData = devGuilistener.getParserError();
-							centerPanel.setTableData(CenterPanel.PARSER_ERROR_TITLE, parserErrorData);
-							
+							ConsoleData<SyntaxAnalysisRow> parserOutputData = devGuilistener.getParserOutput();
+							centerPanel.setTableData(CenterPanel.PARSER_OUTPUT_TITLE, parserOutputData.convertToObjectTable());
+
 							// If parser error found, update compiler message
-							if(parserErrorData.length > 0)
-								message += String.format("Parser: %d error(s) found! ", parserErrorData.length);
+							List<String> errorMessages = devGuilistener.getSyntaxErrorMessages();
+							if(errorMessages.size() > 0)
+								message += String.format("Parser: %d error(s) found! ", errorMessages.size());
 
 							// Get tree
 							centerPanel.setPanel(CenterPanel.PARSER_TREE_TITLE, devGuilistener.getParserTree());
@@ -139,27 +139,6 @@ public class MainFrame extends JFrame {
 							// Clear code generation
 							centerPanel.setText(CenterPanel.CODE_GENERATION_TITLE, null);
 
-							// If no parsing errors
-							if(parserErrorData.length == 0){
-								Object[][][] symbolTables = devGuilistener.getSymbolTables();
-								for(int i=0; i < symbolTables.length; i++) {
-									String subTableName = devGuilistener.getSymbolTableName(i);
-									centerPanel.addTableToNavigationTable(CenterPanel.SYMBOL_TABLE_TITLE, subTableName, CenterPanel.SYMBOL_TABLE_HEADER);
-									centerPanel.setTableOfTableData(CenterPanel.SYMBOL_TABLE_TITLE, subTableName, symbolTables[i]);
-								}
-
-								// Semantic errors
-								Object[][] semanticErrorData = devGuilistener.getSemanticErrors();
-								centerPanel.setTableData(CenterPanel.SEMANTIC_ERROR_TITLE, semanticErrorData);
-
-								// Code generation
-								centerPanel.setText(CenterPanel.CODE_GENERATION_TITLE, devGuilistener.getGeneratedCode());
-
-								// If semantic errors, update compiler message
-								if(semanticErrorData.length > 0)
-									message	+= String.format("Semantic: %d error(s) found! ", semanticErrorData.length);
-							}
-
 							// Insert time
 							message += String.format("Total time: %d ms", compilationTime);
 							
@@ -167,10 +146,11 @@ public class MainFrame extends JFrame {
 							bottomPanel.setCompilerMessageText(message);
 							
 							// Change color
-							if(devGuilistener.doesCompile())
+							if(devGuilistener.doesCompile()) {
 								bottomPanel.setStyle(BottomPanel.Style.SUCCESS);
-							else
+							} else{
 								bottomPanel.setStyle(BottomPanel.Style.ERROR);
+							}
 						}
 					}
 					break;

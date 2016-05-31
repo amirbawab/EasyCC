@@ -5,13 +5,18 @@ import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 import data.GenericTable;
 import data.LexicalAnalysisRow;
+import data.SyntaxAnalysisRow;
 import data.structure.ConsoleData;
+import data.structure.ConsoleDataRow;
 import helper.LexicalHelper;
 import listener.DevGuiListener;
 import machine.StateMachine;
 import machine.json.State;
 import org.apache.commons.lang3.StringUtils;
 import parser.strategy.LLPP.LLPP;
+import parser.strategy.LLPP.data.LLPPDataEntry;
+import parser.strategy.LLPP.data.LLPPDataErrorEntry;
+import parser.strategy.LLPP.data.LLPPDataFineEntry;
 import token.*;
 import utils.StringUtilsPlus;
 
@@ -21,6 +26,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.*;
+import java.util.List;
 
 public class GuiIntegration implements DevGuiListener {
 
@@ -74,17 +80,41 @@ public class GuiIntegration implements DevGuiListener {
 
     @Override
     public void parse() {
-
+        syntaxAnalyzer.parse(lexicalAnalyzer.getFirstToken());
     }
 
     @Override
-    public Object[][] getParserOutput() {
-        return new Object[0][];
+    public ConsoleData<SyntaxAnalysisRow> getParserOutput() {
+
+        ConsoleData<SyntaxAnalysisRow> rows = new ConsoleData<>();
+        if(syntaxAnalyzer.getSyntaxParser().getParseStrategy() instanceof LLPP) {
+            LLPP llpp = (LLPP) syntaxAnalyzer.getSyntaxParser().getParseStrategy();
+            for(int row = 0; row < llpp.getLlppData().getEntryList().size(); row++) {
+
+                // Get current
+                LLPPDataEntry entry = llpp.getLlppData().getEntryList().get(row);
+
+                // If error
+                if(entry instanceof LLPPDataFineEntry) {
+                    LLPPDataFineEntry dataFineEntry = (LLPPDataFineEntry) entry;
+                    rows.add(new SyntaxAnalysisRow(dataFineEntry.getStepNumber(), dataFineEntry.getStackContent(), dataFineEntry.getInputContent(), dataFineEntry.getProductionContent(), dataFineEntry.getDerivationContent()));
+
+                } else if(entry instanceof LLPPDataErrorEntry) {
+                    LLPPDataErrorEntry dataErrorEntry = (LLPPDataErrorEntry) entry;
+                    rows.add(new SyntaxAnalysisRow(dataErrorEntry.getStepNumber(), dataErrorEntry.getStackContent(), dataErrorEntry.getInputContent(), "", dataErrorEntry.getMessage()));
+                }
+            }
+        }
+        return rows;
     }
 
     @Override
-    public Object[][] getParserError() {
-        return new Object[0][];
+    public List<String> getSyntaxErrorMessages() {
+        if(syntaxAnalyzer.getSyntaxParser().getParseStrategy() instanceof LLPP) {
+            LLPP llpp = (LLPP) syntaxAnalyzer.getSyntaxParser().getParseStrategy();
+            return llpp.getLlppData().getErrorMessages();
+        }
+        return null;
     }
 
     @Override

@@ -21,6 +21,7 @@ public class NonTerminalToken extends AbstractSyntaxToken {
      */
     public NonTerminalToken(NonTerminalToken nonTerminalToken) {
         super(nonTerminalToken);
+        children = new ArrayList<>();
     }
 
     /**

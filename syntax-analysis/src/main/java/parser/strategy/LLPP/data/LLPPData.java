@@ -1,6 +1,5 @@
 package parser.strategy.LLPP.data;
 
-import com.bethecoder.ascii_table.ASCIITable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import token.AbstractSyntaxToken;
@@ -53,7 +52,7 @@ public class LLPPData {
                     for(int j=productionRHS.size()-1; j >= 0; --j) {
                         AbstractSyntaxToken syntaxToken = productionRHS.get(j);
                         if(syntaxToken instanceof NonTerminalToken || syntaxToken instanceof TerminalToken) {
-                            derivationClone.add(i, syntaxToken);
+                            derivationList.add(i, syntaxToken);
                         }
                     }
                     break;
@@ -117,51 +116,10 @@ public class LLPPData {
     }
 
     /**
-     * Prettify header
-     * @return header
-     */
-    public String[] prettifyHeader() {
-        return new String[] {"Step", "Stack", "Input", "Rule", "Derivation"};
-    }
-
-    /**
-     * Prettify data
-     * @return data
-     */
-    public String[][] prettifyData() {
-        String[][] data = new String[entryList.size()][5];
-
-        for(int i=0; i < data.length; i++) {
-            LLPPDataEntry dataEntry = entryList.get(i);
-            if(dataEntry instanceof LLPPDataFineEntry) {
-                LLPPDataFineEntry dataFineEntry = (LLPPDataFineEntry) dataEntry;
-                data[i][0] = dataFineEntry.getStepNumber()+"";
-                data[i][1] = dataFineEntry.getStackContent();
-                data[i][2] = dataFineEntry.getInputContent();
-                data[i][3] = dataFineEntry.getProductionContent();
-                data[i][4] = dataFineEntry.getDerivationContent();
-            } else {
-                LLPPDataErrorEntry dataFineEntry = (LLPPDataErrorEntry) dataEntry;
-                data[i][0] = dataFineEntry.getStepNumber()+"";
-                data[i][1] = dataFineEntry.getStackContent();
-                data[i][2] = dataFineEntry.getInputContent();
-                data[i][3] = "";
-                data[i][4] = dataFineEntry.getMessage();
-            }
-        }
-        return data;
-    }
-
-    /**
      * Get error messages
      * @return error messages
      */
     public List<String> getErrorMessages() {
         return errorMessages;
-    }
-
-    @Override
-    public String toString() {
-        return ASCIITable.getInstance().getTable(prettifyHeader(), prettifyData());
     }
 }

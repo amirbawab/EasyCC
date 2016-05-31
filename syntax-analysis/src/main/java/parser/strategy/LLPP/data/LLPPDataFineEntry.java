@@ -31,9 +31,9 @@ public class LLPPDataFineEntry extends LLPPDataEntry {
      */
     public String getProductionContent() {
         if(productionLHS != null) {
-            String content = productionLHS.getValue() + " => ";
+            String content = productionLHS.getValue() + " =>";
             for (AbstractSyntaxToken syntaxToken : productionRHS) {
-                content += syntaxToken.getValue();
+                content += " " + syntaxToken.getValue();
             }
             return content;
         }

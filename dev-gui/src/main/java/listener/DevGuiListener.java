@@ -1,10 +1,12 @@
 package listener;
 
 import data.GenericTable;
+import data.SyntaxAnalysisRow;
 import data.LexicalAnalysisRow;
 import data.structure.ConsoleData;
 
 import javax.swing.*;
+import java.util.List;
 
 public interface DevGuiListener {
 	
@@ -13,8 +15,8 @@ public interface DevGuiListener {
 	ConsoleData<LexicalAnalysisRow> getLexicalAnalyzerOutput();
 	ConsoleData<LexicalAnalysisRow> getLexicalAnalyzerError();
 	void parse();
-	Object[][] getParserOutput();
-	Object[][] getParserError();
+	ConsoleData<SyntaxAnalysisRow> getParserOutput();
+	List<String> getSyntaxErrorMessages();
 	long getLexicalAnalysisTime();
 	long getParserTime();
 	boolean doesCompile();

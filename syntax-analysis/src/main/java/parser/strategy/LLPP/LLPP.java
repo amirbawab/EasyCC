@@ -227,7 +227,7 @@ public class LLPP extends ParseStrategy {
      * Cond 1: First(B) ^ First(C) = {}
      * Cond 2: If First(A) contains "", then First(A) & Follow(A) = {}
      */
-    public void validate() {
+    private void validate() {
 
         // Loop on non-terminal
         for(String nonTerminal : grammar.getProductions().keySet()) {
@@ -284,11 +284,12 @@ public class LLPP extends ParseStrategy {
     }
 
     /**
-     * Get error messages
-     * @return error messages
+     * Get LL PP Data
+     * Includes parsing steps and error messages
+     * @return data
      */
-    public List<String> getErrorMessages() {
-        return llppData.getErrorMessages();
+    public LLPPData getLlppData() {
+        return llppData;
     }
 
     /**

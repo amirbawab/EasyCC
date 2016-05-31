@@ -37,7 +37,7 @@ public abstract class LLPPDataEntry {
     public String getStackContent() {
         String content = "";
         for(AbstractSyntaxToken syntaxToken : stackSyntax){
-            content += syntaxToken.getValue() + " ";
+            content += syntaxToken.getOriginalValue() + " ";
         }
         return content;
     }
