@@ -96,26 +96,31 @@ public class StateTransitionTable {
     public int lookup(int state, char c) {
 
         // a-zA-Z
-        if( (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+        if( headerIndexMap.containsKey(Edge.Special.LETTER.getValue()) && ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))) {
             return transitionTable[state][headerIndexMap.get(Edge.Special.LETTER.getValue())];
+        }
 
         // 1-9
-        if(c >= '1' && c <= '9')
+        if(headerIndexMap.containsKey(Edge.Special.NONZERO.getValue()) && c >= '1' && c <= '9') {
             return transitionTable[state][headerIndexMap.get(Edge.Special.NONZERO.getValue())];
+        }
 
         // Space
-        if(c == ' ' || c == '\t')
+        if(headerIndexMap.containsKey(Edge.Special.SPACE.getValue()) && (c == ' ' || c == '\t')) {
             return transitionTable[state][headerIndexMap.get(Edge.Special.SPACE.getValue())];
+        }
 
         // New line character
         // Note: All possible new lines will be replaced by \n. No need to cover other cases
-        if(c == LexicalHelper.EOL)
+        if(headerIndexMap.containsKey(Edge.Special.END_OF_LINE.getValue()) && c == LexicalHelper.EOL) {
             return transitionTable[state][headerIndexMap.get(Edge.Special.END_OF_LINE.getValue())];
+        }
 
         // End of file character
         // Note: The lexical analyzer will automatically inject \0 at the end of the input
-        if(c == LexicalHelper.EOF)
+        if(headerIndexMap.containsKey(Edge.Special.END_OF_FILE.getValue()) && c == LexicalHelper.EOF) {
             return transitionTable[state][headerIndexMap.get(Edge.Special.END_OF_FILE.getValue())];
+        }
 
         // Other characters
         for(int col=0; col<header.length; col++) {

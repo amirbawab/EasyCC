@@ -1,0 +1,143 @@
+{
+  "states": [
+    {
+      "type": "initial",
+      "name": "0"
+    },
+    {
+      "type": "final",
+      "name": "1",
+      "token": "T_INTEGER",
+      "backtrack": "false"
+    },
+    {
+      "type": "final",
+      "name": "2",
+      "token": "T_PLUS",
+      "backtrack": "false"
+    },
+    {
+      "type": "final",
+      "name": "3",
+      "token": "T_MINUS",
+      "backtrack": "false"
+    },
+    {
+      "type": "final",
+      "name": "4",
+      "token": "T_MULTIPLY",
+      "backtrack": "false"
+    },
+    {
+      "type": "final",
+      "name": "5",
+      "token": "T_DIVIDE",
+      "backtrack": "false"
+    },
+    {
+      "type": "final",
+      "name": "6",
+      "token": "T_OPEN_PAR",
+      "backtrack": "false"
+    },
+    {
+      "type": "final",
+      "name": "7",
+      "token": "T_CLOSE_PAR",
+      "backtrack": "false"
+    },
+    {
+      "type": "normal",
+      "name": "8"
+    },
+    {
+      "type": "final",
+      "name": "9",
+      "token": "T_INTEGER",
+      "backtrack": "true"
+    },
+    {
+      "type": "final",
+      "name": "10",
+      "token": "T_INVALID",
+      "backtrack": "false"
+    }
+  ],
+  "edges": [
+    {
+      "from": "0",
+      "to": "0",
+      "value": "SPACE"
+    },
+    {
+      "from": "0",
+      "to": "0",
+      "value": "EOL"
+    },
+    {
+      "from": "0",
+      "to": "0",
+      "value": "EOF"
+    },
+    {
+      "from": "0",
+      "to": "1",
+      "value": "0"
+    },
+    {
+      "from": "0",
+      "to": "2",
+      "value": "+"
+    },
+    {
+      "from": "0",
+      "to": "3",
+      "value": "-"
+    },
+    {
+      "from": "0",
+      "to": "4",
+      "value": "*"
+    },
+    {
+      "from": "0",
+      "to": "5",
+      "value": "/"
+    },
+    {
+      "from": "0",
+      "to": "6",
+      "value": "("
+    },
+    {
+      "from": "0",
+      "to": "7",
+      "value": ")"
+    },
+    {
+      "from": "0",
+      "to": "8",
+      "value": "NONZERO"
+    },
+    {
+      "from": "8",
+      "to": "8",
+      "value": "NONZERO"
+    },
+    {
+      "from": "8",
+      "to": "8",
+      "value": "0"
+    },
+    {
+      "from": "8",
+      "to": "9",
+      "value": "OTHER"
+    },
+    {
+      "from": "0",
+      "to": "10",
+      "value": "OTHER"
+    }
+  ]
+}

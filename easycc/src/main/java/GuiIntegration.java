@@ -7,8 +7,6 @@ import data.GenericTable;
 import data.LexicalAnalysisRow;
 import data.SyntaxAnalysisRow;
 import data.structure.ConsoleData;
-import data.structure.ConsoleDataRow;
-import helper.LexicalHelper;
 import listener.DevGuiListener;
 import machine.StateMachine;
 import machine.json.State;
@@ -32,6 +30,7 @@ public class GuiIntegration implements DevGuiListener {
 
     private LexicalAnalyzer lexicalAnalyzer;
     private SyntaxAnalyzer syntaxAnalyzer;
+    private boolean lexicalCompiles, syntaxCompiles;
 
     public GuiIntegration(LexicalAnalyzer lexicalAnalyzer, SyntaxAnalyzer syntaxAnalyzer){
         this.lexicalAnalyzer = lexicalAnalyzer;
@@ -41,6 +40,7 @@ public class GuiIntegration implements DevGuiListener {
     @Override
     public void lexicalAnalysis(String text) {
         lexicalAnalyzer.analyzeText(text);
+        lexicalCompiles = lexicalAnalyzer.getErrorMessagesList().size() == 0;
     }
 
     @Override
@@ -71,7 +71,7 @@ public class GuiIntegration implements DevGuiListener {
 
             // If error
             if(token instanceof ErrorToken) {
-                rows.add(new LexicalAnalysisRow(token.getToken(), token.getValue(), token.getRow(), token.getCol(), token.getPosition(), LexicalHelper.tokenMessage(token)));
+                rows.add(new LexicalAnalysisRow(token.getToken(), token.getValue(), token.getRow(), token.getCol(), token.getPosition(), ((ErrorToken) token).getMessage()));
             }
         }
 
@@ -80,14 +80,16 @@ public class GuiIntegration implements DevGuiListener {
 
     @Override
     public void parse() {
-        syntaxAnalyzer.parse(lexicalAnalyzer.getFirstToken());
+        if(lexicalCompiles) {
+            syntaxCompiles = syntaxAnalyzer.parse(lexicalAnalyzer.getFirstToken());
+        }
     }
 
     @Override
     public ConsoleData<SyntaxAnalysisRow> getParserOutput() {
 
         ConsoleData<SyntaxAnalysisRow> rows = new ConsoleData<>();
-        if(syntaxAnalyzer.getSyntaxParser().getParseStrategy() instanceof LLPP) {
+        if(lexicalCompiles && syntaxAnalyzer.getSyntaxParser().getParseStrategy() instanceof LLPP) {
             LLPP llpp = (LLPP) syntaxAnalyzer.getSyntaxParser().getParseStrategy();
             for(int row = 0; row < llpp.getLlppData().getEntryList().size(); row++) {
 
@@ -112,7 +114,10 @@ public class GuiIntegration implements DevGuiListener {
     public List<String> getSyntaxErrorMessages() {
         if(syntaxAnalyzer.getSyntaxParser().getParseStrategy() instanceof LLPP) {
             LLPP llpp = (LLPP) syntaxAnalyzer.getSyntaxParser().getParseStrategy();
-            return llpp.getLlppData().getErrorMessages();
+            if(lexicalCompiles) {
+                return llpp.getLlppData().getErrorMessages();
+            }
+            return new ArrayList<>();
         }
         return null;
     }
@@ -129,7 +134,7 @@ public class GuiIntegration implements DevGuiListener {
 
     @Override
     public boolean doesCompile() {
-        return false;
+        return lexicalCompiles && syntaxCompiles;
     }
 
     @Override

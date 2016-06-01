@@ -1,0 +1,17 @@
+{
+    "ignore": {
+        "prefix": "",
+        "suffix": "",
+        "include": [],
+        "exclude": []
+    },
+
+    "error": {
+        "prefix": "",
+        "suffix": "",
+        "include": ["T_INVALID"],
+        "exclude": []
+    },
+
+    "reserved": []
+}

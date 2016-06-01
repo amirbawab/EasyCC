@@ -38,13 +38,15 @@ public class SyntaxAnalyzer {
      * Parse using the chosen parsing method
      * @param lexicalToken
      */
-    public void parse(AbstractToken lexicalToken) {
+    public boolean parse(AbstractToken lexicalToken) {
         syntaxAnalysisProcessTime = System.currentTimeMillis();
-        syntaxParser.getParseStrategy().parse(lexicalToken);
+        boolean parse = syntaxParser.getParseStrategy().parse(lexicalToken);
         syntaxAnalysisProcessTime = System.currentTimeMillis() - syntaxAnalysisProcessTime;
 
         // Log process time
         l.info("Syntax-analysis took: " + this.syntaxAnalysisProcessTime+ " ms");
+
+        return parse;
     }
 
     /**

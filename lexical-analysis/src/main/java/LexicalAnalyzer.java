@@ -12,7 +12,6 @@ import machine.StateTransitionTable;
 import token.AbstractToken;
 import token.AbstractTokenFactory;
 import token.ErrorToken;
-import token.LexicalToken;
 
 public class LexicalAnalyzer {
 
@@ -37,6 +36,9 @@ public class LexicalAnalyzer {
 
     // Store the list of generated tokens
     private List<AbstractToken> tokens;
+
+    // Store error messages
+    private List<String> errorMessagesList;
 
     // Keep track of execution time
     private long lexicalAnalysisProcessTime;
@@ -104,6 +106,9 @@ public class LexicalAnalyzer {
 
         // Reset state
         this.state = stateMachine.getInitialState().getId();
+
+        // Reset list of errors
+        errorMessagesList = new ArrayList<>();
 
         // Scan text
         scan = new Scanner(text);
@@ -237,7 +242,7 @@ public class LexicalAnalyzer {
                     // If token is an error one
                     if (LexicalConfig.getInstance().getLexicalTokensConfig().getErrorTokensConfig().isErrorToken(tokenStr)) {
                         token = AbstractTokenFactory.createErrorToken(tokenStr, word, wordRow, wordCol, position - word.length());
-
+                        errorMessagesList.add(((ErrorToken)token).getMessage());
                     } else {
                         token = AbstractTokenFactory.createLexicalToken(tokenStr, word, wordRow, wordCol, position - word.length());
                     }
@@ -295,5 +300,13 @@ public class LexicalAnalyzer {
      */
     public AbstractToken getFirstToken() {
         return tokens.size() > 0 ? tokens.get(0) : null;
+    }
+
+    /**
+     * Get the list of error messages
+     * @return error messages list
+     */
+    public List<String> getErrorMessagesList() {
+        return errorMessagesList;
     }
 }
