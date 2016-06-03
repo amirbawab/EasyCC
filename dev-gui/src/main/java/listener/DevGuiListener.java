@@ -23,7 +23,7 @@ public interface DevGuiListener {
 	Object[][][] getSymbolTables();
 	String getSymbolTableName(int id);
 	Object[][] getSemanticErrors();
-	JPanel getParserTree();
+	JPanel getDerivationTree();
 	String getGeneratedCode();
 	
 	// Menu

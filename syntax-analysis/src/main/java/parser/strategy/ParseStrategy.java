@@ -1,7 +1,9 @@
 package parser.strategy;
 
 import grammar.Grammar;
+import token.AbstractSyntaxToken;
 import token.AbstractToken;
+import token.NonTerminalToken;
 
 import java.util.List;
 
@@ -23,6 +25,12 @@ public abstract class ParseStrategy {
      * @return true if parse is successful
      */
     public abstract boolean parse(AbstractToken lexicalTokenList);
+
+    /**
+     * Get the derivation root syntax token
+     * @return syntax token
+     */
+    public abstract NonTerminalToken getDerivationRoot();
 
     /**
      * Set listener instance

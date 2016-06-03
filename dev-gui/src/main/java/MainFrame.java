@@ -4,7 +4,6 @@ import data.GenericTable;
 import data.LexicalAnalysisRow;
 import data.SyntaxAnalysisRow;
 import data.structure.ConsoleData;
-import data.structure.ConsoleDataRow;
 import listener.DevGuiListener;
 import menu.MainMenu;
 import menu.dialogs.StateMachineDialog;
@@ -128,7 +127,7 @@ public class MainFrame extends JFrame {
 								message += String.format("Parser: %d error(s) found! ", errorMessages.size());
 
 							// Get tree
-							centerPanel.setPanel(CenterPanel.PARSER_TREE_TITLE, devGuilistener.getParserTree());
+							centerPanel.setPanel(CenterPanel.PARSER_TREE_TITLE, devGuilistener.getDerivationTree());
 
 							// Clear symbol tables
 							centerPanel.removeTablesInNavigationTable(CenterPanel.SYMBOL_TABLE_TITLE);

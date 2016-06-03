@@ -31,7 +31,7 @@ public class CenterPanel extends JPanel {
 	public static final String 	SCANNER_OUTPUT_TITLE = "Scanner - Correct",
 								SCANNER_ERROR_TITLE = "Scanner - Error",
 								PARSER_OUTPUT_TITLE = "Parser - All Steps",
-								PARSER_TREE_TITLE = "Parser - Tree",
+								PARSER_TREE_TITLE = "Parser - Derivation Tree",
 								SYMBOL_TABLE_TITLE = "Symbol tables",
 								SEMANTIC_ERROR_TITLE = "Semantic - Error",
 								CODE_GENERATION_TITLE = "Code generation";

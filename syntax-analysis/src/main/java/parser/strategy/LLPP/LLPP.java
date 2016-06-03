@@ -297,11 +297,8 @@ public class LLPP extends ParseStrategy {
         return llppData;
     }
 
-    /**
-     * Get parse tree root
-     * @return parse tree root
-     */
-    public NonTerminalToken getTreeRoot() {
+    @Override
+    public NonTerminalToken getDerivationRoot() {
         return treeRoot;
     }
 

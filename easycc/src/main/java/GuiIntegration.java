@@ -1,4 +1,5 @@
 import com.mxgraph.layout.*;
+import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
@@ -153,8 +154,108 @@ public class GuiIntegration implements DevGuiListener {
     }
 
     @Override
-    public JPanel getParserTree() {
-        return null;
+    public JPanel getDerivationTree() {
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+
+        mxGraph graph = new mxGraph();
+        Object parent = graph.getDefaultParent();
+
+        // Configure graph
+        graph.setAutoSizeCells(true);
+
+        // Start drawing
+        graph.getModel().beginUpdate();
+
+        // Create nodes
+        Queue<AbstractSyntaxToken> tokensQueue = new LinkedList<>();
+        Map<AbstractSyntaxToken, Object> vertexMap = new HashMap<>();
+
+        // Add root
+        tokensQueue.offer(syntaxAnalyzer.getSyntaxParser().getParseStrategy().getDerivationRoot());
+        Object vRoot = graph.insertVertex(parent, null, tokensQueue.peek().getValue(), 20, 20, 80,30);
+        vertexMap.put(tokensQueue.peek(), vRoot);
+        try
+        {
+            while(!tokensQueue.isEmpty()) {
+
+                // Peek
+                AbstractSyntaxToken currentToken = tokensQueue.poll();
+
+                // Create node
+                Object v1 = vertexMap.get(currentToken);
+                graph.updateCellSize(v1);
+
+                if(currentToken instanceof NonTerminalToken) {
+                    NonTerminalToken currentNonTerminal =(NonTerminalToken) currentToken;
+
+                    for (int i=currentNonTerminal.getChildren().size()-1; i >= 0; i--) {
+
+                        // Get token
+                        AbstractSyntaxToken token = currentNonTerminal.getChildren().get(i);
+
+                        // Get value
+                        String value = token.getValue();
+                        if(token instanceof TerminalToken) {
+                            value += "\n" + ((TerminalToken) token).getLexicalToken().getValue();
+                        }
+
+                        // Add child
+                        Object v2 = graph.insertVertex(parent, null, value, 240, 150, 80, 30);
+                        vertexMap.put(token, v2);
+                        tokensQueue.offer(token);
+
+                        graph.insertEdge(parent, null, null, v1, v2);
+                    }
+
+                } else if(currentToken instanceof TerminalToken) {
+                    graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "green", new Object[]{v1});
+                    graph.setCellStyles(mxConstants.STYLE_FONTCOLOR, "white", new Object[]{v1});
+
+                } else if(currentToken instanceof EpsilonToken) {
+                    graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "brown", new Object[]{v1});
+                    graph.setCellStyles(mxConstants.STYLE_FONTCOLOR, "white", new Object[]{v1});
+
+                } else if(currentToken instanceof ActionToken) {
+                    graph.setCellStyles(mxConstants.STYLE_FONTCOLOR, "red", new Object[]{v1});
+                }
+            }
+
+            mxHierarchicalLayout layout = new mxHierarchicalLayout(graph, SwingConstants.NORTH);
+            layout.execute(parent);
+        }
+        finally
+        {
+            graph.getModel().endUpdate();
+        }
+
+        final mxGraphComponent graphComponent = new mxGraphComponent(graph);
+
+        // Add wheel listener
+        graphComponent.addMouseWheelListener(new MouseWheelListener() {
+            final int MAX_ZOOM = 10;
+            final int MIN_ZOOM = -10;
+            int zoomValue = 0;
+
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                if((e.getModifiers() & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK) {
+                    if (e.getWheelRotation() < 0 && zoomValue < MAX_ZOOM) {
+                        graphComponent.zoomIn();
+                        zoomValue++;
+
+                    } else if(e.getWheelRotation() > 0 && zoomValue > MIN_ZOOM) {
+                        graphComponent.zoomOut();
+                        zoomValue--;
+                    }
+                }
+            }
+        });
+
+        // Add component
+        panel.add(graphComponent, BorderLayout.CENTER);
+        return panel;
     }
 
     @Override
