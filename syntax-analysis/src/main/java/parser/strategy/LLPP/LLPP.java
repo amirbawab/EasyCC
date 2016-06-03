@@ -106,6 +106,9 @@ public class LLPP extends ParseStrategy {
                         parseStrategyListener.actionCall(syntaxToken, lexicalToken, phase);
                     }
 
+                    // Pop action token
+                    stackSyntax.pop();
+
                 } else if(syntaxToken instanceof TerminalToken) {
 
                     // If match
