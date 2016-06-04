@@ -2,6 +2,7 @@ package creator;
 
 import core.annotations.ActionModel;
 import core.models.GenericModel;
+import models.ArithmeticResultModel;
 import models.IntegerModel;
 
 /**
@@ -16,4 +17,7 @@ public class ModelsFactory {
     public static GenericModel createIntegerModel() {
         return new IntegerModel();
     }
+
+    @ActionModel("add")
+    public static GenericModel createArithmeticResultModel() {return new ArithmeticResultModel();}
 }
