@@ -4,6 +4,7 @@ import core.actions.GenericAction;
 import core.annotations.ActionModel;
 import core.annotations.ParsePhase;
 import core.annotations.SemanticAction;
+import core.models.DataModel;
 import core.models.GenericModel;
 import core.structure.SemanticStack;
 import creator.ActionCreator;
@@ -131,11 +132,13 @@ public class SemanticHandler {
                 if(modelMethodMap.containsKey(actionToken.getValue())) {
                     model = (GenericModel) modelMethodMap.get(actionToken.getValue()).invoke(null);
                 } else {
-                    model = new GenericModel();
+                    model = new DataModel();
                 }
 
-                // Set corresponding lexical token
-                model.setLexicalToken(lexicalToken);
+                // Set corresponding lexical token for data model
+                if(model instanceof DataModel) {
+                    ((DataModel) model).setLexicalToken(lexicalToken);
+                }
 
                 // Prepare a new semantic context
                 SemanticContext semanticContext = new SemanticContext();

@@ -1,6 +1,7 @@
 package creator;
 
 import actions.AddAction;
+import actions.IntegerAction;
 import core.actions.GenericAction;
 
 import java.util.List;
@@ -20,5 +21,6 @@ public class ActionCreator {
         // Add all the actions create here ...
 
         actionList.add(new AddAction());
+        actionList.add(new IntegerAction());
     }
 }

@@ -1,8 +1,8 @@
 package models;
 
-import core.models.GenericModel;
+import core.models.DataModel;
 
-public class IntegerModel extends GenericModel {
+public class IntegerModel extends DataModel {
     public int getIntValue() {
         return Integer.parseInt(getLexicalToken().getValue());
     }
