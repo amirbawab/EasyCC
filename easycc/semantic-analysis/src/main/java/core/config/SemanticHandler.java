@@ -41,6 +41,9 @@ public class SemanticHandler {
     // Semantic stack
     private SemanticStack semanticStack;
 
+    // Store the number of parse phases
+    private int maxParsePhase = 0;
+
     public SemanticHandler() {
 
         // Init components
@@ -79,8 +82,16 @@ public class SemanticHandler {
                     ParsePhase parsePhase = method.getAnnotation(ParsePhase.class);
 
                     if(parsePhase != null) {
-                        actionMethodMap.put(generateMethodKey(semanticAction.value(), parsePhase.value()), new ObjectMethod(method, action));
-                        l.info("Class: " + action.getClass().getSimpleName() + " - Method: " + method.getName() + " - Semantic: " + semanticAction.value() + " - Phase: " + parsePhase.value() + ", was registered!");
+
+                        int currentParsePhase = parsePhase.value();
+
+                        // Update max parse phase
+                        if(currentParsePhase > maxParsePhase) {
+                            maxParsePhase = currentParsePhase;
+                        }
+
+                        actionMethodMap.put(generateMethodKey(semanticAction.value(), currentParsePhase), new ObjectMethod(method, action));
+                        l.info("Class: " + action.getClass().getSimpleName() + " - Method: " + method.getName() + " - Semantic: " + semanticAction.value() + " - Phase: " + currentParsePhase + ", was registered!");
                     }
                 }
             }
@@ -162,6 +173,14 @@ public class SemanticHandler {
      */
     private String generateMethodKey(String action, int phase) {
         return action + "::" + phase;
+    }
+
+    /**
+     * Get the maximum parse phase
+     * @return maximum of all ParsePhase annotations value
+     */
+    public int getMaxParsePhase() {
+        return maxParsePhase;
     }
 
     /**

@@ -18,6 +18,11 @@ public class SemanticAnalyzer {
             public void actionCall(AbstractSyntaxToken syntaxToken, AbstractToken lexicalToken, int phase) {
                 semanticHandler.handleAction(syntaxToken, lexicalToken, phase);
             }
+
+            @Override
+            public int getParsePhase() {
+                return semanticHandler.getMaxParsePhase();
+            }
         });
     }
 }

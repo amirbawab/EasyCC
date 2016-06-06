@@ -72,6 +72,13 @@ public class LLPP extends ParseStrategy {
         // Int phases
         int phases = 1;
 
+        // If listener is set then update the number of parse phases
+        if(parseStrategyListener != null) {
+            phases = parseStrategyListener.getParsePhase();
+        }
+
+        l.info("Total parses: " + phases);
+
         // Prepare lexical token
         AbstractToken lexicalToken = null;
 
@@ -81,14 +88,16 @@ public class LLPP extends ParseStrategy {
             // Push S
             stackSyntax.push(treeRoot);
 
-            // Prepare storage
-            llppData = new LLPPData();
+            if(phase == 1) {
+                // Prepare storage
+                llppData = new LLPPData();
 
-            // Add start production LHS
-            llppData.getDerivationList().add(stackSyntax.peek());
+                // Add start production LHS
+                llppData.getDerivationList().add(stackSyntax.peek());
 
-            // New data entry
-            llppData.addFineEntry(stackSyntax, lexicalToken);
+                // New data entry
+                llppData.addFineEntry(stackSyntax, lexicalToken);
+            }
 
             // Reset input token
             lexicalToken = firstLexicalTokens;
@@ -114,8 +123,10 @@ public class LLPP extends ParseStrategy {
                     // If match
                     if(syntaxToken.getValue().equals(lexicalToken.getToken())) {
 
-                        // New data entry
-                        llppData.addFineEntry(stackSyntax, lexicalToken);
+                        if(phase == 1) {
+                            // New data entry
+                            llppData.addFineEntry(stackSyntax, lexicalToken);
+                        }
 
                         // Set terminal value
                         ((TerminalToken) syntaxToken).setLexicalToken(lexicalToken);
@@ -128,11 +139,13 @@ public class LLPP extends ParseStrategy {
 
                     } else {
 
-                        // New data entry
-                        llppData.addErrorEntry(stackSyntax, lexicalToken, SyntaxHelper.tokenDefaultMessage(lexicalToken));
+                        if(phase == 1) {
+                            // New data entry
+                            llppData.addErrorEntry(stackSyntax, lexicalToken, SyntaxHelper.tokenDefaultMessage(lexicalToken));
 
-                        // Grammar can be enhacned
-                        l.warn("Compiler couldn't make the best decision because it expected a non-terminal and a terminal instead of two terminals");
+                            // Grammar can be enhacned
+                            l.warn("Compiler couldn't make the best decision because it expected a non-terminal and a terminal instead of two terminals");
+                        }
 
                         // Pop a syntax token
                         // Note: This decision is arbitrary because the behavior is not provided
@@ -156,8 +169,10 @@ public class LLPP extends ParseStrategy {
                         // Store production
                         List<AbstractSyntaxToken> ruleCopy = ((LLPPRuleCell) cell).getRuleCopy();
 
-                        // New data entry
-                        llppData.addFineEntry(stackSyntax, lexicalToken, nonTerminalToken, ruleCopy);
+                        if(phase == 1) {
+                            // New data entry
+                            llppData.addFineEntry(stackSyntax, lexicalToken, nonTerminalToken, ruleCopy);
+                        }
 
                         // Pop syntax token
                         stackSyntax.pop();
@@ -175,8 +190,10 @@ public class LLPP extends ParseStrategy {
                         // Cast to error cell
                         LLPPErrorCell errorCell = (LLPPErrorCell) cell;
 
-                        // New data entry
-                        llppData.addErrorEntry(stackSyntax, lexicalToken, SyntaxHelper.tokenMessage(nonTerminalToken, lexicalToken));
+                        if(phase == 1) {
+                            // New data entry
+                            llppData.addErrorEntry(stackSyntax, lexicalToken, SyntaxHelper.tokenMessage(nonTerminalToken, lexicalToken));
+                        }
 
                         // Check decision
                         switch (errorCell.getDecision()) {
