@@ -1,10 +1,4 @@
-plugins {
-    id 'application'
-}
-
 version = '1.0'
-
-mainClassName = "SemanticAnalysis"
 
 dependencies {
     compile project(':syntax-analysis')
