@@ -1,12 +1,12 @@
-package table;
+package core.structure.symbol.table;
 
-import table.entry.SymbolTableGenericEntry;
+import core.structure.symbol.table.entry.SymbolTableGenericEntry;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Symbol table contains a list of entries
+ * Symbol core.structure.symbol.table contains a list of entries
  */
 
 public class SymbolTable {

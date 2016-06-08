@@ -1,4 +1,6 @@
-package table;
+package core.structure.symbol;
+
+import core.structure.symbol.table.SymbolTable;
 
 public class SymbolTableTree {
 
@@ -11,24 +13,24 @@ public class SymbolTableTree {
     }
 
     /**
-     * Get the absolute root symbol table
-     * @return root symbol table
+     * Get the absolute root core.structure.symbol core.structure.symbol.table
+     * @return root core.structure.symbol core.structure.symbol.table
      */
     public SymbolTable getAbsoluteRootSymbolTable() {
         return absoluteRootSymbolTable;
     }
 
     /**
-     * Get the relative root symbol table
-     * If not set, this method will return the absolute symbol table
-     * @return root symbol table which can change during parsing
+     * Get the relative root core.structure.symbol core.structure.symbol.table
+     * If not set, this method will return the absolute core.structure.symbol core.structure.symbol.table
+     * @return root core.structure.symbol core.structure.symbol.table which can change during parsing
      */
     public SymbolTable getRelativeRootSymbolTable() {
         return relativeRootSymbolTable;
     }
 
     /**
-     * Set the relative root symbol table
+     * Set the relative root core.structure.symbol core.structure.symbol.table
      * @param relativeRootSymbolTable
      */
     public void setRelativeRootSymbolTable(SymbolTable relativeRootSymbolTable) {
