@@ -1,5 +1,6 @@
 package creator;
 
+import actions.CreateClassAction;
 import core.actions.GenericAction;
 
 import java.util.List;
@@ -17,6 +18,6 @@ public class ActionCreator {
     public void allActions(List<GenericAction> actionList) {
 
         // Add all the actions create here ...
-
+        actionList.add(new CreateClassAction());
     }
 }

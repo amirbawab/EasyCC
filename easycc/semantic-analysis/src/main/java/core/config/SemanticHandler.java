@@ -7,6 +7,7 @@ import core.annotations.SemanticAction;
 import core.models.DataModel;
 import core.models.GenericModel;
 import core.structure.SemanticStack;
+import core.structure.symbol.SymbolTableTree;
 import creator.ActionCreator;
 import creator.ModelsFactory;
 import org.apache.logging.log4j.LogManager;
@@ -41,6 +42,9 @@ public class SemanticHandler {
     // Semantic stack
     private SemanticStack semanticStack;
 
+    // Symbol table tree
+    private SymbolTableTree symbolTableTree;
+
     // Store the number of parse phases
     private int maxParsePhase = 0;
 
@@ -51,6 +55,7 @@ public class SemanticHandler {
         actionMethodMap = new HashMap<>();
         modelMethodMap = new HashMap<>();
         semanticStack = new SemanticStack();
+        symbolTableTree = new SymbolTableTree();
 
         // Get the actions
         new ActionCreator().allActions(actionList);
@@ -154,7 +159,7 @@ public class SemanticHandler {
                 semanticContext.setModel(model);
 
                 // Call method
-                objectMethod.getMethod().invoke(objectMethod.getGenericAction(), semanticStack, semanticContext);
+                objectMethod.getMethod().invoke(objectMethod.getGenericAction(), semanticContext, semanticStack, symbolTableTree);
             } catch (IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
