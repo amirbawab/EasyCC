@@ -92,19 +92,21 @@ public class GuiIntegration implements DevGuiListener {
         ConsoleData<SyntaxAnalysisRow> rows = new ConsoleData<>();
         if(lexicalCompiles && syntaxAnalyzer.getSyntaxParser().getParseStrategy() instanceof LLPP) {
             LLPP llpp = (LLPP) syntaxAnalyzer.getSyntaxParser().getParseStrategy();
-            for(int row = 0; row < llpp.getLlppData().getEntryList().size(); row++) {
+            if(llpp.getLlppData() != null) {
+                for (int row = 0; row < llpp.getLlppData().getEntryList().size(); row++) {
 
-                // Get current
-                LLPPDataEntry entry = llpp.getLlppData().getEntryList().get(row);
+                    // Get current
+                    LLPPDataEntry entry = llpp.getLlppData().getEntryList().get(row);
 
-                // If error
-                if(entry instanceof LLPPDataFineEntry) {
-                    LLPPDataFineEntry dataFineEntry = (LLPPDataFineEntry) entry;
-                    rows.add(new SyntaxAnalysisRow(dataFineEntry.getStepNumber(), dataFineEntry.getStackContent(), dataFineEntry.getInputContent(), dataFineEntry.getProductionContent(), dataFineEntry.getDerivationContent()));
+                    // If error
+                    if (entry instanceof LLPPDataFineEntry) {
+                        LLPPDataFineEntry dataFineEntry = (LLPPDataFineEntry) entry;
+                        rows.add(new SyntaxAnalysisRow(dataFineEntry.getStepNumber(), dataFineEntry.getStackContent(), dataFineEntry.getInputContent(), dataFineEntry.getProductionContent(), dataFineEntry.getDerivationContent()));
 
-                } else if(entry instanceof LLPPDataErrorEntry) {
-                    LLPPDataErrorEntry dataErrorEntry = (LLPPDataErrorEntry) entry;
-                    rows.add(new SyntaxAnalysisRow(dataErrorEntry.getStepNumber(), dataErrorEntry.getStackContent(), dataErrorEntry.getInputContent(), "", dataErrorEntry.getMessage()));
+                    } else if (entry instanceof LLPPDataErrorEntry) {
+                        LLPPDataErrorEntry dataErrorEntry = (LLPPDataErrorEntry) entry;
+                        rows.add(new SyntaxAnalysisRow(dataErrorEntry.getStepNumber(), dataErrorEntry.getStackContent(), dataErrorEntry.getInputContent(), "", dataErrorEntry.getMessage()));
+                    }
                 }
             }
         }
@@ -115,7 +117,7 @@ public class GuiIntegration implements DevGuiListener {
     public List<String> getSyntaxErrorMessages() {
         if(syntaxAnalyzer.getSyntaxParser().getParseStrategy() instanceof LLPP) {
             LLPP llpp = (LLPP) syntaxAnalyzer.getSyntaxParser().getParseStrategy();
-            if(lexicalCompiles) {
+            if(llpp.getLlppData() != null && lexicalCompiles) {
                 return llpp.getLlppData().getErrorMessages();
             }
             return new ArrayList<>();

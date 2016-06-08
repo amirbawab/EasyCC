@@ -139,15 +139,13 @@ public class SemanticHandler {
             try {
 
                 // Create the corresponding model
-                GenericModel model;
+                GenericModel model = null;
                 if(modelMethodMap.containsKey(actionToken.getValue())) {
                     model = (GenericModel) modelMethodMap.get(actionToken.getValue()).invoke(null);
-                } else {
-                    model = new DataModel();
                 }
 
                 // Set corresponding lexical token for data model
-                if(model instanceof DataModel) {
+                if(model != null && model instanceof DataModel) {
                     ((DataModel) model).setLexicalToken(lexicalToken);
                 }
 

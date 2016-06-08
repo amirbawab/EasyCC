@@ -75,6 +75,12 @@ public class LLPP extends ParseStrategy {
         // If listener is set then update the number of parse phases
         if(parseStrategyListener != null) {
             phases = parseStrategyListener.getParsePhase();
+
+            // If no phase or phase 0 has been specified
+            if(phases == 0) {
+                l.error("Exiting parser because no actions has been specified for phase 1");
+                return false;
+            }
         }
 
         l.info("Total parses: " + phases);

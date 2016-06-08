@@ -18,14 +18,14 @@ dependencies {
 }
 
 lexicalAnalyzer {
-    machinePath = "/calculator/lexical-machine.json"
-    tokensPath = "/calculator/lexical-tokens.json"
-    messagesPath = "/calculator/lexical-messages.json"
+    machinePath = "/moon/lexical-machine.json"
+    tokensPath = "/moon/lexical-tokens.json"
+    messagesPath = "/moon/lexical-messages.json"
 }
 
 syntaxAnalyzer {
-    grammarPath = "/calculator/syntax-grammar.cfg"
-    messagesPath = "/calculator/syntax-messages.json"
+    grammarPath = "/moon/syntax-grammar.cfg"
+    messagesPath = "/moon/syntax-messages.json"
     parseStrategy = "parser.strategy.LLPP.LLPP"
 }
 
