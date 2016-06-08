@@ -10,8 +10,6 @@ import java.lang.annotation.Target;
  * An action model is useful when the instance to be created has complex structure
  * For example: If an identifier can be an array, then a specific structure needs to be created for it
  * in order to store the indices
- *
- * If no action model was specified, then a generic model will be created
  */
 
 @Retention(RetentionPolicy.RUNTIME)

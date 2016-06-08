@@ -4,11 +4,14 @@ import core.actions.GenericAction;
 import core.annotations.ActionModel;
 import core.annotations.ParsePhase;
 import core.annotations.SemanticAction;
+import core.annotations.SymbolTableEntry;
 import core.models.DataModel;
 import core.models.GenericModel;
 import core.structure.SemanticStack;
 import core.structure.symbol.SymbolTableTree;
+import core.structure.symbol.table.entry.SymbolTableGenericEntry;
 import creator.ActionCreator;
+import creator.EntriesFactory;
 import creator.ModelsFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,6 +41,8 @@ public class SemanticHandler {
     // Method mapper
     private Map<String, ObjectMethod> actionMethodMap;
     private Map<String, Method> modelMethodMap;
+    private Map<String, Method> entryMethodMap;
+
 
     // Semantic stack
     private SemanticStack semanticStack;
@@ -53,6 +58,7 @@ public class SemanticHandler {
         // Init components
         actionList = new ArrayList<>();
         actionMethodMap = new HashMap<>();
+        entryMethodMap = new HashMap<>();
         modelMethodMap = new HashMap<>();
         semanticStack = new SemanticStack();
         symbolTableTree = new SymbolTableTree();
@@ -63,6 +69,7 @@ public class SemanticHandler {
         // Register data
         registerActions();
         registerModels();
+        registerEntries();
     }
 
     /**
@@ -128,6 +135,28 @@ public class SemanticHandler {
     }
 
     /**
+     * Register all the entries methods created
+     */
+    public void registerEntries() {
+
+        l.info("Registering symbol table entries");
+
+        // Loop on all the methods
+        for(Method method : EntriesFactory.class.getMethods()) {
+
+            // Get annotation
+            SymbolTableEntry actionEntry = method.getAnnotation(SymbolTableEntry.class);
+
+            if(actionEntry != null) {
+                entryMethodMap.put(actionEntry.value(), method);
+                l.info("Entry method: " + method.getName() + " - Semantic: " + actionEntry.value() + ", was registered");
+            }
+        }
+
+        l.info("Finished registering symbol table entries");
+    }
+
+    /**
      * Handle a semantic action
      * @param syntaxToken
      * @param lexicalToken
@@ -154,9 +183,16 @@ public class SemanticHandler {
                     ((DataModel) model).setLexicalToken(lexicalToken);
                 }
 
+                // Create symbol table entry
+                SymbolTableGenericEntry entry = null;
+                if(entryMethodMap.containsKey(actionToken.getValue())) {
+                    entry = (SymbolTableGenericEntry) entryMethodMap.get(actionToken.getValue()).invoke(null);
+                }
+
                 // Prepare a new semantic context
                 SemanticContext semanticContext = new SemanticContext();
                 semanticContext.setModel(model);
+                semanticContext.setEntry(entry);
 
                 // Call method
                 objectMethod.getMethod().invoke(objectMethod.getGenericAction(), semanticContext, semanticStack, symbolTableTree);

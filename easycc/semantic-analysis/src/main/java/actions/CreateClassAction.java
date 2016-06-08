@@ -12,6 +12,7 @@ public class CreateClassAction extends GenericAction {
 
     @ParsePhase(1)
     public void createClassTable(SemanticContext semanticContext, SemanticStack semanticStack, SymbolTableTree symbolTableTree) {
-        System.out.println("Create class");
+        System.out.println(semanticContext.getModel().getClass().getSimpleName());
+        System.out.println(semanticContext.getEntry().getClass().getSimpleName());
     }
 }
