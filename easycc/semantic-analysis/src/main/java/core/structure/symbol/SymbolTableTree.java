@@ -4,7 +4,7 @@ import com.bethecoder.ascii_table.ASCIITable;
 import core.structure.symbol.table.SymbolTable;
 import core.structure.symbol.table.entry.SymbolTableGenericEntry;
 import core.structure.symbol.table.entry.SymbolTableParentEntry;
-import creator.SymbolTableAttributeEnum;
+import enums.SymbolTableAttributeEnum;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

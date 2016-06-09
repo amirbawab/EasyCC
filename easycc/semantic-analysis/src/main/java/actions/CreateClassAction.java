@@ -7,8 +7,9 @@ import core.config.SemanticContext;
 import core.models.DataModel;
 import core.structure.SemanticStack;
 import core.structure.symbol.SymbolTableTree;
+import enums.SemanticActionEnum;
 
-@SemanticAction("createClassTableAndEntry")
+@SemanticAction(SemanticActionEnum.CREATE_CLASS_TABLE_AND_ENTRY)
 public class CreateClassAction extends GenericAction {
 
     @ParsePhase(1)

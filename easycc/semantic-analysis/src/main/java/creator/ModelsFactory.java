@@ -3,6 +3,7 @@ package creator;
 import core.annotations.ActionModel;
 import core.models.DataModel;
 import core.models.GenericModel;
+import enums.SemanticActionEnum;
 
 /**
  * All models that are expected to be created should be defined in this Factory class
@@ -12,7 +13,7 @@ import core.models.GenericModel;
 
 public class ModelsFactory {
 
-    @ActionModel("createClassTableAndEntry")
+    @ActionModel(SemanticActionEnum.CREATE_CLASS_TABLE_AND_ENTRY)
     public static GenericModel createCreateClassModel() {
         return new DataModel();
     }

@@ -3,6 +3,7 @@ package creator;
 import core.annotations.SymbolTableEntry;
 import core.structure.symbol.table.entry.SymbolTableGenericEntry;
 import entries.ClassEntry;
+import enums.SemanticActionEnum;
 
 /**
  * Factory class to create symbol table entries
@@ -11,7 +12,7 @@ import entries.ClassEntry;
 
 public class EntriesFactory {
 
-    @SymbolTableEntry("createClassTableAndEntry")
+    @SymbolTableEntry(SemanticActionEnum.CREATE_CLASS_TABLE_AND_ENTRY)
     public static SymbolTableGenericEntry createClassEntry() {
         return new ClassEntry();
     }

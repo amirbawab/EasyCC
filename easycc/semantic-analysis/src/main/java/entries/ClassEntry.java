@@ -2,7 +2,7 @@ package entries;
 
 import core.annotations.SymbolTableAttribute;
 import core.structure.symbol.table.entry.SymbolTableParentEntry;
-import creator.SymbolTableAttributeEnum;
+import enums.SymbolTableAttributeEnum;
 
 public class ClassEntry extends SymbolTableParentEntry {
 

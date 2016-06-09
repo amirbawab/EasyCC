@@ -2,7 +2,7 @@ package core.structure.symbol.table.entry;
 
 import core.annotations.SymbolTableAttribute;
 import core.structure.symbol.table.SymbolTable;
-import creator.SymbolTableAttributeEnum;
+import enums.SymbolTableAttributeEnum;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

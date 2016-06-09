@@ -1,6 +1,6 @@
 package core.annotations;
 
-import creator.SymbolTableAttributeEnum;
+import enums.SymbolTableAttributeEnum;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

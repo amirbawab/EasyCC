@@ -102,7 +102,7 @@ public class SemanticHandler {
                             maxParsePhase = currentParsePhase;
                         }
 
-                        actionMethodMap.put(generateMethodKey(semanticAction.value(), currentParsePhase), new ObjectMethod(method, action));
+                        actionMethodMap.put(generateMethodKey(semanticAction.value().getName(), currentParsePhase), new ObjectMethod(method, action));
                         l.info("Class: " + action.getClass().getSimpleName() + " - Method: " + method.getName() + " - Semantic: " + semanticAction.value() + " - Phase: " + currentParsePhase + ", was registered!");
                     }
                 }
@@ -126,7 +126,7 @@ public class SemanticHandler {
             ActionModel actionModel = method.getAnnotation(ActionModel.class);
 
             if(actionModel != null) {
-                modelMethodMap.put(actionModel.value(), method);
+                modelMethodMap.put(actionModel.value().getName(), method);
                 l.info("Model method: " + method.getName() + " - Semantic: " + actionModel.value() + ", was registered");
             }
         }
@@ -148,7 +148,7 @@ public class SemanticHandler {
             SymbolTableEntry actionEntry = method.getAnnotation(SymbolTableEntry.class);
 
             if(actionEntry != null) {
-                entryMethodMap.put(actionEntry.value(), method);
+                entryMethodMap.put(actionEntry.value().getName(), method);
                 l.info("Entry method: " + method.getName() + " - Semantic: " + actionEntry.value() + ", was registered");
             }
         }

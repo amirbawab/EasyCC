@@ -1,4 +1,4 @@
-package creator;
+package enums;
 
 /**
  * List of symbol table attributes
@@ -8,7 +8,7 @@ package creator;
 public enum SymbolTableAttributeEnum {
 
     // Add your attributes here
-    NAME("Name", "No name")
+    NAME("Name")
     ;
 
     // Store name and default value for an attribute
@@ -19,7 +19,7 @@ public enum SymbolTableAttributeEnum {
         this.defaultValue = defaultValue;
     }
     SymbolTableAttributeEnum(String name) {
-        this(name, "");
+        this(name, "Not specified");
     }
 
     public String getName() {
