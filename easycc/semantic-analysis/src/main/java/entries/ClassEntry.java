@@ -1,15 +1,14 @@
 package entries;
 
+import core.annotations.SymbolTableAttribute;
 import core.structure.symbol.table.entry.SymbolTableParentEntry;
+import creator.SymbolTableAttributeEnum;
 
 public class ClassEntry extends SymbolTableParentEntry {
-    private String name;
 
+    @Override
+    @SymbolTableAttribute(SymbolTableAttributeEnum.NAME)
     public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+        return super.getName();
     }
 }

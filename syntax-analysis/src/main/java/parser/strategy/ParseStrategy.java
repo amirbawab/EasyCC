@@ -39,4 +39,12 @@ public abstract class ParseStrategy {
     public void setParseStrategyListener(ParseStrategyListener parseStrategyListener) {
         this.parseStrategyListener = parseStrategyListener;
     }
+
+    /**
+     * Get listener instance
+     * @return listener instance
+     */
+    public ParseStrategyListener getParseStrategyListener() {
+        return parseStrategyListener;
+    }
 }

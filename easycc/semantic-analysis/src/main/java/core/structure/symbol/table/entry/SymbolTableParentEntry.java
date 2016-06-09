@@ -10,7 +10,7 @@ public class SymbolTableParentEntry extends SymbolTableGenericEntry {
     private SymbolTable symbolTable;
 
     public SymbolTableParentEntry() {
-        symbolTable = new SymbolTable();
+        symbolTable = new SymbolTable(this);
     }
 
     /**

@@ -46,6 +46,11 @@ public class SyntaxAnalyzer {
         // Log process time
         l.info("Syntax-analysis took: " + this.syntaxAnalysisProcessTime+ " ms");
 
+        // Log symbol tables
+        if(syntaxParser.getParseStrategy().getParseStrategyListener() != null) {
+            syntaxParser.getParseStrategy().getParseStrategyListener().logSymbolTables();
+        }
+
         return parse;
     }
 

@@ -223,6 +223,14 @@ public class SemanticHandler {
     }
 
     /**
+     * Get symbol table tree
+     * @return symbol table tree
+     */
+    public SymbolTableTree getSymbolTableTree() {
+        return symbolTableTree;
+    }
+
+    /**
      * Store genericAction and its corresponding method
      */
     private class ObjectMethod {
