@@ -15,11 +15,14 @@ public class SemanticAnalyzer {
 
     public SemanticAnalyzer(SyntaxAnalyzer syntaxAnalyzer) {
 
-        // Init components
-        semanticHandler = new SemanticHandler();
-
         // Set parse listener
         syntaxAnalyzer.getSyntaxParser().getParseStrategy().setParseStrategyListener(new ParseStrategyListener() {
+
+            @Override
+            public void init() {
+                semanticHandler = new SemanticHandler();
+            }
+
             @Override
             public void actionCall(AbstractSyntaxToken syntaxToken, AbstractToken lexicalToken, int phase) {
                 semanticHandler.handleAction(syntaxToken, lexicalToken, phase);

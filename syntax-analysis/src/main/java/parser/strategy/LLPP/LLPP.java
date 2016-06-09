@@ -74,6 +74,9 @@ public class LLPP extends ParseStrategy {
 
         // If listener is set then update the number of parse phases
         if(parseStrategyListener != null) {
+
+            // Required to reset data
+            parseStrategyListener.init();
             phases = parseStrategyListener.getParsePhase();
 
             // If no phase or phase 0 has been specified
