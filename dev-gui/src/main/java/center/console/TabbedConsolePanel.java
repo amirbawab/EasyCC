@@ -126,18 +126,6 @@ public class TabbedConsolePanel extends JTabbedPane {
 	public void addTableToTabelNavigation(String tableTitle, final String subTableTitle, Object[] header) {
 		final ConsoleTableNavigation table = (ConsoleTableNavigation) getBoard(tableTitle);
 		table.getTabbedPane().addTable(subTableTitle, header);
-		final ConsoleTable consoleTable = (ConsoleTable) table.getTabbedPane().getBoard(subTableTitle);
-		consoleTable.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				int row = consoleTable.getSelectedRow();
-				int col = consoleTable.getSelectedColumn();
-				Integer link = table.getEntryLink(subTableTitle, row);
-				if(row >=0 && col == consoleTable.getColumnCount()-1 && link != null && link >= 0) {
-					table.setSelectedIndex(link);
-				}
-			}
-		});
 	}
 
 	/**
@@ -146,15 +134,9 @@ public class TabbedConsolePanel extends JTabbedPane {
 	 * @param tableTitle
 	 * @param data
      */
-	public void addRowToTableInTableNavigation(int row, String tableNavigationTitle, String tableTitle, Object[] data) {
+	public void addRowToTableInTableNavigation(String tableNavigationTitle, String tableTitle, Object[] data) {
 		ConsoleTableNavigation table = (ConsoleTableNavigation) getBoard(tableNavigationTitle);
 		ConsoleTable subTable = (ConsoleTable) table.getTabbedPane().getBoard(tableTitle);
-
-		// Adjust the link
-		int link = (int)data[data.length-1];
-		table.addEntryLink(tableTitle, row, link);
-		data[data.length-1] = link >= 0 ? "<html><font color=#005DFF><u>View table</u></font></html>" : "<html><em>No table</em></html>";
-
 		subTable.addRow(data);
 	}
 	

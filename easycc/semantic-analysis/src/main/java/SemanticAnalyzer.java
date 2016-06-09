@@ -1,4 +1,5 @@
 import core.config.SemanticHandler;
+import core.structure.symbol.SymbolTableTree;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import parser.strategy.ParseStrategyListener;
@@ -38,5 +39,9 @@ public class SemanticAnalyzer {
                 l.info("Printing symbol tables\n" + semanticHandler.getSymbolTableTree());
             }
         });
+    }
+
+    public SymbolTableTree getSymbolTableTree() {
+        return semanticHandler.getSymbolTableTree();
     }
 }

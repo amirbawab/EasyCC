@@ -32,6 +32,6 @@ public class EasyCC {
      */
     public void startGui() {
         MainFrame mainFrame = new MainFrame("EasyCC - Dev GUI");
-        mainFrame.setDevGUIListener(new GuiIntegration(lexicalAnalyzer, syntaxAnalyzer));
+        mainFrame.setDevGUIListener(new GuiIntegration(lexicalAnalyzer, syntaxAnalyzer, semanticAnalyzer));
     }
 }

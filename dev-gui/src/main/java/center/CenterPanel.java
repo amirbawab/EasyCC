@@ -24,7 +24,6 @@ public class CenterPanel extends JPanel {
 	public static final Object[] SCANNER_OUTPUT_HEADER = {"Token", "Value", "Row", "Col", "Position"};
 	public static final Object[] SCANNER_ERROR_HEADER = {"Token", "Value", "Row", "Col", "Position", "Comment"};
 	public static final Object[] PARSER_OUTPUT_HEADER = {"Step", "Stack", "Input", "Production", "Derivation"};
-	public static final Object[] SYMBOL_TABLE_HEADER = {"Name", "Kind", "Structure", "Type", "Parameter", "Properly defined", "Address", "Label","Size (Byte)", "Link"};
 	public static final Object[] SEMANTIC_ERROR_HEADER= {"Value", "Row", "Col", "Message"};
 
 	// Panel titles
@@ -121,7 +120,7 @@ public class CenterPanel extends JPanel {
 	public void setTableOfTableData(String inTable, String panelTitle, Object[][] table) {
 		if(table != null)
 			for(int row=0; row<table.length; row++)
-				this.tabbedConsolePanel.addRowToTableInTableNavigation(row, inTable, panelTitle, table[row]);
+				this.tabbedConsolePanel.addRowToTableInTableNavigation(inTable, panelTitle, table[row]);
 	}
 
 	/**

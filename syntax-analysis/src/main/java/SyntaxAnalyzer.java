@@ -74,7 +74,7 @@ public class SyntaxAnalyzer {
      * Get process time
      * @return process time in ms
      */
-    public long getSyntaxAnalysisProcessTime() {
+    public long getProcessTime() {
         return syntaxAnalysisProcessTime;
     }
 }

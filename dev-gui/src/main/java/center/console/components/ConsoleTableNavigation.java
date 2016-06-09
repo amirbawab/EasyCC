@@ -18,7 +18,6 @@ public class ConsoleTableNavigation extends JPanel {
     // Components
     private TabbedConsolePanel tabbedPane;
     private JPanel navigationPanel;
-    private Map<String, Integer> entryLink;
     private Stack<Integer> pageStack;
     private int lastPage;
 
@@ -27,7 +26,6 @@ public class ConsoleTableNavigation extends JPanel {
         // Init components
         tabbedPane = new TabbedConsolePanel();
         navigationPanel = new JPanel();
-        entryLink = new HashMap<>();
         pageStack = new Stack<>();
 
         // Set layout
@@ -71,14 +69,6 @@ public class ConsoleTableNavigation extends JPanel {
         return tabbedPane;
     }
 
-    public void addEntryLink(String panelTitle, int row, int link) {
-        entryLink.put(panelTitle+"#"+row, link);
-    }
-
-    public Integer getEntryLink(String panelTitle, int row) {
-        return entryLink.get(panelTitle+"#"+row);
-    }
-
     public void setSelectedIndex(int i) {
         tabbedPane.setSelectedIndex(i);
     }
@@ -86,7 +76,6 @@ public class ConsoleTableNavigation extends JPanel {
     public void removeTables() {
         tabbedPane.removeAll();
         tabbedPane.getTabPanelsMap().clear();
-        entryLink.clear();
         pageStack.clear();
         lastPage = 0;
     }

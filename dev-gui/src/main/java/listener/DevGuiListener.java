@@ -20,8 +20,7 @@ public interface DevGuiListener {
 	long getLexicalAnalysisTime();
 	long getParserTime();
 	boolean doesCompile();
-	Object[][][] getSymbolTables();
-	String getSymbolTableName(int id);
+	List<GenericTable> getSymbolTables();
 	Object[][] getSemanticErrors();
 	JPanel getDerivationTree();
 	String getGeneratedCode();

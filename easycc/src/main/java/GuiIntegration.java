@@ -4,6 +4,8 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
+import core.structure.symbol.SymbolTableTree;
+import core.structure.symbol.table.SymbolTable;
 import data.GenericTable;
 import data.LexicalAnalysisRow;
 import data.SyntaxAnalysisRow;
@@ -31,11 +33,13 @@ public class GuiIntegration implements DevGuiListener {
 
     private LexicalAnalyzer lexicalAnalyzer;
     private SyntaxAnalyzer syntaxAnalyzer;
-    private boolean lexicalCompiles, syntaxCompiles;
+    private SemanticAnalyzer semanticAnalyzer;
+    private boolean lexicalCompiles, syntaxCompiles, semanticCompiles;
 
-    public GuiIntegration(LexicalAnalyzer lexicalAnalyzer, SyntaxAnalyzer syntaxAnalyzer){
+    public GuiIntegration(LexicalAnalyzer lexicalAnalyzer, SyntaxAnalyzer syntaxAnalyzer, SemanticAnalyzer semanticAnalyzer){
         this.lexicalAnalyzer = lexicalAnalyzer;
         this.syntaxAnalyzer = syntaxAnalyzer;
+        this.semanticAnalyzer = semanticAnalyzer;
     }
 
     @Override
@@ -132,7 +136,7 @@ public class GuiIntegration implements DevGuiListener {
 
     @Override
     public long getParserTime() {
-        return 0;
+        return syntaxAnalyzer.getProcessTime();
     }
 
     @Override
@@ -141,13 +145,19 @@ public class GuiIntegration implements DevGuiListener {
     }
 
     @Override
-    public Object[][][] getSymbolTables() {
-        return new Object[0][][];
-    }
-
-    @Override
-    public String getSymbolTableName(int id) {
-        return null;
+    public List<GenericTable> getSymbolTables() {
+        List<SymbolTable> symbolTables = semanticAnalyzer.getSymbolTableTree().getSymbolTables();
+        List<GenericTable> genericTables = new ArrayList<>();
+        String[] header = semanticAnalyzer.getSymbolTableTree().prettifyHeader();
+        for(int i=0; i < symbolTables.size(); i++) {
+            SymbolTable symbolTable = symbolTables.get(i);
+            GenericTable genericTable = new GenericTable();
+            genericTable.setName(i + 1 + " - " + symbolTable.getPath());
+            genericTable.setHeader(StringUtilsPlus.convertStringArrayToObjectArray(header));
+            genericTable.setData(StringUtilsPlus.convertStringTableToObjectTable(symbolTable.prettifyData()));
+            genericTables.add(genericTable);
+        }
+        return genericTables;
     }
 
     @Override
