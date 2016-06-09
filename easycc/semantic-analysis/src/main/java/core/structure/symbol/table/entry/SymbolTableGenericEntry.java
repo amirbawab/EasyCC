@@ -68,6 +68,9 @@ public abstract class SymbolTableGenericEntry {
                     if(symbolTableAttribute.value() == attributeEnum) {
                         try {
                             data[i] = (String) method.invoke(this);
+                            if(data[i] == null) {
+                                data[i] = attributeEnum.getDefaultValue();
+                            }
                         } catch (IllegalAccessException | InvocationTargetException e) {
                             l.error(e.getMessage());
                             data[i] = attributeEnum.getDefaultValue();

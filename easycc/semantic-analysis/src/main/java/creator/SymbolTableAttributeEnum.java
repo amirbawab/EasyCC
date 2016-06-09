@@ -27,6 +27,6 @@ public enum SymbolTableAttributeEnum {
     }
 
     public String getDefaultValue() {
-        return defaultValue;
+        return defaultValue == null ? "" : defaultValue;
     }
 }
