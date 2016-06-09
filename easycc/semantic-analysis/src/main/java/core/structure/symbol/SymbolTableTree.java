@@ -39,7 +39,8 @@ public class SymbolTableTree {
         while(!tableQueue.isEmpty()) {
             SymbolTable symbolTable = tableQueue.poll();
             tables.add(symbolTable);
-            for(SymbolTableGenericEntry genericEntry : symbolTable.getEntryList()) {
+            for(int i=0; i < symbolTable.getEntriesSize(); i++) {
+                SymbolTableGenericEntry genericEntry = symbolTable.getEntry(i);
                 if(genericEntry instanceof SymbolTableParentEntry) {
                     tableQueue.offer(((SymbolTableParentEntry) genericEntry).getSymbolTable());
                 }

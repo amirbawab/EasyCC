@@ -20,13 +20,20 @@ public class SymbolTable {
     }
 
     /**
-     * Get the list of entries
-     * Note: Do no use this method to add entries
-     * @see #addEntry(SymbolTableGenericEntry)
-     * @return list of entries
+     * Get the entries size
+     * @return
      */
-    public List<SymbolTableGenericEntry> getEntryList() {
-        return entryList;
+    public int getEntriesSize() {
+        return entryList.size();
+    }
+
+    /**
+     * Get entry by index
+     * @param i
+     * @return entry
+     */
+    public SymbolTableGenericEntry getEntry(int i) {
+        return entryList.get(i);
     }
 
     /**
