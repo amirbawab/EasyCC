@@ -21,10 +21,7 @@ import token.ActionToken;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Handle calls from the syntax analyzer
@@ -43,6 +40,8 @@ public class SemanticHandler {
     private Map<String, Method> modelMethodMap;
     private Map<String, Method> entryMethodMap;
 
+    // Cache semantic contexts for additional phases
+    private Queue<SemanticContext> semanticContextsQueue;
 
     // Semantic stack
     private SemanticStack semanticStack;
@@ -62,6 +61,7 @@ public class SemanticHandler {
         modelMethodMap = new HashMap<>();
         semanticStack = new SemanticStack();
         symbolTableTree = new SymbolTableTree();
+        semanticContextsQueue = new LinkedList<>();
 
         // Get the actions
         new ActionCreator().allActions(actionList);
@@ -171,32 +171,39 @@ public class SemanticHandler {
             ObjectMethod objectMethod = actionMethodMap.get(key);
 
             try {
+                SemanticContext semanticContext;
 
-                // Create the corresponding model
-                GenericModel model = null;
-                if(modelMethodMap.containsKey(actionToken.getValue())) {
-                    model = (GenericModel) modelMethodMap.get(actionToken.getValue()).invoke(null);
-                }
+                if(phase == 1) {
+                    // Create the corresponding model
+                    GenericModel model = null;
+                    if (modelMethodMap.containsKey(actionToken.getValue())) {
+                        model = (GenericModel) modelMethodMap.get(actionToken.getValue()).invoke(null);
+                    }
 
-                // Set corresponding lexical token for data model
-                if(model != null && model instanceof DataModel) {
-                    ((DataModel) model).setLexicalToken(lexicalToken);
-                }
+                    // Set corresponding lexical token for data model
+                    if (model != null && model instanceof DataModel) {
+                        ((DataModel) model).setLexicalToken(lexicalToken);
+                    }
 
-                // Create symbol table entry
-                SymbolTableGenericEntry entry = null;
-                if(entryMethodMap.containsKey(actionToken.getValue())) {
-                    entry = (SymbolTableGenericEntry) entryMethodMap.get(actionToken.getValue()).invoke(null);
-                }
+                    // Create symbol table entry
+                    SymbolTableGenericEntry entry = null;
+                    if (entryMethodMap.containsKey(actionToken.getValue())) {
+                        entry = (SymbolTableGenericEntry) entryMethodMap.get(actionToken.getValue()).invoke(null);
+                        entry.setModel(model);
+                    }
 
-                // Prepare a new semantic context
-                SemanticContext semanticContext = new SemanticContext();
-                semanticContext.setModel(model);
-                semanticContext.setEntry(entry);
+                    // Prepare a new semantic context
+                    semanticContext = new SemanticContext();
+                    semanticContext.setModel(model);
+                    semanticContext.setEntry(entry);
 
-                // Store the model inside the entry
-                if(entry != null) {
-                    entry.setModel(model);
+                    // Add to the queue for additional phases
+                    semanticContextsQueue.offer(semanticContext);
+                } else {
+
+                    // Enqueue the value removed from the queue
+                    semanticContext = semanticContextsQueue.poll();
+                    semanticContextsQueue.offer(semanticContext);
                 }
 
                 // Call method
