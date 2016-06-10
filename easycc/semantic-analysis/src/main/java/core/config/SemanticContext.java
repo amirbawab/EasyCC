@@ -41,4 +41,6 @@ public class SemanticContext {
     public void generateCode() {
         semanticContextListener.generateCode(this);
     }
+
+    public void error(String message) { semanticContextListener.error(message);}
 }

@@ -18,5 +18,6 @@ public class CreateClassAction extends GenericAction {
         symbolTableTree.getRelativeRootSymbolTable().addEntry(semanticContext.getEntry());
         semanticContext.getEntry().setName(((DataModel)semanticContext.getModel()).getLexicalToken().getValue());
         semanticContext.generateCode();
+        semanticContext.error("This is an error");
     }
 }

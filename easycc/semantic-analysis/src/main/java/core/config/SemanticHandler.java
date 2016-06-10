@@ -51,6 +51,9 @@ public class SemanticHandler {
     // Symbol table tree
     private SymbolTableTree symbolTableTree;
 
+    // List of error messages
+    private List<String> errorsList;
+
     // Store the number of parse phases
     private int maxParsePhase = 0;
 
@@ -67,6 +70,7 @@ public class SemanticHandler {
         actionMethodMap = new HashMap<>();
         entryMethodMap = new HashMap<>();
         modelMethodMap = new HashMap<>();
+        errorsList = new ArrayList<>();
 
         // Reset all data
         construct();
@@ -205,6 +209,12 @@ public class SemanticHandler {
                     semanticContext.setModel(model);
                     semanticContext.setEntry(entry);
                     semanticContext.setSemanticContextListener(new SemanticContextListener() {
+
+                        @Override
+                        public void error(String message) {
+                            errorsList.add(message);
+                        }
+
                         @Override
                         public void generateCode(SemanticContext semanticContext) {
                             if(semanticHandlerListener != null) {
@@ -271,5 +281,13 @@ public class SemanticHandler {
         semanticStack = new SemanticStack();
         symbolTableTree = new SymbolTableTree();
         semanticContextsQueue = new LinkedList<>();
+    }
+
+    /**
+     * Get list of error messages
+     * @return error messages list
+     */
+    public List<String> getErrorsList() {
+        return errorsList;
     }
 }
