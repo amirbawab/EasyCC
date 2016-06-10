@@ -1,6 +1,7 @@
 package core.structure.symbol.table.entry;
 
 import core.annotations.SymbolTableAttribute;
+import core.models.GenericModel;
 import core.structure.symbol.table.SymbolTable;
 import enums.SymbolTableAttributeEnum;
 import org.apache.logging.log4j.LogManager;
@@ -20,6 +21,7 @@ public abstract class SymbolTableGenericEntry {
 
     private SymbolTable originSymbolTable;
     private String name;
+    private GenericModel model;
 
     /**
      * Get the symbol table the entry belongs to
@@ -35,6 +37,22 @@ public abstract class SymbolTableGenericEntry {
      */
     public void setOriginSymbolTable(SymbolTable originSymbolTable) {
         this.originSymbolTable = originSymbolTable;
+    }
+
+    /**
+     * Get model
+     * @return model
+     */
+    public GenericModel getModel() {
+        return model;
+    }
+
+    /**
+     * Set model
+     * @param model
+     */
+    public void setModel(GenericModel model) {
+        this.model = model;
     }
 
     /**

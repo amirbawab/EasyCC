@@ -194,6 +194,11 @@ public class SemanticHandler {
                 semanticContext.setModel(model);
                 semanticContext.setEntry(entry);
 
+                // Store the model inside the entry
+                if(entry != null) {
+                    entry.setModel(model);
+                }
+
                 // Call method
                 objectMethod.getMethod().invoke(objectMethod.getGenericAction(), semanticContext, semanticStack, symbolTableTree);
             } catch (IllegalAccessException | InvocationTargetException e) {
