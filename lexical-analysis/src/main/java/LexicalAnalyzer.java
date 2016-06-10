@@ -1,7 +1,7 @@
 import java.io.IOException;
 import java.util.*;
 
-import config.LexicalConfig;
+import core.config.LexicalConfig;
 import helper.LexicalHelper;
 import jvm.LexicalArgs;
 import org.apache.logging.log4j.LogManager;

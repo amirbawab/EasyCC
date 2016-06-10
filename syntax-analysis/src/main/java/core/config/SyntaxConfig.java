@@ -1,8 +1,8 @@
-package config;
+package core.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import config.json.messages.SyntaxMessagesConfig;
-import config.json.messages.SyntaxMessagesDataConfig;
+import core.config.json.messages.SyntaxMessagesConfig;
+import core.config.json.messages.SyntaxMessagesDataConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

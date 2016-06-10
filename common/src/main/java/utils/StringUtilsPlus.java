@@ -51,4 +51,14 @@ public class StringUtilsPlus {
         }
         return tableObj;
     }
+
+    /**
+     * Generate a key for a method
+     * @param action
+     * @param phase
+     * @return key
+     */
+    public static String generateMethodKey(String action, int phase) {
+        return action + "::" + phase;
+    }
 }

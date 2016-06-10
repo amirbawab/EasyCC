@@ -1,4 +1,4 @@
-package config.json;
+package core.config.json;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

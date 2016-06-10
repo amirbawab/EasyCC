@@ -12,7 +12,7 @@ version = '1.0'
 mainClassName = "EasyCC"
 
 dependencies {
-    compile project(':easycc:semantic-analysis')
+    compile project(':easycc:code-generation')
     compile project(':dev-gui')
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

@@ -1,4 +1,5 @@
 import core.config.SemanticHandler;
+import core.config.SemanticHandlerListener;
 import core.structure.symbol.SymbolTableTree;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -7,9 +8,6 @@ import token.AbstractSyntaxToken;
 import token.AbstractToken;
 
 public class SemanticAnalyzer {
-
-    // Core components
-    private SemanticHandler semanticHandler;
 
     // Logger
     private Logger l = LogManager.getFormatterLogger(getClass());
@@ -21,27 +19,39 @@ public class SemanticAnalyzer {
 
             @Override
             public void init() {
-                semanticHandler = new SemanticHandler();
+                SemanticHandler.getInstance().construct();
             }
 
             @Override
             public void actionCall(AbstractSyntaxToken syntaxToken, AbstractToken lexicalToken, int phase) {
-                semanticHandler.handleAction(syntaxToken, lexicalToken, phase);
+                SemanticHandler.getInstance().handleAction(syntaxToken, lexicalToken, phase);
             }
 
             @Override
             public int getParsePhase() {
-                return semanticHandler.getMaxParsePhase();
+                return SemanticHandler.getInstance().getMaxParsePhase();
             }
 
             @Override
             public void logSymbolTables() {
-                l.info("Printing symbol tables\n" + semanticHandler.getSymbolTableTree());
+                l.info("Printing symbol tables\n" + SemanticHandler.getInstance().getSymbolTableTree());
             }
         });
     }
 
+    /**
+     * Set semantic handler listener
+     * @param semanticHandlerListener
+     */
+    public void setSemanticHandlerListener(SemanticHandlerListener semanticHandlerListener) {
+        SemanticHandler.getInstance().setSemanticHandlerListener(semanticHandlerListener);
+    }
+
+    /**
+     * Get the symbol table tree
+     * @return symbol table tree
+     */
     public SymbolTableTree getSymbolTableTree() {
-        return semanticHandler.getSymbolTableTree();
+        return SemanticHandler.getInstance().getSymbolTableTree();
     }
 }

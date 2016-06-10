@@ -4,6 +4,7 @@ include 'lexical-analysis:lexical-generator'
 include 'syntax-analysis'
 include 'easycc'
 include 'easycc:semantic-analysis'
+include 'easycc:code-generation'
 include 'dev-gui'
 
 rootProject.name = 'EasyCC'

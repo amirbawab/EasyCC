@@ -1,7 +1,7 @@
 package machine;
 
 import com.bethecoder.ascii_table.ASCIITable;
-import config.LexicalConfig;
+import core.config.LexicalConfig;
 import helper.LexicalHelper;
 import machine.json.Edge;
 import machine.json.State;

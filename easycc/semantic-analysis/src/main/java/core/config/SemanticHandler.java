@@ -15,9 +15,11 @@ import creator.EntriesFactory;
 import creator.ModelsFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import reflection.ObjectMethod;
 import token.AbstractSyntaxToken;
 import token.AbstractToken;
 import token.ActionToken;
+import utils.StringUtilsPlus;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -52,16 +54,22 @@ public class SemanticHandler {
     // Store the number of parse phases
     private int maxParsePhase = 0;
 
-    public SemanticHandler() {
+    // Listener
+    private SemanticHandlerListener semanticHandlerListener;
+
+    // Singleton
+    private static SemanticHandler instance = new SemanticHandler();
+
+    private SemanticHandler() {
 
         // Init components
         actionList = new ArrayList<>();
         actionMethodMap = new HashMap<>();
         entryMethodMap = new HashMap<>();
         modelMethodMap = new HashMap<>();
-        semanticStack = new SemanticStack();
-        symbolTableTree = new SymbolTableTree();
-        semanticContextsQueue = new LinkedList<>();
+
+        // Reset all data
+        construct();
 
         // Get the actions
         new ActionCreator().allActions(actionList);
@@ -102,7 +110,7 @@ public class SemanticHandler {
                             maxParsePhase = currentParsePhase;
                         }
 
-                        actionMethodMap.put(generateMethodKey(semanticAction.value().getName(), currentParsePhase), new ObjectMethod(method, action));
+                        actionMethodMap.put(StringUtilsPlus.generateMethodKey(semanticAction.value().getName(), currentParsePhase), new ObjectMethod(method, action));
                         l.info("Class: " + action.getClass().getSimpleName() + " - Method: " + method.getName() + " - Semantic: " + semanticAction.value() + " - Phase: " + currentParsePhase + ", was registered!");
                     }
                 }
@@ -165,7 +173,7 @@ public class SemanticHandler {
     public void handleAction(AbstractSyntaxToken syntaxToken, AbstractToken lexicalToken, int phase) {
         ActionToken actionToken = (ActionToken) syntaxToken;
 
-        String key = generateMethodKey(actionToken.getValue(), phase);
+        String key = StringUtilsPlus.generateMethodKey(actionToken.getValue(), phase);
 
         if(actionMethodMap.containsKey(key)) {
             ObjectMethod objectMethod = actionMethodMap.get(key);
@@ -196,6 +204,14 @@ public class SemanticHandler {
                     semanticContext = new SemanticContext();
                     semanticContext.setModel(model);
                     semanticContext.setEntry(entry);
+                    semanticContext.setSemanticContextListener(new SemanticContextListener() {
+                        @Override
+                        public void generateCode(SemanticContext semanticContext) {
+                            if(semanticHandlerListener != null) {
+                                semanticHandlerListener.generateCode(actionToken, phase, semanticContext, symbolTableTree);
+                            }
+                        }
+                    });
 
                     // Add to the queue for additional phases
                     semanticContextsQueue.offer(semanticContext);
@@ -207,23 +223,13 @@ public class SemanticHandler {
                 }
 
                 // Call method
-                objectMethod.getMethod().invoke(objectMethod.getGenericAction(), semanticContext, semanticStack, symbolTableTree);
+                objectMethod.getMethod().invoke(objectMethod.getObject(), semanticContext, semanticStack, symbolTableTree);
             } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
+                l.error(e.getMessage());
             }
         } else {
             l.warn("Action: " + syntaxToken.getValue() + " at Phase: " + phase + " is not handled by any method.");
         }
-    }
-
-    /**
-     * Generate a key for a method
-     * @param action
-     * @param phase
-     * @return key
-     */
-    private String generateMethodKey(String action, int phase) {
-        return action + "::" + phase;
     }
 
     /**
@@ -243,23 +249,27 @@ public class SemanticHandler {
     }
 
     /**
-     * Store genericAction and its corresponding method
+     * Set semantic context listener
+     * @param semanticHandlerListener
      */
-    private class ObjectMethod {
-        private Method method;
-        private GenericAction genericAction;
+    public void setSemanticHandlerListener(SemanticHandlerListener semanticHandlerListener) {
+        this.semanticHandlerListener = semanticHandlerListener;
+    }
 
-        public ObjectMethod(Method method, GenericAction genericAction) {
-            this.method = method;
-            this.genericAction = genericAction;
-        }
+    /**
+     * Get singleton instance
+     * @return singleton instance
+     */
+    public static SemanticHandler getInstance() {
+        return instance;
+    }
 
-        public Method getMethod() {
-            return method;
-        }
-
-        public Object getGenericAction() {
-            return genericAction;
-        }
+    /**
+     * Reset instances
+     */
+    public void construct() {
+        semanticStack = new SemanticStack();
+        symbolTableTree = new SymbolTableTree();
+        semanticContextsQueue = new LinkedList<>();
     }
 }

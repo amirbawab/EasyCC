@@ -1,7 +1,7 @@
 package parser.strategy.LLPP.table;
 
 import com.bethecoder.ascii_table.ASCIITable;
-import config.SyntaxConfig;
+import core.config.SyntaxConfig;
 import grammar.Grammar;
 import helper.SyntaxHelper;
 import org.apache.commons.lang3.StringUtils;

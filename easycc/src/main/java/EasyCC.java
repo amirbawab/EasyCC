@@ -12,6 +12,7 @@ public class EasyCC {
     private LexicalAnalyzer lexicalAnalyzer;
     private SyntaxAnalyzer syntaxAnalyzer;
     private SemanticAnalyzer semanticAnalyzer;
+    private CodeGeneration codeGeneration;
 
     public static void main(String[] args) {
         new EasyCC();
@@ -23,6 +24,7 @@ public class EasyCC {
         lexicalAnalyzer = new LexicalAnalyzer(System.getProperty(LexicalArgs.MACHINE), System.getProperty(LexicalArgs.TOKENS), System.getProperty(LexicalArgs.MESSAGES));
         syntaxAnalyzer = new SyntaxAnalyzer(lexicalAnalyzer, System.getProperty(SyntaxArgs.GRAMMAR), System.getProperty(SyntaxArgs.PARSE_STRATEGY), System.getProperty(SyntaxArgs.MESSAGES));
         semanticAnalyzer = new SemanticAnalyzer(syntaxAnalyzer);
+        codeGeneration = new CodeGeneration(semanticAnalyzer);
 
         startGui();
     }

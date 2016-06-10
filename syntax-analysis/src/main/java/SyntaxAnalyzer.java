@@ -1,4 +1,4 @@
-import config.SyntaxConfig;
+import core.config.SyntaxConfig;
 import grammar.Grammar;
 import jvm.LexicalArgs;
 import jvm.SyntaxArgs;

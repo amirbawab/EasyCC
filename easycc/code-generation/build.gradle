@@ -1,0 +1,6 @@
+version = '1.0'
+
+dependencies {
+    compile project(':easycc:semantic-analysis')
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}

@@ -1,6 +1,6 @@
 package helper;
 
-import config.LexicalConfig;
+import core.config.LexicalConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import token.AbstractToken;

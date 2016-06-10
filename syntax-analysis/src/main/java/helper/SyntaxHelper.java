@@ -1,6 +1,6 @@
 package helper;
 
-import config.SyntaxConfig;
+import core.config.SyntaxConfig;
 import token.*;
 
 /**
