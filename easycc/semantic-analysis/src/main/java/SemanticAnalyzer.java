@@ -14,6 +14,9 @@ public class SemanticAnalyzer {
 
     public SemanticAnalyzer(SyntaxAnalyzer syntaxAnalyzer) {
 
+        // Call to create the singleton instance
+        SemanticHandler.getInstance();
+
         // Set parse listener
         syntaxAnalyzer.getSyntaxParser().getParseStrategy().setParseStrategyListener(new ParseStrategyListener() {
 
