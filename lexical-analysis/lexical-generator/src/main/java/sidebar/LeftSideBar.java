@@ -263,7 +263,7 @@ public class LeftSideBar extends JPanel {
 
                     // Check if already exists
                     for(LexicalEdgeJSON lexicalEdgeJSON : lexicalMachineJSON.getEdges()) {
-                        if(lexicalEdgeJSON.getFrom().equals(from) && lexicalEdgeJSON.getTo().equals(to) && lexicalEdgeJSON.getValue().equals(label)) {
+                        if(lexicalEdgeJSON.getFrom().equals(from) && lexicalEdgeJSON.getTo().equals(to) && lexicalEdgeJSON.getLabel().equals(label)) {
                             JOptionPane.showMessageDialog(frame, "Edge already exists", "Edge not created", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
@@ -273,6 +273,8 @@ public class LeftSideBar extends JPanel {
                     LexicalEdgeJSON lexicalEdgeJSON = new LexicalEdgeJSON();
                     lexicalEdgeJSON.setFrom(from);
                     lexicalEdgeJSON.setTo(to);
+                    lexicalEdgeJSON.setFromState(lexicalMachineJSON.getStates().get(fromState.getSelectedIndex()));
+                    lexicalEdgeJSON.setToState(lexicalMachineJSON.getStates().get(toState.getSelectedIndex()));
                     lexicalEdgeJSON.setValue(label);
                     lexicalMachineJSON.getEdges().add(lexicalEdgeJSON);
 

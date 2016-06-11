@@ -13,6 +13,8 @@ public class LexicalEdgeJSON {
     @JsonProperty("value")
     private String value;
 
+    private LexicalStateJSON fromState, toState;
+
     public String getFrom() {
         return from;
     }
@@ -29,11 +31,27 @@ public class LexicalEdgeJSON {
         this.to = to;
     }
 
-    public String getValue() {
+    public String getLabel() {
         return value;
     }
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public LexicalStateJSON getFromState() {
+        return fromState;
+    }
+
+    public void setFromState(LexicalStateJSON fromState) {
+        this.fromState = fromState;
+    }
+
+    public LexicalStateJSON getToState() {
+        return toState;
+    }
+
+    public void setToState(LexicalStateJSON toState) {
+        this.toState = toState;
     }
 }
