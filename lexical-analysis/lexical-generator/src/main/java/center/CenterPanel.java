@@ -8,6 +8,7 @@ import com.mxgraph.view.mxGraph;
 import machine.json.Edge;
 import machine.json.Lexical_Analysis;
 import machine.json.State;
+import utils.StringUtilsPlus;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,6 +34,7 @@ public class CenterPanel extends JTabbedPane {
         graphPanel = new JPanel();
         jsonPanel = new JPanel();
         jsonText = new JTextPane();
+        jsonPanel.setEnabled(false);
 
         // Set layout
         graphPanel.setLayout(new BorderLayout());
@@ -49,7 +51,7 @@ public class CenterPanel extends JTabbedPane {
     }
 
     private void generateJSON() {
-
+        jsonText.setText(StringUtilsPlus.objectToJson(lexical_analysis));
     }
 
     /**

@@ -1,5 +1,6 @@
 package machine.json;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -37,9 +38,11 @@ public class State {
     private boolean backtrack;
 
     // Unique id
+    @JsonIgnore
     private int id;
 
     // List of outgoing edges
+    @JsonIgnore
     private List<Edge> outEdges = new ArrayList<>();
 
     public void setId(int id) {

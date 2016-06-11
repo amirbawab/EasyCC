@@ -13,10 +13,10 @@ public class StringUtilsPlus {
      * @param object
      * @return JSON string
      */
-    public static String ObjectToJson(Object object) {
+    public static String objectToJson(Object object) {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            return mapper.writeValueAsString(object);
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
         } catch (JsonProcessingException e) {
             l.error(e.getMessage());
         }

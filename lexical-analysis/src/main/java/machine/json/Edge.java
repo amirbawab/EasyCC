@@ -1,5 +1,6 @@
 package machine.json;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -37,7 +38,10 @@ public class Edge {
     private String value;
 
     // States
+    @JsonIgnore
     private State fromState;
+
+    @JsonIgnore
     private State toState;
 
     public void setFromState(State fromState) {
@@ -70,6 +74,14 @@ public class Edge {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    public void setTo(String to) {
+        this.to = to;
     }
 
     @Override

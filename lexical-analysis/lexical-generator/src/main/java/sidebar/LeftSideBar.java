@@ -271,6 +271,8 @@ public class LeftSideBar extends JPanel {
 
                     // Create edge
                     Edge edge = new Edge();
+                    edge.setFrom(fromState.getSelectedItem().toString());
+                    edge.setTo(toState.getSelectedItem().toString());
                     edge.setFromState(lexical_analysis.getStates().get(fromState.getSelectedIndex()));
                     edge.setToState(lexical_analysis.getStates().get(toState.getSelectedIndex()));
                     edge.setValue(label);
