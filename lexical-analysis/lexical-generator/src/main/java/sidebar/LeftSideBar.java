@@ -15,7 +15,7 @@ public class LeftSideBar extends JPanel {
     // Components
     private JComboBox<String> stateType, stateBacktrack, fromState, toState;
     private JTextField stateName, finalStateToken, edgeLabel;
-    private JButton addStateButton, deleteStateButton, deleteEdgeButton, verifyDFAButton, addEdgeButton, clearAllButton, exportButton, importButton;
+    private JButton addStateButton, deleteStateButton, deleteEdgeButton, updateStateButton, verifyDFAButton, addEdgeButton, clearAllButton, exportButton, importButton;
     private JTable edgesTable;
     private JScrollPane edgesTableSP;
     private DefaultTableModel edgeTableModel;
@@ -45,6 +45,7 @@ public class LeftSideBar extends JPanel {
         addStateButton = new JButton("Add new state");
         addEdgeButton = new JButton("Add new edge");
         deleteStateButton = new JButton("Delete state by Name");
+        updateStateButton = new JButton("Update state by Name");
         deleteEdgeButton = new JButton("Delete selected Edge");
         verifyDFAButton = new JButton("Verify DFA");
         clearAllButton = new JButton("Clear all");
@@ -113,6 +114,10 @@ public class LeftSideBar extends JPanel {
         gc.gridy++;
         gc.gridwidth = 2;
         statePanel.add(addStateButton, gc);
+
+        gc.gridx=0;
+        gc.gridy++;
+        statePanel.add(updateStateButton, gc);
 
         gc.gridx=0;
         gc.gridy++;
@@ -233,9 +238,12 @@ public class LeftSideBar extends JPanel {
                     // Create state
                     State state = new State();
                     state.setName(name);
-                    state.setBacktrack(backtrack);
                     state.setType(type);
-                    state.setToken(token);
+
+                    if(type.equals(State.Type.FINAL.getValue())) {
+                        state.setBacktrack(backtrack);
+                        state.setToken(token);
+                    }
                     lexical_analysis.getStates().add(state);
 
                     // Update from to states for edge panel
@@ -349,6 +357,53 @@ public class LeftSideBar extends JPanel {
                 } else {
                     lexical_analysis.getEdges().remove(edgesTable.getSelectedRow());
                     edgeTableModel.removeRow(edgesTable.getSelectedRow());
+
+                    // Refresh all
+                    leftTopSideBarListener.refresh();
+                }
+            }
+        });
+
+        updateStateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if(stateName.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(frame, "Please enter a state name to update", "State not updated", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    // Get data
+                    String name = stateName.getText();
+                    String type = (String) stateType.getSelectedItem();
+                    boolean backtrack = stateBacktrack.getSelectedIndex() == 0;
+                    String token = finalStateToken.getText();
+
+                    State targetSate = null;
+
+                    for(State state : lexical_analysis.getStates()) {
+
+                        // If not the same state
+                        if(!state.getName().equals(name))
+                        {
+                            // If more than one initial
+                            if (type.equals(State.Type.INITIAL.getValue()) && state.getType().equals(State.Type.INITIAL)) {
+                                JOptionPane.showMessageDialog(frame, "Cannot have more than one initial state", "State not updated", JOptionPane.ERROR_MESSAGE);
+                                return;
+                            }
+                        } else {
+                            targetSate = state;
+                        }
+                    }
+
+                    if(targetSate != null) {
+                        targetSate.setType(type);
+
+                        if(type.equals(State.Type.FINAL.getValue())) {
+                            targetSate.setBacktrack(backtrack);
+                            targetSate.setToken(token);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "State name does not exist", "State not updated", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
 
                     // Refresh all
                     leftTopSideBarListener.refresh();
