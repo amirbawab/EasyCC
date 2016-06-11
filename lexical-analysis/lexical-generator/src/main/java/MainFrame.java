@@ -1,7 +1,7 @@
 import center.CenterPanel;
 import data.LexicalMachineJSON;
 import sidebar.LeftSideBar;
-import sidebar.LeftTopSideBarListener;
+import sidebar.LeftSideBarListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +31,7 @@ public class MainFrame extends JFrame {
         lexicalMachineJSON = new LexicalMachineJSON();
 
         // Set machine
-        leftSideBar.getLeftTopSideBar().setLexicalMachineJSON(lexicalMachineJSON);
+        leftSideBar.setLexicalMachineJSON(lexicalMachineJSON);
         centerPanel.setLexicalMachineJSON(lexicalMachineJSON);
 
         // Add components
@@ -55,7 +55,7 @@ public class MainFrame extends JFrame {
      * Add listeners for components
      */
     public void addListeners() {
-        leftSideBar.getLeftTopSideBar().setLeftTopSideBarListener(new LeftTopSideBarListener() {
+        leftSideBar.setLeftTopSideBarListener(new LeftSideBarListener() {
             @Override
             public void refresh() {
                 centerPanel.refresh();
