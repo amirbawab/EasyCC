@@ -1,5 +1,6 @@
 package sidebar;
 
+import data.LexicalEdgeJSON;
 import data.LexicalMachineJSON;
 import data.LexicalStateJSON;
 
@@ -187,7 +188,7 @@ public class LeftSideBar extends JPanel {
         // By default
         stateBacktrack.setEnabled(false);
         finalStateToken.setEnabled(false);
-        edgesTable.setEnabled(false);
+        edgesTable.setDefaultEditor(Object.class, null);
 
         // Configure edges table
         edgesTableSP.setPreferredSize(new Dimension(200, 200));
@@ -214,8 +215,15 @@ public class LeftSideBar extends JPanel {
                     String backtrack = stateBacktrack.getSelectedIndex() == 0 ? "true" : "false";
                     String token = finalStateToken.getText();
 
-                    // Check if already exists
                     for(LexicalStateJSON lexicalStateJSON : lexicalMachineJSON.getStates()) {
+
+                        // If more than one initial
+                        if(type.equals(typeValues[0]) && lexicalStateJSON.getType().equals(typeValues[0])) {
+                            JOptionPane.showMessageDialog(frame, "Cannot have more than one initial state", "State not created", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+
+                        // If already exists
                         if(lexicalStateJSON.getName().equals(name)) {
                             JOptionPane.showMessageDialog(frame, "State name already exists", "State not created", JOptionPane.ERROR_MESSAGE);
                             return;
@@ -247,6 +255,31 @@ public class LeftSideBar extends JPanel {
                     JFrame frame = (JFrame)SwingUtilities.getRoot(LeftSideBar.this);
                     JOptionPane.showMessageDialog(frame, "Please fill all the edge fields", "Edge not created", JOptionPane.ERROR_MESSAGE);
                 } else {
+
+                    // Get data
+                    String from = (String) fromState.getSelectedItem();
+                    String to = (String) toState.getSelectedItem();
+                    String lable = edgeLabel.getText();
+
+                    // Check if already exists
+                    for(LexicalEdgeJSON lexicalEdgeJSON : lexicalMachineJSON.getEdges()) {
+                        if(lexicalEdgeJSON.getFrom().equals(from) && lexicalEdgeJSON.getTo().equals(to) && lexicalEdgeJSON.getValue().equals(lable)) {
+                            JOptionPane.showMessageDialog(frame, "Edge already exists", "Edge not created", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                    }
+
+                    // Create edge
+                    LexicalEdgeJSON lexicalEdgeJSON = new LexicalEdgeJSON();
+                    lexicalEdgeJSON.setFrom(from);
+                    lexicalEdgeJSON.setTo(to);
+                    lexicalEdgeJSON.setValue(lable);
+                    lexicalMachineJSON.getEdges().add(lexicalEdgeJSON);
+
+                    // Add entry in table
+                    edgeTableModel.addRow(new Object[]{from, to, lable});
+
+                    // Refresh all
                     leftTopSideBarListener.refresh();
                 }
             }
