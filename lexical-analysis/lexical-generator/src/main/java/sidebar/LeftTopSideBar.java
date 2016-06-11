@@ -27,7 +27,7 @@ public class LeftTopSideBar extends JPanel {
     private LeftTopSideBarListener leftTopSideBarListener;
 
     // Values
-    private String[] typeValues = { "Initial", "Normal", "Final"};
+    private String[] typeValues = { "initial", "normal", "final"};
     private String[] backtrackValues = { "Yes", "No"};
 
     public LeftTopSideBar() {
@@ -172,15 +172,43 @@ public class LeftTopSideBar extends JPanel {
      * Add buttons listeners
      */
     public void addListeners() {
+        JFrame frame = (JFrame)SwingUtilities.getRoot(LeftTopSideBar.this);
 
         addStateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
 
                 if( (stateType.getSelectedIndex() == 2 && finalStateToken.getText().isEmpty() ) || stateName.getText().isEmpty()) {
-                    JFrame frame = (JFrame)SwingUtilities.getRoot(LeftTopSideBar.this);
                     JOptionPane.showMessageDialog(frame, "Please fill all the state fields", "State not created", JOptionPane.ERROR_MESSAGE);
                 } else {
+
+                    // Get data
+                    String name = stateName.getText();
+                    String type = (String) stateType.getSelectedItem();
+                    String backtrack = stateBacktrack.getSelectedIndex() == 0 ? "true" : "false";
+                    String token = finalStateToken.getText();
+
+                    // Check if already exists
+                    for(LexicalStateJSON lexicalStateJSON : lexicalMachineJSON.getStates()) {
+                        if(lexicalStateJSON.getName().equals(name)) {
+                            JOptionPane.showMessageDialog(frame, "State name already exists", "State not created", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                    }
+
+                    // Create state
+                    LexicalStateJSON lexicalStateJSON = new LexicalStateJSON();
+                    lexicalStateJSON.setName(name);
+                    lexicalStateJSON.setBacktrack(backtrack);
+                    lexicalStateJSON.setType(type);
+                    lexicalStateJSON.setToken(token);
+                    lexicalMachineJSON.getStates().add(lexicalStateJSON);
+
+                    // Update from to states for edge panel
+                    fromState.addItem(name);
+                    toState.addItem(name);
+
+                    // Refresh all
                     leftTopSideBarListener.refresh();
                 }
             }
