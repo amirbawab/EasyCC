@@ -55,6 +55,7 @@ public class State {
         return name;
     }
 
+    @JsonIgnore
     public Type getType() {
         for(Type t : Type.values()){
             if(t.getValue().equals(type)){

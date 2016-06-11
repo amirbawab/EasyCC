@@ -63,6 +63,11 @@ public class MainFrame extends JFrame {
             public void refresh() {
                 centerPanel.refresh();
             }
+
+            @Override
+            public String getJSON() {
+                return centerPanel.getJSON();
+            }
         });
     }
 }

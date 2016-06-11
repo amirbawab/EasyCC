@@ -34,7 +34,7 @@ public class CenterPanel extends JTabbedPane {
         graphPanel = new JPanel();
         jsonPanel = new JPanel();
         jsonText = new JTextPane();
-        jsonPanel.setEnabled(false);
+        jsonText.setEditable(false);
 
         // Set layout
         graphPanel.setLayout(new BorderLayout());
@@ -149,6 +149,14 @@ public class CenterPanel extends JTabbedPane {
     public void refresh() {
         drawGraph();
         generateJSON();
+    }
+
+    /**
+     * Get the json result
+     * @return json result
+     */
+    public String getJSON() {
+        return jsonText.getText();
     }
 
     /**

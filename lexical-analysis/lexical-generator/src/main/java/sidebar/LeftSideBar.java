@@ -9,6 +9,9 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 
 public class LeftSideBar extends JPanel {
 
@@ -19,6 +22,7 @@ public class LeftSideBar extends JPanel {
     private JTable edgesTable;
     private JScrollPane edgesTableSP;
     private DefaultTableModel edgeTableModel;
+    private JFileChooser fileChooser;
 
     // Store machine
     private Lexical_Analysis lexical_analysis;
@@ -57,6 +61,7 @@ public class LeftSideBar extends JPanel {
         edgeTableModel = new DefaultTableModel(null, new Object[]{"From", "To", "Label"});
         edgesTable = new JTable(edgeTableModel);
         edgesTableSP = new JScrollPane(edgesTable);
+        fileChooser = new JFileChooser();
 
         // Set layout
         setLayout(new GridBagLayout());
@@ -424,6 +429,43 @@ public class LeftSideBar extends JPanel {
                 lexical_analysis.getEdges().clear();
                 lexical_analysis.getStates().clear();
                 leftTopSideBarListener.refresh();
+            }
+        });
+
+        exportButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+
+                PrintWriter print = null;
+                try {
+                    int returnVal = fileChooser.showSaveDialog(frame);
+                    File file = fileChooser.getSelectedFile();
+
+                    if(returnVal == JFileChooser.APPROVE_OPTION) {
+                        if(file.exists()) {
+                            int result = JOptionPane.showConfirmDialog(frame, "The file exists, overwrite?","Existing file",JOptionPane.YES_NO_CANCEL_OPTION);
+                            switch(result){
+                                case JOptionPane.YES_OPTION:
+                                    break;
+                                case JOptionPane.NO_OPTION:
+                                case JOptionPane.CLOSED_OPTION:
+                                case JOptionPane.CANCEL_OPTION:
+                                    return;
+                            }
+                        }
+
+                        print = new PrintWriter(file);
+                        leftTopSideBarListener.refresh();
+                        print.write(leftTopSideBarListener.getJSON());
+                    }
+
+                } catch (FileNotFoundException e) {
+                    JOptionPane.showMessageDialog(frame, e.getMessage(), "Error saving file", JOptionPane.ERROR_MESSAGE);
+                } finally {
+                    if(print != null) {
+                        print.close();
+                    }
+                }
             }
         });
     }
