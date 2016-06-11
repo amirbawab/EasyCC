@@ -30,4 +30,12 @@ public class LeftSideBar extends JPanel {
         gc.gridy = 1;
         add(leftBottomSideBar, gc);
     }
+
+    public LeftTopSideBar getLeftTopSideBar() {
+        return leftTopSideBar;
+    }
+
+    public LeftBottomSideBar getLeftBottomSideBar() {
+        return leftBottomSideBar;
+    }
 }

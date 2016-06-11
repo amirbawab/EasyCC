@@ -1,5 +1,7 @@
 import center.CenterPanel;
+import data.LexicalMachineJSON;
 import sidebar.LeftSideBar;
+import sidebar.LeftTopSideBarListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,6 +11,7 @@ public class MainFrame extends JFrame {
     // Components
     private LeftSideBar leftSideBar;
     private CenterPanel centerPanel;
+    private LexicalMachineJSON lexicalMachineJSON;
 
     public static void main(String[] args) {
         new MainFrame("EasyCC - Lexical tokens Generator");
@@ -25,10 +28,18 @@ public class MainFrame extends JFrame {
         // Init components
         leftSideBar = new LeftSideBar();
         centerPanel = new CenterPanel();
+        lexicalMachineJSON = new LexicalMachineJSON();
+
+        // Set machine
+        leftSideBar.getLeftTopSideBar().setLexicalMachineJSON(lexicalMachineJSON);
+        centerPanel.setLexicalMachineJSON(lexicalMachineJSON);
 
         // Add components
         add(leftSideBar, BorderLayout.WEST);
         add(centerPanel, BorderLayout.CENTER);
+
+        // Add listeners
+        addListeners();
 
         // Configure frame
         Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -38,5 +49,17 @@ public class MainFrame extends JFrame {
         this.setVisible(true);
         this.pack();
         this.setLocationRelativeTo(null);
+    }
+
+    /**
+     * Add listeners for components
+     */
+    public void addListeners() {
+        leftSideBar.getLeftTopSideBar().setLeftTopSideBarListener(new LeftTopSideBarListener() {
+            @Override
+            public void refresh() {
+                centerPanel.refresh();
+            }
+        });
     }
 }
