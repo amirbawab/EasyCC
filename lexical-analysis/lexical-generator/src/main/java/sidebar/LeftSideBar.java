@@ -336,6 +336,18 @@ public class LeftSideBar extends JPanel {
             }
         });
 
+        deleteEdgeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if(edgesTable.getSelectedRow() < 0) {
+                    JOptionPane.showMessageDialog(frame, "Please select an edge to delete", "Edge not deleted", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    lexicalMachineJSON.getEdges().remove(edgesTable.getSelectedRow());
+                    edgeTableModel.removeRow(edgesTable.getSelectedRow());
+                }
+            }
+        });
+
         clearAllButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
