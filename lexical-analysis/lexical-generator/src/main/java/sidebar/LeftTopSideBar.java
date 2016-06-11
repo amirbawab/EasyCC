@@ -12,16 +12,13 @@ import java.awt.event.ActionListener;
 public class LeftTopSideBar extends JPanel {
 
     // Components
-    private JComboBox<String> stateType, stateBacktrack;
-    private JTextField finalStateToken;
-    private JButton addStateButton, refreshEdgeRowsButton, addEdgeRowsButton, clearAllButton;
-    private JPanel statePanel;
+    private JComboBox<String> stateType, stateBacktrack, fromState, toState;
+    private JTextField stateName, finalStateToken, edgeLabel;
+    private JButton addStateButton, addEdgeButton, clearAllButton;
+    private JPanel statePanel, edgePanel, otherPanel;
     private JTable edgesTable;
     private JScrollPane edgesTableSP;
-    private DefaultTableModel tableModel;
-
-    // Private unique id
-    private int uniqueId = 0;
+    private DefaultTableModel edgeTableModel;
 
     // Store machine
     private LexicalMachineJSON lexicalMachineJSON;
@@ -38,24 +35,34 @@ public class LeftTopSideBar extends JPanel {
         // Init components
         stateType = new JComboBox<>(typeValues);
         stateBacktrack = new JComboBox<>(backtrackValues);
+        fromState = new JComboBox<>();
+        toState = new JComboBox<>();
         finalStateToken = new JTextField(10);
+        edgeLabel = new JTextField(10);
+        stateName = new JTextField(10);
         addStateButton = new JButton("Add new state");
-        addEdgeRowsButton = new JButton("Add 10 edge rows");
+        addEdgeButton = new JButton("Add new edge");
         clearAllButton = new JButton("Clear all");
-        refreshEdgeRowsButton = new JButton("Refresh All");
         statePanel = new JPanel();
-        tableModel = new DefaultTableModel(null, new Object[]{"From", "To", "Label"});
-        edgesTable = new JTable(tableModel);
+        edgePanel = new JPanel();
+        otherPanel = new JPanel();
+        edgeTableModel = new DefaultTableModel(null, new Object[]{"From", "To", "Label"});
+        edgesTable = new JTable(edgeTableModel);
         edgesTableSP = new JScrollPane(edgesTable);
 
         // Set layout
         setLayout(new GridBagLayout());
         statePanel.setLayout(new GridBagLayout());
+        edgePanel.setLayout(new GridBagLayout());
+        otherPanel.setLayout(new GridBagLayout());
 
         GridBagConstraints gc = new GridBagConstraints();
 
         // Set border
         setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        statePanel.setBorder(BorderFactory.createTitledBorder("Add State"));
+        edgePanel.setBorder(BorderFactory.createTitledBorder("Add Edge"));
+        otherPanel.setBorder(BorderFactory.createTitledBorder("Other"));
 
         // Add listeners
         addListeners();
@@ -72,6 +79,12 @@ public class LeftTopSideBar extends JPanel {
         // Add components to state panel
         gc.gridx=0;
         gc.gridy=0;
+        statePanel.add(new JLabel("Name: "), gc);
+        gc.gridx=1;
+        statePanel.add(stateName, gc);
+
+        gc.gridx=0;
+        gc.gridy++;
         statePanel.add(new JLabel("Type: "), gc);
         gc.gridx=1;
         statePanel.add(stateType, gc);
@@ -95,26 +108,52 @@ public class LeftTopSideBar extends JPanel {
         statePanel.add(addStateButton, gc);
 
         gc.gridx=0;
-        gc.gridy++;
-        statePanel.add(edgesTableSP, gc);
+        gc.gridy=0;
+        gc.gridwidth = 1;
+        edgePanel.add(new JLabel("From: "), gc);
+        gc.gridx=1;
+        edgePanel.add(fromState, gc);
 
         gc.gridx=0;
         gc.gridy++;
-        statePanel.add(addEdgeRowsButton, gc);
+        edgePanel.add(new JLabel("To: "), gc);
+        gc.gridx=1;
+        edgePanel.add(toState, gc);
 
         gc.gridx=0;
         gc.gridy++;
-        statePanel.add(refreshEdgeRowsButton, gc);
+        edgePanel.add(new JLabel("Label: "), gc);
+        gc.gridx=1;
+        edgePanel.add(edgeLabel, gc);
 
         gc.gridx=0;
         gc.gridy++;
-        statePanel.add(clearAllButton, gc);
+        gc.gridwidth = 2;
+        edgePanel.add(addEdgeButton, gc);
+
+        gc.gridx=0;
+        gc.gridy++;
+        edgePanel.add(edgesTableSP, gc);
+
+        gc.gridx=0;
+        gc.gridy=0;
+        otherPanel.add(clearAllButton, gc);
 
         // Add components to left panel
-        gc.anchor = GridBagConstraints.FIRST_LINE_START;
+        gc.anchor = GridBagConstraints.CENTER;
+        gc.fill = GridBagConstraints.HORIZONTAL;
+        gc.gridwidth = 1;
         gc.gridx=0;
         gc.gridy=0;
         add(statePanel, gc);
+
+        gc.gridx=0;
+        gc.gridy++;
+        add(edgePanel, gc);
+
+        gc.gridx=0;
+        gc.gridy++;
+        add(otherPanel, gc);
     }
 
     public void configureComponents() {
@@ -122,15 +161,11 @@ public class LeftTopSideBar extends JPanel {
         // By default
         stateBacktrack.setEnabled(false);
         finalStateToken.setEnabled(false);
+        edgesTable.setEnabled(false);
 
         // Configure edges table
         edgesTableSP.setPreferredSize(new Dimension(200, 200));
         edgesTable.getTableHeader().setReorderingAllowed(false);
-
-        // Add empty rows
-        for(int i=0; i < 10; i++) {
-            tableModel.addRow(new Object[tableModel.getColumnCount()]);
-        }
     }
 
     /**
@@ -138,20 +173,28 @@ public class LeftTopSideBar extends JPanel {
      */
     public void addListeners() {
 
-        refreshEdgeRowsButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                leftTopSideBarListener.refresh();
-            }
-        });
-
         addStateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                LexicalStateJSON lexicalStateJSON = new LexicalStateJSON();
-                lexicalStateJSON.setName("" + uniqueId++);
-                lexicalMachineJSON.getStates().add(lexicalStateJSON);
-                leftTopSideBarListener.refresh();
+
+                if( (stateType.getSelectedIndex() == 2 && finalStateToken.getText().isEmpty() ) || stateName.getText().isEmpty()) {
+                    JFrame frame = (JFrame)SwingUtilities.getRoot(LeftTopSideBar.this);
+                    JOptionPane.showMessageDialog(frame, "Please fill all the state fields", "State not created", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    leftTopSideBarListener.refresh();
+                }
+            }
+        });
+
+        addEdgeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if(fromState.getSelectedIndex() < 0 || toState.getSelectedIndex() < 0 || edgeLabel.getText().isEmpty()) {
+                    JFrame frame = (JFrame)SwingUtilities.getRoot(LeftTopSideBar.this);
+                    JOptionPane.showMessageDialog(frame, "Please fill all the edge fields", "Edge not created", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    leftTopSideBarListener.refresh();
+                }
             }
         });
 
@@ -171,20 +214,11 @@ public class LeftTopSideBar extends JPanel {
             }
         });
 
-        addEdgeRowsButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                for(int i=0; i < 10; i++) {
-                    tableModel.addRow(new Object[tableModel.getColumnCount()]);
-                }
-            }
-        });
-
         clearAllButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                while(tableModel.getRowCount() > 0) {
-                    tableModel.removeRow(0);
+                while(edgeTableModel.getRowCount() > 0) {
+                    edgeTableModel.removeRow(0);
                     lexicalMachineJSON.getEdges().clear();
                     lexicalMachineJSON.getStates().clear();
                 }
