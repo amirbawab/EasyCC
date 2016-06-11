@@ -1,3 +1,4 @@
+import center.CenterPanel;
 import sidebar.LeftSideBar;
 
 import javax.swing.*;
@@ -7,6 +8,7 @@ public class MainFrame extends JFrame {
 
     // Components
     private LeftSideBar leftSideBar;
+    private CenterPanel centerPanel;
 
     public static void main(String[] args) {
         new MainFrame("EasyCC - Lexical tokens Generator");
@@ -22,9 +24,11 @@ public class MainFrame extends JFrame {
 
         // Init components
         leftSideBar = new LeftSideBar();
+        centerPanel = new CenterPanel();
 
         // Add components
         add(leftSideBar, BorderLayout.WEST);
+        add(centerPanel, BorderLayout.CENTER);
 
         // Configure frame
         Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
