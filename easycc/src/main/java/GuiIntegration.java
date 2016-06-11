@@ -395,7 +395,7 @@ public class GuiIntegration implements DevGuiListener {
                     }
 
                     Object[] edges = graph.getEdgesBetween(v1, v2);
-                    if(edges.length == 0 || ((mxCell) edges[0]).getTarget() == v1) {
+                    if(edges.length == 0 || (((mxCell) edges[0]).getTarget() == v1 && ((mxCell) edges[0]).getSource() != v1)) {
                         graph.insertEdge(parent, null, currentState.getOutEdges().get(i).getValue(), v1, v2);
                     } else {
                         mxCell cell = (mxCell) edges[0];
