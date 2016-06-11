@@ -41,20 +41,4 @@ public class SemanticAnalyzer {
             }
         });
     }
-
-    /**
-     * Set semantic handler listener
-     * @param semanticHandlerListener
-     */
-    public void setSemanticHandlerListener(SemanticHandlerListener semanticHandlerListener) {
-        SemanticHandler.getInstance().setSemanticHandlerListener(semanticHandlerListener);
-    }
-
-    /**
-     * Get the symbol table tree
-     * @return symbol table tree
-     */
-    public SymbolTableTree getSymbolTableTree() {
-        return SemanticHandler.getInstance().getSymbolTableTree();
-    }
 }

@@ -1,5 +1,6 @@
 import core.config.CodeHandler;
 import core.config.SemanticContext;
+import core.config.SemanticHandler;
 import core.config.SemanticHandlerListener;
 import core.structure.symbol.SymbolTableTree;
 import token.ActionToken;
@@ -16,7 +17,7 @@ public class CodeGeneration {
         CodeHandler.getInstance();
 
         // Register semantic handle listener
-        semanticAnalyzer.setSemanticHandlerListener(new SemanticHandlerListener() {
+        SemanticHandler.getInstance().setSemanticHandlerListener(new SemanticHandlerListener() {
             @Override
             public void generateCode(ActionToken actionToken, int phase, SemanticContext semanticContext, SymbolTableTree symbolTableTree) {
                 CodeHandler.getInstance().handleCode(actionToken, phase, semanticContext, symbolTableTree);

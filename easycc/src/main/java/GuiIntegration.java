@@ -148,9 +148,9 @@ public class GuiIntegration implements DevGuiListener {
 
     @Override
     public List<GenericTable> getSymbolTables() {
-        List<SymbolTable> symbolTables = semanticAnalyzer.getSymbolTableTree().getSymbolTables();
+        List<SymbolTable> symbolTables = SemanticHandler.getInstance().getSymbolTableTree().getSymbolTables();
         List<GenericTable> genericTables = new ArrayList<>();
-        String[] header = semanticAnalyzer.getSymbolTableTree().prettifyHeader();
+        String[] header = SemanticHandler.getInstance().getSymbolTableTree().prettifyHeader();
         for(int i=0; i < symbolTables.size(); i++) {
             SymbolTable symbolTable = symbolTables.get(i);
             GenericTable genericTable = new GenericTable();
