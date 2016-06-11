@@ -21,6 +21,7 @@ public class CenterPanel extends JTabbedPane {
 
     // Components
     private JPanel graphPanel, jsonPanel;
+    private JTextPane jsonText;
     private LexicalMachineJSON lexicalMachineJSON;
 
     // Map states
@@ -31,21 +32,30 @@ public class CenterPanel extends JTabbedPane {
         // Init components
         graphPanel = new JPanel();
         jsonPanel = new JPanel();
+        jsonText = new JTextPane();
 
         // Set layout
         graphPanel.setLayout(new BorderLayout());
+        jsonPanel.setLayout(new BorderLayout());
 
         // Set border
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        // Add components
+        jsonPanel.add(jsonText, BorderLayout.CENTER);
 
         addTab("Graph", graphPanel);
         addTab("JSON", jsonPanel);
     }
 
+    private void generateJSON() {
+
+    }
+
     /**
      * Draw graph on the graph tab
      */
-    public void drawGraph() {
+    private void drawGraph() {
         graphPanel.setLayout(new BorderLayout());
 
         mxGraph graph = new mxGraph();
@@ -136,6 +146,7 @@ public class CenterPanel extends JTabbedPane {
      */
     public void refresh() {
         drawGraph();
+        generateJSON();
     }
 
     /**
