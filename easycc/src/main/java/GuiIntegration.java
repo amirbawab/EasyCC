@@ -4,10 +4,12 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
+import core.config.SemanticHandler;
 import core.structure.symbol.SymbolTableTree;
 import core.structure.symbol.table.SymbolTable;
 import data.GenericTable;
 import data.LexicalAnalysisRow;
+import data.SemanticErrorRow;
 import data.SyntaxAnalysisRow;
 import data.structure.ConsoleData;
 import listener.DevGuiListener;
@@ -161,8 +163,12 @@ public class GuiIntegration implements DevGuiListener {
     }
 
     @Override
-    public Object[][] getSemanticErrors() {
-        return new Object[0][];
+    public ConsoleData<SemanticErrorRow> getSemanticErrors() {
+        ConsoleData<SemanticErrorRow> rows = new ConsoleData<>();
+        for(String message : SemanticHandler.getInstance().getErrorsList()) {
+            rows.add(new SemanticErrorRow(message));
+        }
+        return rows;
     }
 
     @Override

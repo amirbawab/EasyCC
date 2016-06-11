@@ -24,7 +24,7 @@ public class CenterPanel extends JPanel {
 	public static final Object[] SCANNER_OUTPUT_HEADER = {"Token", "Value", "Row", "Col", "Position"};
 	public static final Object[] SCANNER_ERROR_HEADER = {"Token", "Value", "Row", "Col", "Position", "Comment"};
 	public static final Object[] PARSER_OUTPUT_HEADER = {"Step", "Stack", "Input", "Production", "Derivation"};
-	public static final Object[] SEMANTIC_ERROR_HEADER= {"Value", "Row", "Col", "Message"};
+	public static final Object[] SEMANTIC_ERROR_HEADER= {"Message"};
 
 	// Panel titles
 	public static final String 	SCANNER_OUTPUT_TITLE = "Scanner - Correct",

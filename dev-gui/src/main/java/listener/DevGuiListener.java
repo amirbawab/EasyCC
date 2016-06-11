@@ -1,6 +1,7 @@
 package listener;
 
 import data.GenericTable;
+import data.SemanticErrorRow;
 import data.SyntaxAnalysisRow;
 import data.LexicalAnalysisRow;
 import data.structure.ConsoleData;
@@ -21,7 +22,7 @@ public interface DevGuiListener {
 	long getParserTime();
 	boolean doesCompile();
 	List<GenericTable> getSymbolTables();
-	Object[][] getSemanticErrors();
+	ConsoleData<SemanticErrorRow> getSemanticErrors();
 	JPanel getDerivationTree();
 	String getGeneratedCode();
 	

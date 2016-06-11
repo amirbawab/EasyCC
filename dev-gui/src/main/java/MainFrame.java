@@ -2,6 +2,7 @@ import bottom.BottomPanel;
 import center.CenterPanel;
 import data.GenericTable;
 import data.LexicalAnalysisRow;
+import data.SemanticErrorRow;
 import data.SyntaxAnalysisRow;
 import data.structure.ConsoleData;
 import listener.DevGuiListener;
@@ -132,9 +133,6 @@ public class MainFrame extends JFrame {
 							// Clear symbol tables
 							centerPanel.removeTablesInNavigationTable(CenterPanel.SYMBOL_TABLE_TITLE);
 
-							// Clear semantic errors
-							centerPanel.resetTable(CenterPanel.SEMANTIC_ERROR_TITLE);
-
 							// Clear code generation
 							centerPanel.setText(CenterPanel.CODE_GENERATION_TITLE, null);
 
@@ -144,6 +142,10 @@ public class MainFrame extends JFrame {
 								centerPanel.addTableToNavigationTable(CenterPanel.SYMBOL_TABLE_TITLE, subTableName, symbolTables.get(i).getHeader());
 								centerPanel.setTableOfTableData(CenterPanel.SYMBOL_TABLE_TITLE, subTableName, symbolTables.get(i).getData());
 							}
+
+							// Semantic errors output
+							ConsoleData<SemanticErrorRow> semanticErrors = devGuilistener.getSemanticErrors();
+							centerPanel.setTableData(CenterPanel.SEMANTIC_ERROR_TITLE, semanticErrors.convertToObjectTable());
 
 							// Insert time
 							message += String.format("Total time: %d ms", compilationTime);

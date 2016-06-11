@@ -213,6 +213,7 @@ public class SemanticHandler {
                         @Override
                         public void error(String message) {
                             errorsList.add(message);
+                            l.info("Semantic Error: " + message);
                         }
 
                         @Override
