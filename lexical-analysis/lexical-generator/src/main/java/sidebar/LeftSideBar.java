@@ -259,11 +259,11 @@ public class LeftSideBar extends JPanel {
                     // Get data
                     String from = (String) fromState.getSelectedItem();
                     String to = (String) toState.getSelectedItem();
-                    String lable = edgeLabel.getText();
+                    String label = edgeLabel.getText();
 
                     // Check if already exists
                     for(LexicalEdgeJSON lexicalEdgeJSON : lexicalMachineJSON.getEdges()) {
-                        if(lexicalEdgeJSON.getFrom().equals(from) && lexicalEdgeJSON.getTo().equals(to) && lexicalEdgeJSON.getValue().equals(lable)) {
+                        if(lexicalEdgeJSON.getFrom().equals(from) && lexicalEdgeJSON.getTo().equals(to) && lexicalEdgeJSON.getValue().equals(label)) {
                             JOptionPane.showMessageDialog(frame, "Edge already exists", "Edge not created", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
@@ -273,11 +273,11 @@ public class LeftSideBar extends JPanel {
                     LexicalEdgeJSON lexicalEdgeJSON = new LexicalEdgeJSON();
                     lexicalEdgeJSON.setFrom(from);
                     lexicalEdgeJSON.setTo(to);
-                    lexicalEdgeJSON.setValue(lable);
+                    lexicalEdgeJSON.setValue(label);
                     lexicalMachineJSON.getEdges().add(lexicalEdgeJSON);
 
                     // Add entry in table
-                    edgeTableModel.addRow(new Object[]{from, to, lable});
+                    edgeTableModel.addRow(new Object[]{from, to, label});
 
                     // Refresh all
                     leftTopSideBarListener.refresh();
@@ -301,14 +301,49 @@ public class LeftSideBar extends JPanel {
             }
         });
 
+        deleteStateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if(stateName.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(frame, "Please enter a state name to delete", "State not deleted", JOptionPane.ERROR_MESSAGE);
+                } else {
+
+                    boolean found = false;
+                    String name = stateName.getText();
+                    for(int i=0; i < lexicalMachineJSON.getStates().size(); i++) {
+                        if(name.equals(lexicalMachineJSON.getStates().get(i).getName())) {
+                            lexicalMachineJSON.getStates().remove(i);
+                            fromState.removeItemAt(i);
+                            toState.removeItemAt(i);
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if(!found) {
+                        JOptionPane.showMessageDialog(frame, "State name does not exist", "State not deleted", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        for(int i=0; i < lexicalMachineJSON.getEdges().size();i++) {
+                            LexicalEdgeJSON lexicalEdgeJSON = lexicalMachineJSON.getEdges().get(i);
+                            if(lexicalEdgeJSON.getFrom().equals(name) || lexicalEdgeJSON.getTo().equals(name)) {
+                                lexicalMachineJSON.getEdges().remove(i);
+                                edgeTableModel.removeRow(i);
+                                i--;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
         clearAllButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 while(edgeTableModel.getRowCount() > 0) {
                     edgeTableModel.removeRow(0);
-                    lexicalMachineJSON.getEdges().clear();
-                    lexicalMachineJSON.getStates().clear();
                 }
+                lexicalMachineJSON.getEdges().clear();
+                lexicalMachineJSON.getStates().clear();
                 leftTopSideBarListener.refresh();
             }
         });
