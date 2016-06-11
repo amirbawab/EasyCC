@@ -6,4 +6,5 @@ mainClassName = "MainFrame"
 
 dependencies {
     compile project(':common')
+    compile project(':lexical-analysis')
 }

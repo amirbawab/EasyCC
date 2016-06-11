@@ -1,8 +1,8 @@
 package sidebar;
 
-import data.LexicalEdgeJSON;
-import data.LexicalMachineJSON;
-import data.LexicalStateJSON;
+import machine.json.Edge;
+import machine.json.Lexical_Analysis;
+import machine.json.State;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -21,13 +21,13 @@ public class LeftSideBar extends JPanel {
     private DefaultTableModel edgeTableModel;
 
     // Store machine
-    private LexicalMachineJSON lexicalMachineJSON;
+    private Lexical_Analysis lexical_analysis;
 
     // Listener
     private LeftSideBarListener leftTopSideBarListener;
 
     // Values
-    private String[] typeValues = { "initial", "normal", "final"};
+    private String[] typeValues = {State.Type.INITIAL.getValue(), State.Type.NORMAL.getValue(), State.Type.FINAL.getValue()};
     private String[] backtrackValues = { "Yes", "No"};
 
     public LeftSideBar() {
@@ -183,7 +183,7 @@ public class LeftSideBar extends JPanel {
         add(otherPanel, gc);
     }
 
-    public void configureComponents() {
+    private void configureComponents() {
 
         // By default
         stateBacktrack.setEnabled(false);
@@ -198,7 +198,7 @@ public class LeftSideBar extends JPanel {
     /**
      * Add buttons listeners
      */
-    public void addListeners() {
+    private void addListeners() {
         JFrame frame = (JFrame)SwingUtilities.getRoot(LeftSideBar.this);
 
         addStateButton.addActionListener(new ActionListener() {
@@ -212,31 +212,31 @@ public class LeftSideBar extends JPanel {
                     // Get data
                     String name = stateName.getText();
                     String type = (String) stateType.getSelectedItem();
-                    String backtrack = stateBacktrack.getSelectedIndex() == 0 ? "true" : "false";
+                    boolean backtrack = stateBacktrack.getSelectedIndex() == 0;
                     String token = finalStateToken.getText();
 
-                    for(LexicalStateJSON lexicalStateJSON : lexicalMachineJSON.getStates()) {
+                    for(State state : lexical_analysis.getStates()) {
 
                         // If more than one initial
-                        if(type.equals(typeValues[0]) && lexicalStateJSON.getType().equals(typeValues[0])) {
+                        if(type.equals(State.Type.INITIAL.getValue()) && state.getType().equals(State.Type.INITIAL)) {
                             JOptionPane.showMessageDialog(frame, "Cannot have more than one initial state", "State not created", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
 
                         // If already exists
-                        if(lexicalStateJSON.getName().equals(name)) {
+                        if(state.getName().equals(name)) {
                             JOptionPane.showMessageDialog(frame, "State name already exists", "State not created", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
                     }
 
                     // Create state
-                    LexicalStateJSON lexicalStateJSON = new LexicalStateJSON();
-                    lexicalStateJSON.setName(name);
-                    lexicalStateJSON.setBacktrack(backtrack);
-                    lexicalStateJSON.setType(type);
-                    lexicalStateJSON.setToken(token);
-                    lexicalMachineJSON.getStates().add(lexicalStateJSON);
+                    State state = new State();
+                    state.setName(name);
+                    state.setBacktrack(backtrack);
+                    state.setType(type);
+                    state.setToken(token);
+                    lexical_analysis.getStates().add(state);
 
                     // Update from to states for edge panel
                     fromState.addItem(name);
@@ -262,21 +262,19 @@ public class LeftSideBar extends JPanel {
                     String label = edgeLabel.getText();
 
                     // Check if already exists
-                    for(LexicalEdgeJSON lexicalEdgeJSON : lexicalMachineJSON.getEdges()) {
-                        if(lexicalEdgeJSON.getFrom().equals(from) && lexicalEdgeJSON.getTo().equals(to) && lexicalEdgeJSON.getLabel().equals(label)) {
+                    for(Edge edge : lexical_analysis.getEdges()) {
+                        if(edge.getFromState().getName().equals(from) && edge.getToState().getName().equals(to) && edge.getValue().equals(label)) {
                             JOptionPane.showMessageDialog(frame, "Edge already exists", "Edge not created", JOptionPane.ERROR_MESSAGE);
                             return;
                         }
                     }
 
                     // Create edge
-                    LexicalEdgeJSON lexicalEdgeJSON = new LexicalEdgeJSON();
-                    lexicalEdgeJSON.setFrom(from);
-                    lexicalEdgeJSON.setTo(to);
-                    lexicalEdgeJSON.setFromState(lexicalMachineJSON.getStates().get(fromState.getSelectedIndex()));
-                    lexicalEdgeJSON.setToState(lexicalMachineJSON.getStates().get(toState.getSelectedIndex()));
-                    lexicalEdgeJSON.setValue(label);
-                    lexicalMachineJSON.getEdges().add(lexicalEdgeJSON);
+                    Edge edge = new Edge();
+                    edge.setFromState(lexical_analysis.getStates().get(fromState.getSelectedIndex()));
+                    edge.setToState(lexical_analysis.getStates().get(toState.getSelectedIndex()));
+                    edge.setValue(label);
+                    lexical_analysis.getEdges().add(edge);
 
                     // Add entry in table
                     edgeTableModel.addRow(new Object[]{from, to, label});
@@ -312,9 +310,9 @@ public class LeftSideBar extends JPanel {
 
                     boolean found = false;
                     String name = stateName.getText();
-                    for(int i=0; i < lexicalMachineJSON.getStates().size(); i++) {
-                        if(name.equals(lexicalMachineJSON.getStates().get(i).getName())) {
-                            lexicalMachineJSON.getStates().remove(i);
+                    for(int i = 0; i < lexical_analysis.getStates().size(); i++) {
+                        if(name.equals(lexical_analysis.getStates().get(i).getName())) {
+                            lexical_analysis.getStates().remove(i);
                             fromState.removeItemAt(i);
                             toState.removeItemAt(i);
                             found = true;
@@ -325,10 +323,10 @@ public class LeftSideBar extends JPanel {
                     if(!found) {
                         JOptionPane.showMessageDialog(frame, "State name does not exist", "State not deleted", JOptionPane.ERROR_MESSAGE);
                     } else {
-                        for(int i=0; i < lexicalMachineJSON.getEdges().size();i++) {
-                            LexicalEdgeJSON lexicalEdgeJSON = lexicalMachineJSON.getEdges().get(i);
-                            if(lexicalEdgeJSON.getFrom().equals(name) || lexicalEdgeJSON.getTo().equals(name)) {
-                                lexicalMachineJSON.getEdges().remove(i);
+                        for(int i = 0; i < lexical_analysis.getEdges().size(); i++) {
+                            Edge edge = lexical_analysis.getEdges().get(i);
+                            if(edge.getFromState().getName().equals(name) || edge.getToState().getName().equals(name)) {
+                                lexical_analysis.getEdges().remove(i);
                                 edgeTableModel.removeRow(i);
                                 i--;
                             }
@@ -347,7 +345,7 @@ public class LeftSideBar extends JPanel {
                 if(edgesTable.getSelectedRow() < 0) {
                     JOptionPane.showMessageDialog(frame, "Please select an edge to delete", "Edge not deleted", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    lexicalMachineJSON.getEdges().remove(edgesTable.getSelectedRow());
+                    lexical_analysis.getEdges().remove(edgesTable.getSelectedRow());
                     edgeTableModel.removeRow(edgesTable.getSelectedRow());
 
                     // Refresh all
@@ -366,8 +364,8 @@ public class LeftSideBar extends JPanel {
                     fromState.removeItemAt(0);
                     toState.removeItemAt(0);
                 }
-                lexicalMachineJSON.getEdges().clear();
-                lexicalMachineJSON.getStates().clear();
+                lexical_analysis.getEdges().clear();
+                lexical_analysis.getStates().clear();
                 leftTopSideBarListener.refresh();
             }
         });
@@ -383,9 +381,9 @@ public class LeftSideBar extends JPanel {
 
     /**
      * Set lexical machine
-     * @param lexicalMachineJSON
+     * @param lexical_analysis
      */
-    public void setLexicalMachineJSON(LexicalMachineJSON lexicalMachineJSON) {
-        this.lexicalMachineJSON = lexicalMachineJSON;
+    public void setLexical_analysis(Lexical_Analysis lexical_analysis) {
+        this.lexical_analysis = lexical_analysis;
     }
 }

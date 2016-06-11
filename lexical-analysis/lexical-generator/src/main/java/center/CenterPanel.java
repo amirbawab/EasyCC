@@ -5,9 +5,9 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
-import data.LexicalEdgeJSON;
-import data.LexicalMachineJSON;
-import data.LexicalStateJSON;
+import machine.json.Edge;
+import machine.json.Lexical_Analysis;
+import machine.json.State;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,7 +22,7 @@ public class CenterPanel extends JTabbedPane {
     // Components
     private JPanel graphPanel, jsonPanel;
     private JTextPane jsonText;
-    private LexicalMachineJSON lexicalMachineJSON;
+    private Lexical_Analysis lexical_analysis;
 
     // Map states
 //    Map<String, >
@@ -68,35 +68,35 @@ public class CenterPanel extends JTabbedPane {
         graph.getModel().beginUpdate();
 
         // Add root
-        Map<LexicalStateJSON, Object> stateMap = new HashMap<>();
+        Map<State, Object> stateMap = new HashMap<>();
 
         try
         {
 
-            for(LexicalStateJSON lexicalStateJSON : lexicalMachineJSON.getStates()) {
-                Object vertex = graph.insertVertex(parent, null, lexicalStateJSON.getName(), 20, 20, 80,30);
-                stateMap.put(lexicalStateJSON, vertex);
+            for(State state : lexical_analysis.getStates()) {
+                Object vertex = graph.insertVertex(parent, null, state.getName(), 20, 20, 80,30);
+                stateMap.put(state, vertex);
 
                 // If final
-                if(lexicalStateJSON.getType().equals("final")) {
+                if(state.getType().equals(State.Type.FINAL)) {
                     graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "green", new Object[]{vertex});
                     graph.setCellStyles(mxConstants.STYLE_FONTCOLOR, "white", new Object[]{vertex});
                     mxCell cell = (mxCell) vertex;
-                    cell.setValue(cell.getValue() + "\nToken: " + lexicalStateJSON.getToken() + "\nBacktrack: " + lexicalStateJSON.getBacktrack());
+                    cell.setValue(cell.getValue() + "\nToken: " + state.getToken() + "\nBacktrack: " + state.shouldBacktrack());
                     graph.updateCellSize(vertex);
                 }
             }
 
-            for(LexicalEdgeJSON lexicalEdgeJSON : lexicalMachineJSON.getEdges()) {
-                Object v1 = stateMap.get(lexicalEdgeJSON.getFromState());
-                Object v2 = stateMap.get(lexicalEdgeJSON.getToState());
+            for(Edge state : lexical_analysis.getEdges()) {
+                Object v1 = stateMap.get(state.getFromState());
+                Object v2 = stateMap.get(state.getToState());
 
                 Object[] edges = graph.getEdgesBetween(v1, v2);
-                if(edges.length == 0 || ((mxCell) edges[0]).getTarget() == v1) {
-                    graph.insertEdge(parent, null, lexicalEdgeJSON.getLabel(), v1, v2);
+                if(edges.length == 0 || (((mxCell) edges[0]).getTarget() == v1 && ((mxCell) edges[0]).getSource() != v1)) {
+                    graph.insertEdge(parent, null, state.getValue(), v1, v2);
                 } else {
                     mxCell cell = (mxCell) edges[0];
-                    cell.setValue(cell.getValue() + ", " + lexicalEdgeJSON.getLabel());
+                    cell.setValue(cell.getValue() + ", " + state.getValue());
                 }
             }
 
@@ -151,9 +151,9 @@ public class CenterPanel extends JTabbedPane {
 
     /**
      * Set lexical machine
-     * @param lexicalMachineJSON
+     * @param lexical_analysis
      */
-    public void setLexicalMachineJSON(LexicalMachineJSON lexicalMachineJSON) {
-        this.lexicalMachineJSON = lexicalMachineJSON;
+    public void setLexical_analysis(Lexical_Analysis lexical_analysis) {
+        this.lexical_analysis = lexical_analysis;
     }
 }

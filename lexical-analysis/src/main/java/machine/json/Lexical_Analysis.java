@@ -22,6 +22,14 @@ public class Lexical_Analysis {
         return edges;
     }
 
+    public void setStates(List<State> states) {
+        this.states = states;
+    }
+
+    public void setEdges(List<Edge> edges) {
+        this.edges = edges;
+    }
+
     @Override
     public String toString() {
         String result = "";

@@ -68,6 +68,10 @@ public class Edge {
         return toState;
     }
 
+    public void setValue(String value) {
+        this.value = value;
+    }
+
     @Override
     public String toString() {
         return String.format("%s => %s (%s)", from, to, value);

@@ -87,6 +87,22 @@ public class State {
         return null;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setBacktrack(boolean backtrack) {
+        this.backtrack = backtrack;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     @Override
     public String toString() {
         String result = String.format("%s - %s\n", name, type + (getType() == Type.FINAL ? " : " + token : ""));

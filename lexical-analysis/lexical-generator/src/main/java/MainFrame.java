@@ -1,17 +1,18 @@
 import center.CenterPanel;
-import data.LexicalMachineJSON;
+import machine.json.Lexical_Analysis;
 import sidebar.LeftSideBar;
 import sidebar.LeftSideBarListener;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class MainFrame extends JFrame {
 
     // Components
     private LeftSideBar leftSideBar;
     private CenterPanel centerPanel;
-    private LexicalMachineJSON lexicalMachineJSON;
+    private Lexical_Analysis lexical_analysis;
 
     public static void main(String[] args) {
         new MainFrame("EasyCC - Lexical tokens Generator");
@@ -28,11 +29,13 @@ public class MainFrame extends JFrame {
         // Init components
         leftSideBar = new LeftSideBar();
         centerPanel = new CenterPanel();
-        lexicalMachineJSON = new LexicalMachineJSON();
+        lexical_analysis = new Lexical_Analysis();
+        lexical_analysis.setEdges(new ArrayList<>());
+        lexical_analysis.setStates(new ArrayList<>());
 
         // Set machine
-        leftSideBar.setLexicalMachineJSON(lexicalMachineJSON);
-        centerPanel.setLexicalMachineJSON(lexicalMachineJSON);
+        leftSideBar.setLexical_analysis(lexical_analysis);
+        centerPanel.setLexical_analysis(lexical_analysis);
 
         // Add components
         add(leftSideBar, BorderLayout.WEST);
