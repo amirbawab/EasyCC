@@ -331,6 +331,9 @@ public class LeftSideBar extends JPanel {
                                 i--;
                             }
                         }
+
+                        // Refresh all
+                        leftTopSideBarListener.refresh();
                     }
                 }
             }
@@ -344,6 +347,9 @@ public class LeftSideBar extends JPanel {
                 } else {
                     lexicalMachineJSON.getEdges().remove(edgesTable.getSelectedRow());
                     edgeTableModel.removeRow(edgesTable.getSelectedRow());
+
+                    // Refresh all
+                    leftTopSideBarListener.refresh();
                 }
             }
         });
@@ -353,6 +359,10 @@ public class LeftSideBar extends JPanel {
             public void actionPerformed(ActionEvent actionEvent) {
                 while(edgeTableModel.getRowCount() > 0) {
                     edgeTableModel.removeRow(0);
+                }
+                while(fromState.getItemCount() > 0) {
+                    fromState.removeItemAt(0);
+                    toState.removeItemAt(0);
                 }
                 lexicalMachineJSON.getEdges().clear();
                 lexicalMachineJSON.getStates().clear();
