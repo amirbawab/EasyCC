@@ -21,6 +21,7 @@ public class LexicalAnalyzer {
     // Core variables
     private StateMachine stateMachine;
     private StateTransitionTable stateTransitionTable;
+    private State initialState;
 
     // Store current line
     private String currentLine;
@@ -71,6 +72,7 @@ public class LexicalAnalyzer {
             // Build state machine based on input file
             stateMachine = new StateMachine(stateMachineFilename);
             stateMachine.verify();
+            initialState = stateMachine.getInitialState();
 
             // Build state transition table
             stateTransitionTable = new StateTransitionTable(stateMachine);
@@ -106,7 +108,7 @@ public class LexicalAnalyzer {
         this.position = 0;
 
         // Reset state
-        this.state = stateMachine.getInitialState().getId();
+        this.state = initialState.getId();
 
         // Reset list of errors
         errorMessagesList = new ArrayList<>();
@@ -199,7 +201,7 @@ public class LexicalAnalyzer {
         do {
 
             // If initial state
-            if(state == stateMachine.getInitialState().getId()){
+            if(state == initialState.getId()){
                 wordCol = index + 1;
                 wordRow = line;
             }
@@ -253,10 +255,10 @@ public class LexicalAnalyzer {
                 word = "";
 
                 // Go to initial state
-                state = stateMachine.getInitialState().getId();
+                state = initialState.getId();
 
                 // If not final state and not in the initial state
-            } else if(state != stateMachine.getInitialState().getId()) {
+            } else if(state != initialState.getId()) {
                 word += currentChar;
             }
         } while(token == null && index < currentLine.length());

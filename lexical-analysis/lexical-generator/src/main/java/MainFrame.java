@@ -1,18 +1,17 @@
 import center.CenterPanel;
-import machine.json.MachineGraph;
+import machine.StateMachine;
 import sidebar.LeftSideBar;
 import sidebar.LeftSideBarListener;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class MainFrame extends JFrame {
 
     // Components
     private LeftSideBar leftSideBar;
     private CenterPanel centerPanel;
-    private MachineGraph lexical_analysis;
+    private StateMachine stateMachine;
 
     public static void main(String[] args) {
         new MainFrame("EasyCC - Lexical tokens Generator");
@@ -29,13 +28,11 @@ public class MainFrame extends JFrame {
         // Init components
         leftSideBar = new LeftSideBar();
         centerPanel = new CenterPanel();
-        lexical_analysis = new MachineGraph();
-        lexical_analysis.setEdges(new ArrayList<>());
-        lexical_analysis.setStates(new ArrayList<>());
+        stateMachine = new StateMachine();
 
         // Set machine
-        leftSideBar.setLexical_analysis(lexical_analysis);
-        centerPanel.setLexical_analysis(lexical_analysis);
+        leftSideBar.setStateMachine(stateMachine);
+        centerPanel.setStateMachine(stateMachine);
 
         // Add components
         add(leftSideBar, BorderLayout.WEST);
@@ -62,11 +59,20 @@ public class MainFrame extends JFrame {
             @Override
             public void refresh() {
                 centerPanel.refresh();
+                leftSideBar.refresh();
             }
 
             @Override
             public String getJSON() {
                 return centerPanel.getJSON();
+            }
+
+            @Override
+            public void reset() {
+                stateMachine = new StateMachine();
+                leftSideBar.setStateMachine(stateMachine);
+                centerPanel.setStateMachine(stateMachine);
+                refresh();
             }
         });
     }

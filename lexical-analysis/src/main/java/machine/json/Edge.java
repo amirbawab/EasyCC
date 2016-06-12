@@ -86,4 +86,13 @@ public class Edge {
     public String toString() {
         return String.format("%s => %s (%s)", from, to, value);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof Edge) {
+            Edge edge = (Edge) o;
+            return from.equals(edge.from) && to.equals(edge.to) && value.equals(edge.value);
+        }
+        return super.equals(o);
+    }
 }

@@ -16,7 +16,6 @@ public class StateMachine {
     // Variables
     private Logger l = LogManager.getLogger();
     private Map<String, State> statesMap;
-    private State initialState;
     private int stateId = 0;
 
     /**
@@ -54,6 +53,15 @@ public class StateMachine {
     }
 
     /**
+     * Get state by name
+     * @param name
+     * @return state
+     */
+    public State getStateByName(String name) {
+        return statesMap.get(name);
+    }
+
+    /**
      * Add state to the state machine
      * @param state
      */
@@ -61,15 +69,13 @@ public class StateMachine {
         if(statesMap.containsKey(state.getName())) {
             throw new StateMachineException("State name must be unique");
         } else {
-            statesMap.put(state.getName(), state);
             state.setId(stateId++);
             if (state.getType() == State.Type.INITIAL) {
-                if(initialState != null) {
+                if(getInitialState() != null) {
                     throw new StateMachineException("Only one initial state is allowed");
-                } else {
-                    initialState = state;
                 }
             }
+            statesMap.put(state.getName(), state);
         }
     }
 
@@ -78,6 +84,12 @@ public class StateMachine {
      * @param edge
      */
     public void addEdge(Edge edge) {
+        // Check if a similar edge was already added
+        for(Edge e : statesMap.get(edge.getFrom()).getOutEdges()) {
+            if(e.equals(edge)) {
+                throw new StateMachineException("Edge already exists between " + e.getFrom() + " and " + e.getTo() + " with value: " + e.getValue());
+            }
+        }
         edge.setFromState(statesMap.get(edge.getFrom()));
         edge.setToState(statesMap.get(edge.getTo()));
         edge.getFromState().getOutEdges().add(edge);
@@ -85,25 +97,49 @@ public class StateMachine {
 
     /**
      * Remove state from state machine
-     * @param state
+     * @param name
+     * @return true if removed
      */
-    public void removeState(State state) {
+    public boolean removeState(String name) {
 
-        // Update initial state
-        if(initialState == state) {
-            initialState = null;
+        if(statesMap.containsKey(name)) {
+
+            State deleteState = statesMap.get(name);
+
+            // Remove all in edges
+            for(State state : statesMap.values()) {
+                for(int i=0; i < state.getOutEdges().size(); i++) {
+                    Edge edge = state.getOutEdges().get(i);
+                    if(edge.getToState() == deleteState) {
+                        state.getOutEdges().remove(i);
+                    }
+                }
+            }
+
+            // Remove state from map
+            statesMap.remove(name);
+            return true;
         }
-
-        // Remove state from map
-        statesMap.remove(state.getName());
+        return false;
     }
 
     /**
      * Remove edge from the state machine
-     * @param edge
+     * @param from
+     * @param to
+     * @param value
+     * @return true if removed
      */
-    public void removeEdge(Edge edge) {
-        edge.getFromState().getOutEdges().remove(edge);
+    public boolean removeEdge(String from, String to, String value) {
+        State fromState = statesMap.get(from);
+        State toState = statesMap.get(to);
+        for(Edge edge : fromState.getOutEdges()) {
+            if(edge.getFromState() == fromState && edge.getToState() == toState && edge.getValue().equals(value)) {
+                edge.getFromState().getOutEdges().remove(edge);
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -147,7 +183,12 @@ public class StateMachine {
      * @return initial state
      */
     public State getInitialState() {
-        return initialState;
+        for(State state : statesMap.values()) {
+            if(state.getType() == State.Type.INITIAL) {
+                return state;
+            }
+        }
+        return null;
     }
 
     /**
