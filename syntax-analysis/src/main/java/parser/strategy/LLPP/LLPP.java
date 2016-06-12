@@ -63,6 +63,9 @@ public class LLPP extends ParseStrategy {
         // True if error detected
         boolean error = false;
 
+        // True if the parser is in panic mode
+        boolean stable = true;
+
         // Push EOS
         stackSyntax.push(SyntaxTokenFactory.createEndOfStackToken());
 
@@ -121,6 +124,7 @@ public class LLPP extends ParseStrategy {
 
                     // Call action
                     if(parseStrategyListener != null) {
+                        ((ActionToken) syntaxToken).setStable(stable);
                         parseStrategyListener.actionCall(syntaxToken, lexicalToken.getPrevious(), phase);
                     }
 
@@ -146,6 +150,9 @@ public class LLPP extends ParseStrategy {
                         // Update inputToken
                         lexicalToken = lexicalToken.getNext();
 
+                        // Update stability
+                        stable = true;
+
                     } else {
 
                         if(phase == 1) {
@@ -162,6 +169,9 @@ public class LLPP extends ParseStrategy {
 
                         // Error found
                         error = true;
+
+                        // Update stability
+                        stable = false;
                     }
 
                 } else if(syntaxToken instanceof NonTerminalToken) {
@@ -194,6 +204,9 @@ public class LLPP extends ParseStrategy {
                             nonTerminalToken.addChild(ruleCopy.get(i));
                         }
 
+                        // Update stability
+                        stable = true;
+
                     } else if(cell instanceof LLPPErrorCell) {
 
                         // Cast to error cell
@@ -225,6 +238,9 @@ public class LLPP extends ParseStrategy {
 
                         // Error found
                         error = true;
+
+                        // Update stability
+                        stable = false;
                     }
                 }
             }

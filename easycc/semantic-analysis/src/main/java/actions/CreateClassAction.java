@@ -10,7 +10,7 @@ import core.structure.SemanticStack;
 import core.structure.symbol.SymbolTableTree;
 import enums.SemanticActionEnum;
 
-@SemanticAction(SemanticActionEnum.CREATE_CLASS_TABLE_AND_ENTRY)
+@SemanticAction(value = SemanticActionEnum.CREATE_CLASS_TABLE_AND_ENTRY, stable = true)
 public class CreateClassAction extends GenericAction {
 
     @ParsePhase(1)
