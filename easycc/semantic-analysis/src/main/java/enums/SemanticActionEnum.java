@@ -6,7 +6,10 @@ package enums;
  */
 
 public enum SemanticActionEnum {
-    CREATE_CLASS_TABLE_AND_ENTRY("createClassTableAndEntry")
+    OP("op"),
+    INTEGER("integer"),
+    RESULT("result"),
+    SYMBOL("symb")
     ;
 
     private String name;

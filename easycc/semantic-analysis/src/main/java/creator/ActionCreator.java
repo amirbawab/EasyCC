@@ -1,6 +1,9 @@
 package creator;
 
-import actions.CreateClassAction;
+import actions.IntegerAction;
+import actions.OpAction;
+import actions.ResultAction;
+import actions.SymbolAction;
 import core.actions.GenericAction;
 
 import java.util.List;
@@ -18,6 +21,9 @@ public class ActionCreator {
     public void allActions(List<GenericAction> actionList) {
 
         // Add all the actions create here ...
-        actionList.add(new CreateClassAction());
+        actionList.add(new OpAction());
+        actionList.add(new IntegerAction());
+        actionList.add(new ResultAction());
+        actionList.add(new SymbolAction());
     }
 }

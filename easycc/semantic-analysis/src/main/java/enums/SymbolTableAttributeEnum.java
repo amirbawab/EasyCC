@@ -8,7 +8,7 @@ package enums;
 public enum SymbolTableAttributeEnum {
 
     // Add your attributes here
-    NAME("Name")
+
     ;
 
     // Store name and default value for an attribute

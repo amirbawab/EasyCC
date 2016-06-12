@@ -7,43 +7,43 @@
     {
       "type": "final",
       "name": "1",
-      "token": "T_INTEGER",
+      "token": "integer",
       "backtrack": "false"
     },
     {
       "type": "final",
       "name": "2",
-      "token": "T_PLUS",
+      "token": "plus",
       "backtrack": "false"
     },
     {
       "type": "final",
       "name": "3",
-      "token": "T_MINUS",
+      "token": "minus",
       "backtrack": "false"
     },
     {
       "type": "final",
       "name": "4",
-      "token": "T_MULTIPLY",
+      "token": "multiply",
       "backtrack": "false"
     },
     {
       "type": "final",
       "name": "5",
-      "token": "T_DIVIDE",
+      "token": "divide",
       "backtrack": "false"
     },
     {
       "type": "final",
       "name": "6",
-      "token": "T_OPEN_PAR",
+      "token": "oParenthesis",
       "backtrack": "false"
     },
     {
       "type": "final",
       "name": "7",
-      "token": "T_CLOSE_PAR",
+      "token": "cParenthesis",
       "backtrack": "false"
     },
     {
@@ -53,13 +53,13 @@
     {
       "type": "final",
       "name": "9",
-      "token": "T_INTEGER",
+      "token": "integer",
       "backtrack": "true"
     },
     {
       "type": "final",
       "name": "10",
-      "token": "T_INVALID",
+      "token": "invalid",
       "backtrack": "false"
     }
   ],

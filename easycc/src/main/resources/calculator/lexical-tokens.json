@@ -9,7 +9,7 @@
     "error": {
         "prefix": "",
         "suffix": "",
-        "include": ["T_INVALID"],
+        "include": ["invalid"],
         "exclude": []
     },
 

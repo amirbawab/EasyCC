@@ -1,6 +1,6 @@
 package creator;
 
-import code.CreateClassCode;
+import code.ResultCode;
 import core.code.GenericCodeGeneration;
 
 import java.util.List;
@@ -17,7 +17,6 @@ public class CodeGenerationCreator {
     public void allCodeGeneration(List<GenericCodeGeneration> genericCodeGenerationList) {
 
         // Add all the code generation here ...
-
-        genericCodeGenerationList.add(new CreateClassCode());
+        genericCodeGenerationList.add(new ResultCode());
     }
 }
