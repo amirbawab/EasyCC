@@ -2,6 +2,7 @@ package center;
 
 import helper.GuiHelper;
 import machine.StateMachine;
+import utils.StringUtilsPlus;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,8 +36,11 @@ public class CenterPanel extends JTabbedPane {
         addTab("JSON", jsonPanel);
     }
 
+    /**
+     * Generate JSON from a state machine
+     */
     private void generateJSON() {
-//        jsonText.setText(StringUtilsPlus.objectToJson(lexical_analysis));
+        jsonText.setText(StringUtilsPlus.objectToJson(stateMachine.createMachineGraph()));
     }
 
     /**

@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 public class LeftSideBar extends JPanel {
@@ -407,6 +408,33 @@ public class LeftSideBar extends JPanel {
                     if(print != null) {
                         print.close();
                     }
+                }
+            }
+        });
+
+        importButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                int returnVal = fileChooser.showOpenDialog(frame);
+                File file = fileChooser.getSelectedFile();
+                try {
+                    if(returnVal == JFileChooser.APPROVE_OPTION) {
+                        leftTopSideBarListener.updateStateMachine(new StateMachine(file));
+                    }
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(frame, "Cannot open file:\n" + file.getAbsolutePath(), "Error loading file", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        verifyDFAButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    stateMachine.verify();
+                    JOptionPane.showMessageDialog(frame, "State machine is a DFA", "It's a DFA!", JOptionPane.INFORMATION_MESSAGE);
+                } catch (StateMachineException e) {
+                    JOptionPane.showMessageDialog(frame, e.getMessage(), "Not a DFA", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });

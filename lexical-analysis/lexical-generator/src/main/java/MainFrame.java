@@ -63,16 +63,21 @@ public class MainFrame extends JFrame {
             }
 
             @Override
+            public void updateStateMachine(StateMachine stateMachine) {
+                MainFrame.this.stateMachine = stateMachine;
+                leftSideBar.setStateMachine(stateMachine);
+                centerPanel.setStateMachine(stateMachine);
+                refresh();
+            }
+
+            @Override
             public String getJSON() {
                 return centerPanel.getJSON();
             }
 
             @Override
             public void reset() {
-                stateMachine = new StateMachine();
-                leftSideBar.setStateMachine(stateMachine);
-                centerPanel.setStateMachine(stateMachine);
-                refresh();
+                updateStateMachine(new StateMachine());
             }
         });
     }

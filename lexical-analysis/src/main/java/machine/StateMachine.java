@@ -7,6 +7,7 @@ import machine.json.MachineGraph;
 import machine.json.State;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -20,19 +21,41 @@ public class StateMachine {
 
     /**
      * Read a Machine Graph file and converts it into a state machine
-     * @param filename
+     * @param resourceFile
      * @throws IOException
      */
-    public StateMachine(String filename) throws IOException {
+    public StateMachine(String resourceFile) throws IOException {
 
         // Default constructor
         this();
 
         // Parse JSON
         ObjectMapper mapper = new ObjectMapper();
-        InputStream file = getClass().getResourceAsStream(filename);
+        InputStream file = getClass().getResourceAsStream(resourceFile);
         MachineGraph machineGraph = mapper.readValue(file, MachineGraph.class);
+        loadFromMachineGraph(machineGraph);
+    }
 
+    /**
+     * Read a Machine Graph file and converts it into a state machine
+     * @param file
+     * @throws IOException
+     */
+    public StateMachine(File file) throws IOException {
+        // Default constructor
+        this();
+
+        // Parse JSON
+        ObjectMapper mapper = new ObjectMapper();
+        MachineGraph machineGraph = mapper.readValue(file, MachineGraph.class);
+        loadFromMachineGraph(machineGraph);
+    }
+
+    /**
+     * Load data from a machine graph
+     * @param machineGraph
+     */
+    private void loadFromMachineGraph(MachineGraph machineGraph) {
         // Store states in a map
         for(State state : machineGraph.getStates()) {
             addState(state);
@@ -140,6 +163,25 @@ public class StateMachine {
             }
         }
         return false;
+    }
+
+    /**
+     * Create a machine graph from a state machine
+     * @return machine graph
+     */
+    public MachineGraph createMachineGraph() {
+        List<State> states = new ArrayList<>();
+        List<Edge> edges = new ArrayList<>();
+        for(State state : statesMap.values()) {
+            states.add(state);
+            for(Edge edge : state.getOutEdges()) {
+                edges.add(edge);
+            }
+        }
+        MachineGraph machineGraph = new MachineGraph();
+        machineGraph.setEdges(edges);
+        machineGraph.setStates(states);
+        return machineGraph;
     }
 
     /**
