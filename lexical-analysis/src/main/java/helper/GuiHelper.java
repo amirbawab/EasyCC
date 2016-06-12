@@ -106,6 +106,7 @@ public class GuiHelper {
 
         final mxGraphComponent graphComponent = new mxGraphComponent(graph);
         graphComponent.setEnabled(true);
+        graphComponent.setConnectable(false);
 
         // Add wheel listener
         graphComponent.addMouseWheelListener(new MouseWheelListener() {
