@@ -288,7 +288,6 @@ public class LeftSideBar extends JPanel {
                     edge.setTo(toState.getSelectedItem().toString());
                     edge.setFromState(lexical_analysis.getStates().get(fromState.getSelectedIndex()));
                     edge.setToState(lexical_analysis.getStates().get(toState.getSelectedIndex()));
-                    lexical_analysis.getStates().get(fromState.getSelectedIndex()).getOutEdges().add(edge);
                     edge.setValue(label);
                     lexical_analysis.getEdges().add(edge);
 
@@ -342,7 +341,6 @@ public class LeftSideBar extends JPanel {
                         for(int i = 0; i < lexical_analysis.getEdges().size(); i++) {
                             Edge edge = lexical_analysis.getEdges().get(i);
                             if(edge.getFromState().getName().equals(name) || edge.getToState().getName().equals(name)) {
-                                edge.getFromState().getOutEdges().remove(edge);
                                 lexical_analysis.getEdges().remove(i);
                                 edgeTableModel.removeRow(i);
                                 i--;
