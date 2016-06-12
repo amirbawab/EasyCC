@@ -288,6 +288,7 @@ public class LeftSideBar extends JPanel {
                     edge.setTo(toState.getSelectedItem().toString());
                     edge.setFromState(lexical_analysis.getStates().get(fromState.getSelectedIndex()));
                     edge.setToState(lexical_analysis.getStates().get(toState.getSelectedIndex()));
+                    lexical_analysis.getStates().get(fromState.getSelectedIndex()).getOutEdges().add(edge);
                     edge.setValue(label);
                     lexical_analysis.getEdges().add(edge);
 
@@ -341,6 +342,7 @@ public class LeftSideBar extends JPanel {
                         for(int i = 0; i < lexical_analysis.getEdges().size(); i++) {
                             Edge edge = lexical_analysis.getEdges().get(i);
                             if(edge.getFromState().getName().equals(name) || edge.getToState().getName().equals(name)) {
+                                edge.getFromState().getOutEdges().remove(edge);
                                 lexical_analysis.getEdges().remove(i);
                                 edgeTableModel.removeRow(i);
                                 i--;
@@ -372,6 +374,7 @@ public class LeftSideBar extends JPanel {
         updateStateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+
                 if(stateName.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(frame, "Please enter a state name to update", "State not updated", JOptionPane.ERROR_MESSAGE);
                 } else {
@@ -399,12 +402,19 @@ public class LeftSideBar extends JPanel {
                     }
 
                     if(targetSate != null) {
-                        targetSate.setType(type);
 
-                        if(type.equals(State.Type.FINAL.getValue())) {
-                            targetSate.setBacktrack(backtrack);
-                            targetSate.setToken(token);
+                        if(type.equals(State.Type.FINAL.getValue()) && finalStateToken.getText().isEmpty()) {
+                            JOptionPane.showMessageDialog(frame, "Please fill the token value", "State not updated", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        } else {
+                            targetSate.setType(type);
+
+                            if (type.equals(State.Type.FINAL.getValue())) {
+                                targetSate.setBacktrack(backtrack);
+                                targetSate.setToken(token);
+                            }
                         }
+
                     } else {
                         JOptionPane.showMessageDialog(frame, "State name does not exist", "State not updated", JOptionPane.ERROR_MESSAGE);
                         return;
