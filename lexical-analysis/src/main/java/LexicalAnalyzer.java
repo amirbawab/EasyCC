@@ -70,6 +70,7 @@ public class LexicalAnalyzer {
 
             // Build state machine based on input file
             stateMachine = new StateMachine(stateMachineFilename);
+            stateMachine.verify();
 
             // Build state transition table
             stateTransitionTable = new StateTransitionTable(stateMachine);

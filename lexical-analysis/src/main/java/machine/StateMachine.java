@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import machine.json.Edge;
 import machine.json.MachineGraph;
 import machine.json.State;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,45 +14,96 @@ import java.util.*;
 public class StateMachine {
 
     // Variables
-    private final org.apache.logging.log4j.Logger l = LogManager.getLogger();
-    private MachineGraph lexical_analysis;
+    private Logger l = LogManager.getLogger();
     private Map<String, State> statesMap;
-    private Set<String> tokens;
-    private Set<String> characters;
     private State initialState;
+    private int stateId = 0;
 
+    /**
+     * Read a Machine Graph file and converts it into a state machine
+     * @param filename
+     * @throws IOException
+     */
     public StateMachine(String filename) throws IOException {
-        // Init variables
-        statesMap = new HashMap<>();
-        tokens = new HashSet<>();
-        characters = new HashSet<>();
+
+        // Default constructor
+        this();
 
         // Parse JSON
         ObjectMapper mapper = new ObjectMapper();
         InputStream file = getClass().getResourceAsStream(filename);
-        lexical_analysis = mapper.readValue(file, MachineGraph.class);
+        MachineGraph machineGraph = mapper.readValue(file, MachineGraph.class);
 
         // Store states in a map
-        for(int i = 0; i < lexical_analysis.getStates().size(); i++) {
-            State current = lexical_analysis.getStates().get(i);
-            statesMap.put(current.getName(), current);
-            current.setId(i);
-            if(current.getType() == State.Type.FINAL)
-                tokens.add(current.getToken());
-            else if(current.getType() == State.Type.INITIAL)
-                initialState = current;
+        for(State state : machineGraph.getStates()) {
+            addState(state);
         }
 
         // Create graph
-        for (Edge edge : lexical_analysis.getEdges()) {
-            edge.setFromState(statesMap.get(edge.getFrom()));
-            edge.setToState(statesMap.get(edge.getTo()));
-            edge.getFromState().getOutEdges().add(edge);
-            characters.add(edge.getValue());
+        for (Edge edge : machineGraph.getEdges()) {
+            addEdge(edge);
+        }
+    }
+
+    /**
+     * Create an empty state machine
+     */
+    public StateMachine() {
+        // Init variables
+        statesMap = new HashMap<>();
+    }
+
+    /**
+     * Add state to the state machine
+     * @param state
+     */
+    public void addState(State state) {
+        if(statesMap.containsKey(state.getName())) {
+            throw new StateMachineException("State name must be unique");
+        } else {
+            statesMap.put(state.getName(), state);
+            state.setId(stateId++);
+            if (state.getType() == State.Type.INITIAL) {
+                if(initialState != null) {
+                    throw new StateMachineException("Only one initial state is allowed");
+                } else {
+                    initialState = state;
+                }
+            }
+        }
+    }
+
+    /**
+     * Add edge to the state machine
+     * @param edge
+     */
+    public void addEdge(Edge edge) {
+        edge.setFromState(statesMap.get(edge.getFrom()));
+        edge.setToState(statesMap.get(edge.getTo()));
+        edge.getFromState().getOutEdges().add(edge);
+    }
+
+    /**
+     * Remove state from state machine
+     * @param state
+     */
+    public void removeState(State state) {
+
+        // Update initial state
+        if(initialState == state) {
+            initialState = null;
         }
 
-        // Verify that the state machine is structured correctly
-        verify();
+        // Remove state from map
+        statesMap.remove(state.getName());
+    }
+
+    /**
+     * Remove edge from the state machine
+     * @param edge
+     */
+    public void removeEdge(Edge edge) {
+        edge.getFromState().getOutEdges().remove(edge);
     }
 
     /**
@@ -66,13 +118,27 @@ public class StateMachine {
      * Get all tokens
      * @return set of tokens
      */
-    public Set<String> getTokens() { return tokens; }
+    public Set<String> getTokens() {
+        Set<String> tokens = new HashSet<>();
+        for(State state : statesMap.values()) {
+            if(state.getType() == State.Type.FINAL) {
+                tokens.add(state.getToken());
+            }
+        }
+        return tokens;
+    }
 
     /**
      * Get all characters
      * @return characters
      */
     public Set<String> getCharacters() {
+        Set<String> characters = new HashSet<>();
+        for(State state : statesMap.values()) {
+            for(Edge edge : state.getOutEdges()) {
+                characters.add(edge.getValue());
+            }
+        }
         return characters;
     }
 
@@ -84,16 +150,11 @@ public class StateMachine {
         return initialState;
     }
 
-    @Override
-    public String toString() {
-        return lexical_analysis.toString();
-    }
-
     /**
      * Verify that the state machine is valid
      * Note: This state machine has custom rules
      */
-    private void verify() {
+    public void verify() {
 
         // One initial state only
         boolean hasInitial = false;
