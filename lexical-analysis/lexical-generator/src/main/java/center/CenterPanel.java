@@ -33,7 +33,7 @@ public class CenterPanel extends JTabbedPane {
         jsonPanel.add(jsonText, BorderLayout.CENTER);
 
         addTab("Graph", graphPanel);
-        addTab("JSON", jsonPanel);
+        addTab("JSON", new JScrollPane(jsonPanel));
     }
 
     /**
