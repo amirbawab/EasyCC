@@ -1,5 +1,5 @@
 import center.CenterPanel;
-import machine.json.Lexical_Analysis;
+import machine.json.MachineGraph;
 import sidebar.LeftSideBar;
 import sidebar.LeftSideBarListener;
 
@@ -12,7 +12,7 @@ public class MainFrame extends JFrame {
     // Components
     private LeftSideBar leftSideBar;
     private CenterPanel centerPanel;
-    private Lexical_Analysis lexical_analysis;
+    private MachineGraph lexical_analysis;
 
     public static void main(String[] args) {
         new MainFrame("EasyCC - Lexical tokens Generator");
@@ -29,7 +29,7 @@ public class MainFrame extends JFrame {
         // Init components
         leftSideBar = new LeftSideBar();
         centerPanel = new CenterPanel();
-        lexical_analysis = new Lexical_Analysis();
+        lexical_analysis = new MachineGraph();
         lexical_analysis.setEdges(new ArrayList<>());
         lexical_analysis.setStates(new ArrayList<>());
 

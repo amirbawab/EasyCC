@@ -6,7 +6,7 @@ import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 import machine.json.Edge;
-import machine.json.Lexical_Analysis;
+import machine.json.MachineGraph;
 import machine.json.State;
 import utils.StringUtilsPlus;
 
@@ -23,7 +23,7 @@ public class CenterPanel extends JTabbedPane {
     // Components
     private JPanel graphPanel, jsonPanel;
     private JTextPane jsonText;
-    private Lexical_Analysis lexical_analysis;
+    private MachineGraph lexical_analysis;
 
     // Map states
 //    Map<String, >
@@ -163,7 +163,7 @@ public class CenterPanel extends JTabbedPane {
      * Set lexical machine
      * @param lexical_analysis
      */
-    public void setLexical_analysis(Lexical_Analysis lexical_analysis) {
+    public void setLexical_analysis(MachineGraph lexical_analysis) {
         this.lexical_analysis = lexical_analysis;
     }
 }

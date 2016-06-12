@@ -1,7 +1,7 @@
 package sidebar;
 
 import machine.json.Edge;
-import machine.json.Lexical_Analysis;
+import machine.json.MachineGraph;
 import machine.json.State;
 
 import javax.swing.*;
@@ -25,7 +25,7 @@ public class LeftSideBar extends JPanel {
     private JFileChooser fileChooser;
 
     // Store machine
-    private Lexical_Analysis lexical_analysis;
+    private MachineGraph lexical_analysis;
 
     // Listener
     private LeftSideBarListener leftTopSideBarListener;
@@ -490,7 +490,7 @@ public class LeftSideBar extends JPanel {
      * Set lexical machine
      * @param lexical_analysis
      */
-    public void setLexical_analysis(Lexical_Analysis lexical_analysis) {
+    public void setLexical_analysis(MachineGraph lexical_analysis) {
         this.lexical_analysis = lexical_analysis;
     }
 }

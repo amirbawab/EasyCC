@@ -3,7 +3,7 @@ package machine;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import machine.json.Edge;
-import machine.json.Lexical_Analysis;
+import machine.json.MachineGraph;
 import machine.json.State;
 
 import java.io.IOException;
@@ -14,7 +14,7 @@ public class StateMachine {
 
     // Variables
     private final org.apache.logging.log4j.Logger l = LogManager.getLogger();
-    private Lexical_Analysis lexical_analysis;
+    private MachineGraph lexical_analysis;
     private Map<String, State> statesMap;
     private Set<String> tokens;
     private Set<String> characters;
@@ -29,7 +29,7 @@ public class StateMachine {
         // Parse JSON
         ObjectMapper mapper = new ObjectMapper();
         InputStream file = getClass().getResourceAsStream(filename);
-        lexical_analysis = mapper.readValue(file, Lexical_Analysis.class);
+        lexical_analysis = mapper.readValue(file, MachineGraph.class);
 
         // Store states in a map
         for(int i = 0; i < lexical_analysis.getStates().size(); i++) {
