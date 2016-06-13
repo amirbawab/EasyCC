@@ -70,17 +70,28 @@ task buildCompiler(dependsOn: 'fullJar') {
         println "Creating ${compilerPath}"
         file(compilerPath).mkdirs()
 
-        def runFile = file("${compilerPath}/run.sh")
-        runFile << "java "
+        def runFileSh = file("${compilerPath}/run.sh")
+        def runFileBat = file("${compilerPath}/run.bat")
+
+        runFileSh << "java "
+        runFileBat << "java "
+
         lexicalAnalyzer.getValues().each {
-            runFile << "${it} "
+            runFileSh << "${it} "
+            runFileBat << "${it} "
         }
         syntaxAnalyzer.getValues().each {
-            runFile << "${it} "
+            runFileSh << "${it} "
+            runFileBat << "${it} "
         }
-        runFile << "-jar ${compilerName}.jar"
-        runFile.setExecutable(true)
-        runFile.createNewFile()
+
+        runFileSh << "-jar ${compilerName}.jar"
+        runFileSh.setExecutable(true)
+        runFileSh.createNewFile()
+
+        runFileBat << "-jar ${compilerName}.jar"
+        runFileBat.setExecutable(true)
+        runFileBat.createNewFile()
 
         println "Copying compiler jar"
         copy {
