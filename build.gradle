@@ -8,10 +8,13 @@ dependencies {
 ext{
     sonarReportPath = "reports/jacoco/test/jacocoTest.exec"
     jacocoToolVersion = "0.7.6.201602180812"
+    compilerPath = "${buildDir}/compiler"
+    compilerName = "EasyCC"
 }
 
 subprojects {
     apply plugin: 'java'
+    sourceCompatibility = 1.8
 
     repositories {
         mavenCentral()

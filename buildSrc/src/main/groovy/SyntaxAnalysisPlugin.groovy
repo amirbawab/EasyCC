@@ -9,11 +9,7 @@ public class SyntaxAnalysisPlugin implements Plugin<Project> {
 
         // After evaluating the build file, add jvm args
         project.afterEvaluate {
-            def values = []
-            values << "-Deasycc.syntax.grammar=" + project.syntaxAnalyzer.grammarPath
-            values << "-Deasycc.syntax.parseStrategy=" + project.syntaxAnalyzer.parseStrategy
-            values << "-Deasycc.syntax.messages=" + project.syntaxAnalyzer.messagesPath
-            project.run.jvmArgs = values
+            project.run.jvmArgs = project.syntaxAnalyzer.getValues()
         }
     }
 }
@@ -22,4 +18,12 @@ class SyntaxAnalysisPluginExtension {
     String grammarPath
     String parseStrategy
     String messagesPath
+
+    def getValues() {
+        def values = []
+        values << "-Deasycc.syntax.grammar=" + grammarPath
+        values << "-Deasycc.syntax.parseStrategy=" + parseStrategy
+        values << "-Deasycc.syntax.messages=" + messagesPath
+        return values
+    }
 }

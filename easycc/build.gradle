@@ -51,4 +51,41 @@ sonarqube {
     }
 }
 
+task fullJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': compilerName,
+                'Implementation-Version': version,
+                'Main-Class': mainClassName
+    }
+    archiveName="${compilerName}.jar"
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+task buildCompiler(dependsOn: 'fullJar') {
+    doLast {
+        println "Deleting ${compilerPath} (if any)"
+        file(compilerPath).deleteDir()
+
+        println "Creating ${compilerPath}"
+        file(compilerPath).mkdirs()
+
+        def runFile = file("${compilerPath}/run.sh")
+        runFile << "java -jar ${compilerName}.jar "
+        lexicalAnalyzer.getValues().each {
+            runFile << "${it} "
+        }
+        syntaxAnalyzer.getValues().each {
+            runFile << "${it} "
+        }
+        runFile.setExecutable(true)
+        runFile.createNewFile()
+
+        println "Copying compiler jar"
+        copy {
+            from file("${buildDir}/libs/${compilerName}.jar")
+            into file("${compilerPath}")
+        }
+    }
+}
 

@@ -9,11 +9,7 @@ public class LexicalAnalysisPlugin implements Plugin<Project> {
 
         // After evaluating the build file, add jvm args
         project.afterEvaluate {
-            def values = []
-            values << "-Deasycc.lexical.machine=" + project.lexicalAnalyzer.machinePath
-            values << "-Deasycc.lexical.tokens=" + project.lexicalAnalyzer.tokensPath
-            values << "-Deasycc.lexical.messages=" + project.lexicalAnalyzer.messagesPath
-            project.run.jvmArgs = values
+            project.run.jvmArgs = project.lexicalAnalyzer.getValues()
         }
     }
 }
@@ -22,4 +18,12 @@ class LexicalAnalysisPluginExtension {
     String machinePath
     String tokensPath
     String messagesPath
+
+    def getValues() {
+        def values = []
+        values << "-Deasycc.lexical.machine=" + machinePath
+        values << "-Deasycc.lexical.tokens=" + tokensPath
+        values << "-Deasycc.lexical.messages=" + messagesPath
+        return values
+    }
 }
