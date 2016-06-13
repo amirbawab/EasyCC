@@ -239,7 +239,7 @@ public class SemanticHandler {
                     // Call method
                     objectMethod.getMethod().invoke(objectMethod.getObject(), semanticContext, semanticStack, symbolTableTree);
                 } catch (IllegalAccessException | InvocationTargetException e) {
-                    l.error("Error invoking method for semantic action '" + actionToken.getValue() + "'");
+                    e.getCause().printStackTrace();
                 }
             } else {
                 l.warn("Skipping semantic action call for '" + actionToken.getValue() + "' because the parser is in error recovery mode (unstable)");
