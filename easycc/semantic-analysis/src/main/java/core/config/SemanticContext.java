@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 public class SemanticContext {
     private GenericModel model;
     private SymbolTableGenericEntry entry;
+    private boolean stable;
 
     public GenericModel getModel() {
         return model;
@@ -34,4 +35,12 @@ public class SemanticContext {
     }
 
     public void error(String message) { SemanticHandler.getInstance().getErrorsList().add(message);}
+
+    public boolean isStable() {
+        return stable;
+    }
+
+    public void setStable(boolean stable) {
+        this.stable = stable;
+    }
 }

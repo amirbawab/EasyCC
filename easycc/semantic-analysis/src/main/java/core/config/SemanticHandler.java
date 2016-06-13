@@ -211,6 +211,7 @@ public class SemanticHandler {
                         semanticContext = new SemanticContext();
                         semanticContext.setModel(model);
                         semanticContext.setEntry(entry);
+                        semanticContext.setStable(actionToken.isStable());
 
                         // Add to the queue for additional phases
                         semanticContextsQueue.offer(semanticContext);
