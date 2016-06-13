@@ -16,6 +16,5 @@ public class ResultAction extends GenericAction {
     public void solve(SemanticContext semanticContext, SemanticStack semanticStack, SymbolTableTree symbolTableTree) {
         ResultModel resultModel = (ResultModel) semanticContext.getModel();
         resultModel.setResultModel(semanticStack.pop());
-        semanticContext.generateCode();
     }
 }

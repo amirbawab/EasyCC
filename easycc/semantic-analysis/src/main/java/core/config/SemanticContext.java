@@ -16,7 +16,6 @@ import java.lang.reflect.Method;
 public class SemanticContext {
     private GenericModel model;
     private SymbolTableGenericEntry entry;
-    private SemanticContextListener semanticContextListener;
 
     public GenericModel getModel() {
         return model;
@@ -34,13 +33,5 @@ public class SemanticContext {
         this.entry = entry;
     }
 
-    public void setSemanticContextListener(SemanticContextListener semanticContextListener) {
-        this.semanticContextListener = semanticContextListener;
-    }
-
-    public void generateCode() {
-        semanticContextListener.generateCode(this);
-    }
-
-    public void error(String message) { semanticContextListener.error(message);}
+    public void error(String message) { SemanticHandler.getInstance().getErrorsList().add(message);}
 }

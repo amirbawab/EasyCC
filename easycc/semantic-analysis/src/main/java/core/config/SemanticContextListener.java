@@ -8,5 +8,4 @@ import core.structure.symbol.SymbolTableTree;
 
 public interface SemanticContextListener {
     void error(String message);
-    void generateCode(SemanticContext semanticContext);
 }

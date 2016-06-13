@@ -211,21 +211,6 @@ public class SemanticHandler {
                         semanticContext = new SemanticContext();
                         semanticContext.setModel(model);
                         semanticContext.setEntry(entry);
-                        semanticContext.setSemanticContextListener(new SemanticContextListener() {
-
-                            @Override
-                            public void error(String message) {
-                                errorsList.add(message);
-                                l.info("Semantic Error: " + message);
-                            }
-
-                            @Override
-                            public void generateCode(SemanticContext semanticContext) {
-                                if (semanticHandlerListener != null) {
-                                    semanticHandlerListener.generateCode(actionToken, phase, semanticContext, symbolTableTree);
-                                }
-                            }
-                        });
 
                         // Add to the queue for additional phases
                         semanticContextsQueue.offer(semanticContext);
@@ -236,8 +221,13 @@ public class SemanticHandler {
                         semanticContextsQueue.offer(semanticContext);
                     }
 
-                    // Call method
+                    // Call semantic action method
                     objectMethod.getMethod().invoke(objectMethod.getObject(), semanticContext, semanticStack, symbolTableTree);
+
+                    // Call code generation
+                    if(semanticHandlerListener != null) {
+                        semanticHandlerListener.generateCode(actionToken, phase, semanticContext, symbolTableTree);
+                    }
                 } catch (IllegalAccessException | InvocationTargetException e) {
                     e.getCause().printStackTrace();
                 }
