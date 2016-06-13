@@ -133,9 +133,6 @@ public class MainFrame extends JFrame {
 							// Clear symbol tables
 							centerPanel.removeTablesInNavigationTable(CenterPanel.SYMBOL_TABLE_TITLE);
 
-							// Clear code generation
-							centerPanel.setText(CenterPanel.CODE_GENERATION_TITLE, null);
-
 							List<GenericTable> symbolTables = devGuilistener.getSymbolTables();
 							for(int i=0; i < symbolTables.size(); i++) {
 								String subTableName = symbolTables.get(i).getName();

@@ -32,8 +32,7 @@ public class CenterPanel extends JPanel {
 								PARSER_OUTPUT_TITLE = "Parser - All Steps",
 								PARSER_TREE_TITLE = "Parser - Derivation Tree",
 								SYMBOL_TABLE_TITLE = "Symbol tables",
-								SEMANTIC_ERROR_TITLE = "Semantic - Error",
-								CODE_GENERATION_TITLE = "Code generation";
+								SEMANTIC_ERROR_TITLE = "Semantic - Error";
 	
 	
 	public CenterPanel() {
@@ -59,7 +58,6 @@ public class CenterPanel extends JPanel {
 		this.tabbedConsolePanel.addPanel(PARSER_TREE_TITLE, new JPanel());
 		this.tabbedConsolePanel.addTableNavigation(SYMBOL_TABLE_TITLE);
 		this.tabbedConsolePanel.addTable(SEMANTIC_ERROR_TITLE, SEMANTIC_ERROR_HEADER);
-		this.tabbedConsolePanel.addText(CODE_GENERATION_TITLE);
 
 		// Resize
 		this.tabbedConsolePanel.setPreferredSize(new Dimension(0, 0));

@@ -24,7 +24,6 @@ public interface DevGuiListener {
 	List<GenericTable> getSymbolTables();
 	ConsoleData<SemanticErrorRow> getSemanticErrors();
 	JPanel getDerivationTree();
-	String getGeneratedCode();
 	
 	// Menu
 	void setStateTable(GenericTable genericTable);

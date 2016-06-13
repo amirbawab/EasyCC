@@ -280,11 +280,6 @@ public class GuiIntegration implements DevGuiListener {
     }
 
     @Override
-    public String getGeneratedCode() {
-        return null;
-    }
-
-    @Override
     public void setStateTable(GenericTable genericTable) {
         genericTable.setHeader(StringUtilsPlus.convertStringArrayToObjectArray(lexicalAnalyzer.getStateTransitionTable().prettifyStateTransitionTableHeader()));
         genericTable.setData(StringUtilsPlus.convertStringTableToObjectTable(lexicalAnalyzer.getStateTransitionTable().prettifyStateTransitionTableData()));
