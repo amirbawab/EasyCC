@@ -30,7 +30,7 @@ public class SemanticContext {
         this.model = model;
     }
 
-    public void setEntry(SymbolTableGenericEntry entry) {
+    void setEntry(SymbolTableGenericEntry entry) {
         this.entry = entry;
     }
 
@@ -40,7 +40,7 @@ public class SemanticContext {
         return stable;
     }
 
-    public void setStable(boolean stable) {
+    void setStable(boolean stable) {
         this.stable = stable;
     }
 }
