@@ -6,9 +6,7 @@ import center.editor.TabbedTextEditorPanel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
+import javax.swing.*;
 import javax.swing.border.Border;
 
 public class CenterPanel extends JPanel {
@@ -157,7 +155,7 @@ public class CenterPanel extends JPanel {
 	/**
 	 * Add a new file
 	 */
-	public void addNewFile() {
-		this.tabbedTextEditorPanel.addDefaultTextEditor();
+	public JEditorPane addNewFile() {
+		return this.tabbedTextEditorPanel.addDefaultTextEditor();
 	}
 }

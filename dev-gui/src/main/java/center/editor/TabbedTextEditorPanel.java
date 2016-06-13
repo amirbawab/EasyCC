@@ -28,7 +28,7 @@ public class TabbedTextEditorPanel extends JTabbedPane {
 	 * Add a new tab
 	 * @param title Tab title
 	 */
-	public void addTextEditor(String title) {
+	public JEditorPane addTextEditor(String title) {
 		
 		// Create and add text editor to panel
 		JEditorPane textPane = new JEditorPane();
@@ -42,13 +42,14 @@ public class TabbedTextEditorPanel extends JTabbedPane {
 		
 		// Store it in the map
 		this.tabPanelsList.add(textPane);
+		return textPane;
 	}
 	
 	/**
 	 * Add new default text editor
 	 */
-	public void addDefaultTextEditor() {
-		addTextEditor(String.format("%s", DEFAULT_TITLE));
+	public JEditorPane addDefaultTextEditor() {
+		return addTextEditor(String.format("%s", DEFAULT_TITLE));
 	}
 	
 	/**

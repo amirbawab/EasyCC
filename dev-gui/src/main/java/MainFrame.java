@@ -24,8 +24,7 @@ import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.util.List;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 public class MainFrame extends JFrame {
 	
@@ -241,6 +240,15 @@ public class MainFrame extends JFrame {
         this.setVisible(true);                               // Make the frame visible
         this.pack();                                         // Force setting the size of components
         this.setLocationRelativeTo(null);                    // Load on center of the screen
+	}
+
+	/**
+	 * Add new page with content
+	 * @param content
+     */
+	public void addPage(String content) {
+		JEditorPane editorPane = centerPanel.addNewFile();
+		editorPane.setText(content);
 	}
 	
 	/**
