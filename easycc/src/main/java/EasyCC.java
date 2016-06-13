@@ -37,6 +37,7 @@ public class EasyCC {
     public EasyCC(String[] args) throws ParseException, IOException {
 
         // Init components
+        System.out.println(System.getProperty(LexicalArgs.MACHINE));
         lexicalAnalyzer = new LexicalAnalyzer(System.getProperty(LexicalArgs.MACHINE), System.getProperty(LexicalArgs.TOKENS), System.getProperty(LexicalArgs.MESSAGES));
         syntaxAnalyzer = new SyntaxAnalyzer(lexicalAnalyzer, System.getProperty(SyntaxArgs.GRAMMAR), System.getProperty(SyntaxArgs.PARSE_STRATEGY), System.getProperty(SyntaxArgs.MESSAGES));
         semanticAnalyzer = new SemanticAnalyzer(syntaxAnalyzer);

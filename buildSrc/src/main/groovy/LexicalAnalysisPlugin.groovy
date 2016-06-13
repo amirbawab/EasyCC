@@ -21,9 +21,9 @@ class LexicalAnalysisPluginExtension {
 
     def getValues() {
         def values = []
-        values << "-Deasycc.lexical.machine=" + machinePath
-        values << "-Deasycc.lexical.tokens=" + tokensPath
-        values << "-Deasycc.lexical.messages=" + messagesPath
+        values << "-Deasycc.lexical.machine=\"$machinePath\""
+        values << "-Deasycc.lexical.tokens=\"$tokensPath\""
+        values << "-Deasycc.lexical.messages=\"$messagesPath\""
         return values
     }
 }

@@ -71,13 +71,14 @@ task buildCompiler(dependsOn: 'fullJar') {
         file(compilerPath).mkdirs()
 
         def runFile = file("${compilerPath}/run.sh")
-        runFile << "java -jar ${compilerName}.jar "
+        runFile << "java "
         lexicalAnalyzer.getValues().each {
             runFile << "${it} "
         }
         syntaxAnalyzer.getValues().each {
             runFile << "${it} "
         }
+        runFile << "-jar ${compilerName}.jar"
         runFile.setExecutable(true)
         runFile.createNewFile()
 
