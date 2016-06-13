@@ -7,10 +7,9 @@ import core.config.SemanticContext;
 import core.structure.SemanticStack;
 import core.structure.symbol.SymbolTableTree;
 import enums.SemanticActionEnum;
-import models.IntegerModel;
 import models.OpModel;
 
-@SemanticAction(value = SemanticActionEnum.OP, stable = true)
+@SemanticAction(value = SemanticActionEnum.OP, stableOnly = true)
 public class OpAction extends GenericAction {
 
     @ParsePhase(1)

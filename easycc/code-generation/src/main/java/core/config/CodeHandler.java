@@ -2,6 +2,7 @@ package core.config;
 
 import core.annotation.Code;
 import core.annotations.ParsePhase;
+import core.annotations.SemanticAction;
 import core.code.GenericCodeGeneration;
 import core.structure.symbol.SymbolTableTree;
 import creator.CodeGenerationCreator;
@@ -95,10 +96,14 @@ public class CodeHandler {
 
         if(codeMethodMap.containsKey(key)) {
             ObjectMethod objectMethod = codeMethodMap.get(key);
+            boolean codeClassStability = objectMethod.getObject().getClass().getAnnotation(Code.class).stableOnly();
 
             try {
-                // Call method
-                objectMethod.getMethod().invoke(objectMethod.getObject(), semanticContext, symbolTableTree);
+                if(!codeClassStability || actionToken.isStable()) {
+                    objectMethod.getMethod().invoke(objectMethod.getObject(), semanticContext, symbolTableTree);
+                } else {
+                    l.warn("Skipping code generation call for '" + actionToken.getValue() + "' because the parser is in error recovery mode (unstable)");
+                }
             } catch (IllegalAccessException | InvocationTargetException e) {
                 l.error(e.getMessage());
             }

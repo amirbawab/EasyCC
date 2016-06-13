@@ -182,58 +182,57 @@ public class SemanticHandler {
         if(actionMethodMap.containsKey(key)) {
             ObjectMethod objectMethod = actionMethodMap.get(key);
 
-            boolean actionClassStability = objectMethod.getObject().getClass().getAnnotation(SemanticAction.class).stable();
+            boolean actionClassStability = objectMethod.getObject().getClass().getAnnotation(SemanticAction.class).stableOnly();
 
-            if(!actionClassStability || actionToken.isStable()) {
-                try {
-                    SemanticContext semanticContext;
-
-                    if (phase == 1) {
-                        // Create the corresponding model
-                        GenericModel model = null;
-                        if (modelMethodMap.containsKey(actionToken.getValue())) {
-                            model = (GenericModel) modelMethodMap.get(actionToken.getValue()).invoke(null);
-                        }
-
-                        // Set corresponding lexical token for data model
-                        if (model != null && model instanceof DataModel) {
-                            ((DataModel) model).setLexicalToken(lexicalToken);
-                        }
-
-                        // Create symbol table entry
-                        SymbolTableGenericEntry entry = null;
-                        if (entryMethodMap.containsKey(actionToken.getValue())) {
-                            entry = (SymbolTableGenericEntry) entryMethodMap.get(actionToken.getValue()).invoke(null);
-                            entry.setModel(model);
-                        }
-
-                        // Prepare a new semantic context
-                        semanticContext = new SemanticContext();
-                        semanticContext.setModel(model);
-                        semanticContext.setEntry(entry);
-                        semanticContext.setStable(actionToken.isStable());
-
-                        // Add to the queue for additional phases
-                        semanticContextsQueue.offer(semanticContext);
-                    } else {
-
-                        // Enqueue the value removed from the queue
-                        semanticContext = semanticContextsQueue.poll();
-                        semanticContextsQueue.offer(semanticContext);
+            try {
+                SemanticContext semanticContext;
+                if (phase == 1) {
+                    // Create the corresponding model
+                    GenericModel model = null;
+                    if (modelMethodMap.containsKey(actionToken.getValue())) {
+                        model = (GenericModel) modelMethodMap.get(actionToken.getValue()).invoke(null);
                     }
 
-                    // Call semantic action method
-                    objectMethod.getMethod().invoke(objectMethod.getObject(), semanticContext, semanticStack, symbolTableTree);
-
-                    // Call code generation
-                    if(semanticHandlerListener != null) {
-                        semanticHandlerListener.generateCode(actionToken, phase, semanticContext, symbolTableTree);
+                    // Set corresponding lexical token for data model
+                    if (model != null && model instanceof DataModel) {
+                        ((DataModel) model).setLexicalToken(lexicalToken);
                     }
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    e.getCause().printStackTrace();
+
+                    // Create symbol table entry
+                    SymbolTableGenericEntry entry = null;
+                    if (entryMethodMap.containsKey(actionToken.getValue())) {
+                        entry = (SymbolTableGenericEntry) entryMethodMap.get(actionToken.getValue()).invoke(null);
+                        entry.setModel(model);
+                    }
+
+                    // Prepare a new semantic context
+                    semanticContext = new SemanticContext();
+                    semanticContext.setModel(model);
+                    semanticContext.setEntry(entry);
+                    semanticContext.setStable(actionToken.isStable());
+
+                    // Add to the queue for additional phases
+                    semanticContextsQueue.offer(semanticContext);
+                } else {
+
+                    // Enqueue the value removed from the queue
+                    semanticContext = semanticContextsQueue.poll();
+                    semanticContextsQueue.offer(semanticContext);
                 }
-            } else {
-                l.warn("Skipping semantic action call for '" + actionToken.getValue() + "' because the parser is in error recovery mode (unstable)");
+
+                // Call semantic action method
+                if(!actionClassStability || actionToken.isStable()) {
+                    objectMethod.getMethod().invoke(objectMethod.getObject(), semanticContext, semanticStack, symbolTableTree);
+                } else {
+                    l.warn("Skipping semantic action call for '" + actionToken.getValue() + "' because the parser is in error recovery mode (unstable)");
+                }
+
+                // Call code generation
+                if(semanticHandlerListener != null) {
+                    semanticHandlerListener.generateCode(actionToken, phase, semanticContext, symbolTableTree);
+                }
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                e.getCause().printStackTrace();
             }
         } else {
             l.warn("Action: " + syntaxToken.getValue() + " at Phase: " + phase + " is not handled by any method.");

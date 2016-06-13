@@ -9,7 +9,7 @@ import core.structure.symbol.SymbolTableTree;
 import enums.SemanticActionEnum;
 import models.ResultModel;
 
-@SemanticAction(value = SemanticActionEnum.RESULT, stable = true)
+@SemanticAction(value = SemanticActionEnum.RESULT, stableOnly = true)
 public class ResultAction extends GenericAction {
 
     @ParsePhase(1)

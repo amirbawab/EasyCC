@@ -8,9 +8,8 @@ import core.models.LogicalErrorModel;
 import core.structure.SemanticStack;
 import core.structure.symbol.SymbolTableTree;
 import enums.SemanticActionEnum;
-import models.IntegerModel;
 
-@SemanticAction(value = SemanticActionEnum.INTEGER, stable = false)
+@SemanticAction(value = SemanticActionEnum.INTEGER, stableOnly = false)
 public class IntegerAction extends GenericAction {
 
     @ParsePhase(1)

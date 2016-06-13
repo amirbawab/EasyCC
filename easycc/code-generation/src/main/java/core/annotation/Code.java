@@ -15,4 +15,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Code {
     SemanticActionEnum value();
+    boolean stableOnly() default false;
 }
