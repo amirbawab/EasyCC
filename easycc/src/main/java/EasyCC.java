@@ -26,7 +26,7 @@ public class EasyCC {
         try {
             new EasyCC(args);
         } catch (ParseException | IOException e) {
-            System.err.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -36,28 +36,24 @@ public class EasyCC {
      */
     public EasyCC(String[] args) throws ParseException, IOException {
 
-        // Init components
-        System.out.println(System.getProperty(LexicalArgs.MACHINE));
-        lexicalAnalyzer = new LexicalAnalyzer(System.getProperty(LexicalArgs.MACHINE), System.getProperty(LexicalArgs.TOKENS), System.getProperty(LexicalArgs.MESSAGES));
-        syntaxAnalyzer = new SyntaxAnalyzer(lexicalAnalyzer, System.getProperty(SyntaxArgs.GRAMMAR), System.getProperty(SyntaxArgs.PARSE_STRATEGY), System.getProperty(SyntaxArgs.MESSAGES));
-        semanticAnalyzer = new SemanticAnalyzer(syntaxAnalyzer);
-        codeGeneration = new CodeGeneration(semanticAnalyzer);
+        final String HELP = "help", GUI = "gui", INPUT = "input";
 
-        Option helpOption = Option.builder("h")
-                .longOpt("help")
+        Option helpOption = Option.builder(Character.toString(HELP.charAt(0)))
+                .longOpt(HELP)
                 .required(false)
                 .desc("Show help")
                 .build();
 
-        Option guiOption = Option.builder("n")
-                .longOpt("no-gui")
+        Option guiOption = Option.builder(Character.toString(GUI.charAt(0)))
+                .longOpt(GUI)
                 .required(false)
                 .desc("Display GUI")
                 .build();
 
-        Option includeOption = Option.builder("i")
-                .longOpt("input")
+        Option includeOption = Option.builder(Character.toString(INPUT.charAt(0)))
+                .longOpt(INPUT)
                 .required(false)
+                .numberOfArgs(Option.UNLIMITED_VALUES)
                 .desc("Input files")
                 .build();
 
@@ -69,12 +65,45 @@ public class EasyCC {
         CommandLineParser parser = new DefaultParser();
         CommandLine cmdLine = parser.parse(options, args);
 
-        if (cmdLine.hasOption("help")) {
-            HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("EasyCC", options);
-            return;
+        if (cmdLine.hasOption(HELP)) {
+            cliHelp(options);
+
+        } else if(cmdLine.hasOption(GUI)) {
+            startGui();
+
+        } else if(cmdLine.hasOption(INPUT)){
+            init();
+            String[] fileNameArray = cmdLine.getOptionValues(INPUT);
+            for(String fileName : fileNameArray) {
+                File file = new File(fileName);
+                if(file.exists()) {
+                    compile(FileUtils.readFileToString(file));
+                } else {
+                    System.err.println("Skipping: " + fileName + ". File " + file.getAbsolutePath() + " was not found");
+                }
+            }
+        } else {
+            cliHelp(options);
         }
-        startGui();
+    }
+
+    /**
+     * Display options
+     * @param options
+     */
+    private void cliHelp(Options options) {
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.printHelp("EasyCC", options);
+    }
+
+    /**
+     * Init components
+     */
+    private void init() {
+        lexicalAnalyzer = new LexicalAnalyzer(System.getProperty(LexicalArgs.MACHINE), System.getProperty(LexicalArgs.TOKENS), System.getProperty(LexicalArgs.MESSAGES));
+        syntaxAnalyzer = new SyntaxAnalyzer(lexicalAnalyzer, System.getProperty(SyntaxArgs.GRAMMAR), System.getProperty(SyntaxArgs.PARSE_STRATEGY), System.getProperty(SyntaxArgs.MESSAGES));
+        semanticAnalyzer = new SemanticAnalyzer(syntaxAnalyzer);
+        codeGeneration = new CodeGeneration(semanticAnalyzer);
     }
 
     /**
@@ -90,6 +119,7 @@ public class EasyCC {
      * Start application with a GUI
      */
     private void startGui() {
+        init();
         mainFrame = new MainFrame("EasyCC - Dev GUI");
         mainFrame.setDevGUIListener(new GuiIntegration(lexicalAnalyzer, syntaxAnalyzer, semanticAnalyzer));
     }

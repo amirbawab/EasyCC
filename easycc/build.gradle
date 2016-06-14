@@ -85,11 +85,11 @@ task buildCompiler(dependsOn: 'fullJar') {
             runFileBat << "${it} "
         }
 
-        runFileSh << "-jar ${compilerName}.jar"
+        runFileSh << "-jar ${compilerName}.jar \"\$@\""
         runFileSh.setExecutable(true)
         runFileSh.createNewFile()
 
-        runFileBat << "-jar ${compilerName}.jar"
+        runFileBat << "-jar ${compilerName}.jar %*"
         runFileBat.setExecutable(true)
         runFileBat.createNewFile()
 
@@ -98,6 +98,9 @@ task buildCompiler(dependsOn: 'fullJar') {
             from file("${buildDir}/libs/${compilerName}.jar")
             into file("${compilerPath}")
         }
+
+        def dummyFile = file("${compilerPath}/dummy.txt")
+        dummyFile << "1+2+3"
     }
 }
 
