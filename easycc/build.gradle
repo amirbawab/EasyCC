@@ -63,7 +63,10 @@ task fullJar(type: Jar) {
 }
 
 run {
-    args System.getProperty("exec.args").split(" ")
+    def pArgs = System.getProperty("exec.args")
+    if(pArgs != null) {
+        args System.getProperty("exec.args").split(" ")
+    }
 }
 
 task buildCompiler(dependsOn: 'fullJar') {
