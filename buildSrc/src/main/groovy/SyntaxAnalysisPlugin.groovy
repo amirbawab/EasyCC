@@ -21,9 +21,9 @@ class SyntaxAnalysisPluginExtension {
 
     def getValues() {
         def values = []
-        values << "-Deasycc.syntax.grammar=\"$grammarPath\""
-        values << "-Deasycc.syntax.parseStrategy=\"$parseStrategy\""
-        values << "-Deasycc.syntax.messages=\"$messagesPath\""
+        values << "-Deasycc.syntax.grammar=$grammarPath"
+        values << "-Deasycc.syntax.parseStrategy=$parseStrategy"
+        values << "-Deasycc.syntax.messages=$messagesPath"
         return values
     }
 }

@@ -62,6 +62,10 @@ task fullJar(type: Jar) {
     with jar
 }
 
+run {
+    args System.getProperty("exec.args").split(" ")
+}
+
 task buildCompiler(dependsOn: 'fullJar') {
     doLast {
         println "Deleting ${compilerPath} (if any)"
