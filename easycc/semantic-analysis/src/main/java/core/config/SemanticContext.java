@@ -1,9 +1,12 @@
 package core.config;
 
+import core.helper.SemanticHelper;
 import core.models.GenericModel;
 import core.structure.symbol.table.entry.SymbolTableGenericEntry;
+import enums.SemanticMessageEnum;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import token.AbstractToken;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -34,7 +37,7 @@ public class SemanticContext {
         this.entry = entry;
     }
 
-    public void message(String message) { SemanticHandler.getInstance().getErrorsList().add(message);}
+    public void message(SemanticMessageEnum key, AbstractToken token) { SemanticHandler.getInstance().getErrorsList().add(SemanticHelper.tokenMessage(key, token));}
 
     public boolean isStable() {
         return stable;

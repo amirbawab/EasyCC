@@ -1,3 +1,4 @@
+import core.config.SemanticConfig;
 import core.config.SemanticHandler;
 import core.config.SemanticHandlerListener;
 import core.structure.symbol.SymbolTableTree;
@@ -12,10 +13,13 @@ public class SemanticAnalyzer {
     // Logger
     private Logger l = LogManager.getFormatterLogger(getClass());
 
-    public SemanticAnalyzer(SyntaxAnalyzer syntaxAnalyzer) {
+    public SemanticAnalyzer(SyntaxAnalyzer syntaxAnalyzer, String semanticMessagesPath) {
 
         // Call to create the singleton instance
         SemanticHandler.getInstance();
+
+        // Load messages from file
+        SemanticConfig.getInstance().loadMessages(semanticMessagesPath);
 
         // Set parse listener
         syntaxAnalyzer.getSyntaxParser().getParseStrategy().setParseStrategyListener(new ParseStrategyListener() {

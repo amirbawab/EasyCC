@@ -6,6 +6,7 @@ plugins {
 apply plugin: 'application'
 apply plugin: LexicalAnalysisPlugin
 apply plugin: SyntaxAnalysisPlugin
+apply plugin: SemanticAnalysisPlugin
 
 version = '1.0'
 
@@ -28,6 +29,10 @@ syntaxAnalyzer {
     grammarPath = "/calculator/syntax-grammar.cfg"
     messagesPath = "/calculator/syntax-messages.json"
     parseStrategy = "parser.strategy.LLPP.LLPP"
+}
+
+semanticAnalyzer {
+    messagesPath = "/calculator/semantic-messages.json"
 }
 
 jacoco {
