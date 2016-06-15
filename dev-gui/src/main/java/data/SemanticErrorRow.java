@@ -16,6 +16,6 @@ public class SemanticErrorRow extends ConsoleDataRow {
 
     @Override
     public Object[] convertToObjectArray() {
-        return new Object[0];
+        return new Object[]{message};
     }
 }
