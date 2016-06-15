@@ -135,6 +135,7 @@ public class StateMachine {
                     Edge edge = state.getOutEdges().get(i);
                     if(edge.getToState() == deleteState) {
                         state.getOutEdges().remove(i);
+                        i--;
                     }
                 }
             }
@@ -156,9 +157,10 @@ public class StateMachine {
     public boolean removeEdge(String from, String to, String value) {
         State fromState = statesMap.get(from);
         State toState = statesMap.get(to);
-        for(Edge edge : fromState.getOutEdges()) {
+        for(int i=0; i < fromState.getOutEdges().size(); i++) {
+            Edge edge = fromState.getOutEdges().get(i);
             if(edge.getFromState() == fromState && edge.getToState() == toState && edge.getValue().equals(value)) {
-                edge.getFromState().getOutEdges().remove(edge);
+                edge.getFromState().getOutEdges().remove(i);
                 return true;
             }
         }
