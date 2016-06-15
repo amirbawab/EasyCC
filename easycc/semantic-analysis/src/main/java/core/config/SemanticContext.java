@@ -34,7 +34,7 @@ public class SemanticContext {
         this.entry = entry;
     }
 
-    public void error(String message) { SemanticHandler.getInstance().getErrorsList().add(message);}
+    public void message(String message) { SemanticHandler.getInstance().getErrorsList().add(message);}
 
     public boolean isStable() {
         return stable;
