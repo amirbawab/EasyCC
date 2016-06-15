@@ -232,7 +232,7 @@ public class SemanticHandler {
 
             // Call code generation
             if(semanticHandlerListener != null) {
-                semanticHandlerListener.generateCode(actionToken, phase, semanticContext, symbolTableTree);
+                semanticHandlerListener.postSemanticHandler(actionToken, phase, semanticContext, symbolTableTree);
             }
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.getCause().printStackTrace();

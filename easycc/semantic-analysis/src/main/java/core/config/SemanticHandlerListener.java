@@ -8,5 +8,5 @@ import token.ActionToken;
  */
 
 public interface SemanticHandlerListener {
-    void generateCode(ActionToken actionToken, int phase, SemanticContext semanticContext, SymbolTableTree symbolTableTree);
+    void postSemanticHandler(ActionToken actionToken, int phase, SemanticContext semanticContext, SymbolTableTree symbolTableTree);
 }

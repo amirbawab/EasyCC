@@ -19,7 +19,7 @@ public class CodeGeneration {
         // Register semantic handle listener
         semanticHandler.setSemanticHandlerListener(new SemanticHandlerListener() {
             @Override
-            public void generateCode(ActionToken actionToken, int phase, SemanticContext semanticContext, SymbolTableTree symbolTableTree) {
+            public void postSemanticHandler(ActionToken actionToken, int phase, SemanticContext semanticContext, SymbolTableTree symbolTableTree) {
                 CodeHandler.getInstance().handleCode(actionToken, phase, semanticContext, symbolTableTree);
             }
         });
