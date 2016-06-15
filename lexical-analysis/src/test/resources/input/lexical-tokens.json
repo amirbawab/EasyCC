@@ -1,0 +1,22 @@
+{
+    "ignore": {
+        "prefix": "ignore_",
+        "suffix": "_ignore",
+        "include": ["ignore"],
+        "exclude": ["ignore_no_ignore"]
+    },
+
+    "error": {
+        "prefix": "error_",
+        "suffix": "_error",
+        "include": ["error"],
+        "exclude": ["error_no_error"]
+    },
+
+    "reserved": [
+        {
+            "token": "T_HELLO",
+            "value": "hello"
+        }
+    ]
+}
