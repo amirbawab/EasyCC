@@ -1,3 +1,4 @@
+import core.config.SemanticHandler;
 import jvm.LexicalArgs;
 import jvm.SyntaxArgs;
 import org.apache.commons.cli.*;
@@ -103,7 +104,7 @@ public class EasyCC {
         lexicalAnalyzer = new LexicalAnalyzer(System.getProperty(LexicalArgs.MACHINE), System.getProperty(LexicalArgs.TOKENS), System.getProperty(LexicalArgs.MESSAGES));
         syntaxAnalyzer = new SyntaxAnalyzer(lexicalAnalyzer, System.getProperty(SyntaxArgs.GRAMMAR), System.getProperty(SyntaxArgs.PARSE_STRATEGY), System.getProperty(SyntaxArgs.MESSAGES));
         semanticAnalyzer = new SemanticAnalyzer(syntaxAnalyzer);
-        codeGeneration = new CodeGeneration(semanticAnalyzer);
+        codeGeneration = new CodeGeneration(SemanticHandler.getInstance());
     }
 
     /**

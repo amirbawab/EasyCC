@@ -11,13 +11,13 @@ import token.ActionToken;
 
 public class CodeGeneration {
 
-    public CodeGeneration(SemanticAnalyzer semanticAnalyzer) {
+    public CodeGeneration(SemanticHandler semanticHandler) {
 
         // Call to create the singleton instance
         CodeHandler.getInstance();
 
         // Register semantic handle listener
-        SemanticHandler.getInstance().setSemanticHandlerListener(new SemanticHandlerListener() {
+        semanticHandler.setSemanticHandlerListener(new SemanticHandlerListener() {
             @Override
             public void generateCode(ActionToken actionToken, int phase, SemanticContext semanticContext, SymbolTableTree symbolTableTree) {
                 CodeHandler.getInstance().handleCode(actionToken, phase, semanticContext, symbolTableTree);
