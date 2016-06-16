@@ -21,6 +21,7 @@ import parser.strategy.LLPP.LLPP;
 import parser.strategy.LLPP.data.LLPPDataEntry;
 import parser.strategy.LLPP.data.LLPPDataErrorEntry;
 import parser.strategy.LLPP.data.LLPPDataFineEntry;
+import parser.strategy.SLR.SLR;
 import token.*;
 import utils.StringUtilsPlus;
 
@@ -128,6 +129,9 @@ public class GuiIntegration implements DevGuiListener {
                 return llpp.getLlppData().getErrorMessages();
             }
             return new ArrayList<>();
+
+        } else if(syntaxAnalyzer.getSyntaxParser().getParseStrategy() instanceof SLR) {
+            return new ArrayList<>();
         }
         return null;
     }
@@ -192,9 +196,13 @@ public class GuiIntegration implements DevGuiListener {
         Map<AbstractSyntaxToken, Object> vertexMap = new HashMap<>();
 
         // Add root
-        tokensQueue.offer(syntaxAnalyzer.getSyntaxParser().getParseStrategy().getDerivationRoot());
-        Object vRoot = graph.insertVertex(parent, null, tokensQueue.peek().getValue(), 20, 20, 80,30);
-        vertexMap.put(tokensQueue.peek(), vRoot);
+        NonTerminalToken derivationRoot = syntaxAnalyzer.getSyntaxParser().getParseStrategy().getDerivationRoot();
+        if(derivationRoot != null) {
+            tokensQueue.offer(derivationRoot);
+            Object vRoot = graph.insertVertex(parent, null, tokensQueue.peek().getValue(), 20, 20, 80, 30);
+            vertexMap.put(tokensQueue.peek(), vRoot);
+        }
+
         try
         {
             while(!tokensQueue.isEmpty()) {
