@@ -1,6 +1,6 @@
-package parser.strategy.SLR.structure;
+package parser.strategy.SLR.structure.machine;
 
-import token.AbstractToken;
+import token.AbstractSyntaxToken;
 
 /**
  * Edge between two nodes
@@ -8,7 +8,7 @@ import token.AbstractToken;
 
 public class LRTransition {
     private LRProductionNode fromProductionNode, toProductionNode;
-    private AbstractToken value;
+    private AbstractSyntaxToken value;
 
     public LRProductionNode getFromProductionNode() {
         return fromProductionNode;
@@ -26,11 +26,11 @@ public class LRTransition {
         this.toProductionNode = toProductionNode;
     }
 
-    public AbstractToken getValue() {
+    public AbstractSyntaxToken getValue() {
         return value;
     }
 
-    public void setValue(AbstractToken value) {
+    public void setValue(AbstractSyntaxToken value) {
         this.value = value;
     }
 }

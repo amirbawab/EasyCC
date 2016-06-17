@@ -1,4 +1,4 @@
-package parser.strategy.SLR.structure;
+package parser.strategy.SLR.structure.machine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +11,10 @@ public class LRProductionNode {
 
     // Node components
     private List<LRProduction> productionList;
-
+    private List<LRTransition> transitionList;
 
     public LRProductionNode() {
+        productionList = new ArrayList<>();
         productionList = new ArrayList<>();
     }
 
@@ -23,5 +24,13 @@ public class LRProductionNode {
 
     public List<LRProduction> getProductionList() {
         return productionList;
+    }
+
+    public void addTransition(LRTransition transition) {
+        transitionList.add(transition);
+    }
+
+    public List<LRTransition> getTransitionList() {
+        return transitionList;
     }
 }
