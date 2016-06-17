@@ -11,7 +11,7 @@ import java.util.List;
  */
 
 public class LRStateMachine {
-    private List<LRProductionNode> nodes;
+    private List<LRItemNode> nodes;
     private Grammar grammar;
 
     public LRStateMachine(Grammar grammar) {
@@ -19,7 +19,7 @@ public class LRStateMachine {
         this.grammar = grammar;
     }
 
-    public List<LRProductionNode> getNodes() {
+    public List<LRItemNode> getNodes() {
         return nodes;
     }
 

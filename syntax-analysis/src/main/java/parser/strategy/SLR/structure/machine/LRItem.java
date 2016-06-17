@@ -9,12 +9,12 @@ import java.util.List;
  * A node in the LR state machine
  */
 
-public class LRProduction {
+public class LRItem {
 
     private AbstractSyntaxToken LHS;
     private List<AbstractSyntaxToken> RHS;
 
-    public LRProduction() {
+    public LRItem() {
         RHS = new ArrayList<>();
     }
 

@@ -7,23 +7,23 @@ import token.AbstractSyntaxToken;
  */
 
 public class LRTransition {
-    private LRProductionNode fromProductionNode, toProductionNode;
+    private LRItemNode fromItemNode, toItemNode;
     private AbstractSyntaxToken value;
 
-    public LRProductionNode getFromProductionNode() {
-        return fromProductionNode;
+    public LRItemNode getFromItemNode() {
+        return fromItemNode;
     }
 
-    public void setFromProductionNode(LRProductionNode fromProductionNode) {
-        this.fromProductionNode = fromProductionNode;
+    public void setFromItemNode(LRItemNode fromItemNode) {
+        this.fromItemNode = fromItemNode;
     }
 
-    public LRProductionNode getToProductionNode() {
-        return toProductionNode;
+    public LRItemNode getToItemNode() {
+        return toItemNode;
     }
 
-    public void setToProductionNode(LRProductionNode toProductionNode) {
-        this.toProductionNode = toProductionNode;
+    public void setToItemNode(LRItemNode toItemNode) {
+        this.toItemNode = toItemNode;
     }
 
     public AbstractSyntaxToken getValue() {
