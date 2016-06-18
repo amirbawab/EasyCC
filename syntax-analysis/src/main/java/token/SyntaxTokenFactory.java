@@ -48,4 +48,12 @@ public class SyntaxTokenFactory {
     public static TerminalToken createTerminalToken(String value) {
         return new TerminalToken(value);
     }
+
+    /**
+     * Create a dot syntax token
+     * @return A new dot syntax token
+     */
+    public static DotToken createDotToken() {
+        return new DotToken();
+    }
 }
