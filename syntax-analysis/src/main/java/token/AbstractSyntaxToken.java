@@ -31,10 +31,4 @@ public abstract class AbstractSyntaxToken {
      * @return copy of a token
      */
     public abstract AbstractSyntaxToken copy();
-
-    @Override
-    public boolean equals(Object o) {
-        AbstractSyntaxToken oToken = (AbstractSyntaxToken) o;
-        return oToken.getOriginalValue().equals(getOriginalValue());
-    }
 }
