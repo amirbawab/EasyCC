@@ -1,4 +1,4 @@
-package parser.strategy.SLR.structure.machine;
+package parser.strategy.SLR.structure.machine.item;
 
 import org.apache.commons.lang3.StringUtils;
 import token.AbstractSyntaxToken;

@@ -1,5 +1,6 @@
-package parser.strategy.SLR.structure.machine;
+package parser.strategy.SLR.structure.machine.transition;
 
+import parser.strategy.SLR.structure.machine.node.LRItemNode;
 import token.AbstractSyntaxToken;
 
 /**

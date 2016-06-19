@@ -1,12 +1,11 @@
-package parser.strategy.SLR.structure.machine;
+package parser.strategy.SLR.structure.machine.node;
 
-import grammar.Grammar;
+import parser.strategy.SLR.structure.machine.transition.LRTransition;
+import parser.strategy.SLR.structure.machine.item.LRItem;
 import token.AbstractSyntaxToken;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * This class represent a node in the LR state machine

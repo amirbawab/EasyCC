@@ -1,29 +1,25 @@
 package parser.strategy.SLR;
 
 import grammar.Grammar;
-import org.apache.commons.lang3.StringUtils;
 import parser.strategy.ParseStrategy;
-import parser.strategy.ParseStrategyListener;
-import parser.strategy.SLR.structure.machine.LRItem;
-import parser.strategy.SLR.structure.machine.LRItemNode;
-import parser.strategy.SLR.structure.machine.LRStateMachine;
+import parser.strategy.SLR.structure.machine.SLRStateMachine;
 import token.AbstractToken;
 import token.NonTerminalToken;
 
 public class SLR extends ParseStrategy {
 
-    private LRStateMachine stateMachine;
+    private SLRStateMachine stateMachine;
 
     public SLR(Grammar grammar) {
         super(grammar);
-        stateMachine = new LRStateMachine(grammar);
+        stateMachine = new SLRStateMachine(grammar);
     }
 
     /**
      * Get LR state machine
      * @return LR state machine
      */
-    public LRStateMachine getStateMachine() {
+    public SLRStateMachine getStateMachine() {
         return stateMachine;
     }
 

@@ -1,11 +1,9 @@
 import com.mxgraph.layout.*;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
-import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxConstants;
 import com.mxgraph.view.mxGraph;
 import core.config.SemanticHandler;
-import core.structure.symbol.SymbolTableTree;
 import core.structure.symbol.table.SymbolTable;
 import data.GenericTable;
 import data.LexicalAnalysisRow;
@@ -14,18 +12,16 @@ import data.SyntaxAnalysisRow;
 import data.structure.ConsoleData;
 import helper.GuiHelper;
 import listener.DevGuiListener;
-import machine.StateMachine;
-import machine.json.State;
 import org.apache.commons.lang3.StringUtils;
 import parser.strategy.LLPP.LLPP;
 import parser.strategy.LLPP.data.LLPPDataEntry;
 import parser.strategy.LLPP.data.LLPPDataErrorEntry;
 import parser.strategy.LLPP.data.LLPPDataFineEntry;
 import parser.strategy.SLR.SLR;
-import parser.strategy.SLR.structure.machine.LRItem;
-import parser.strategy.SLR.structure.machine.LRItemNode;
-import parser.strategy.SLR.structure.machine.LRStateMachine;
-import parser.strategy.SLR.structure.machine.LRTransition;
+import parser.strategy.SLR.structure.machine.item.LRItem;
+import parser.strategy.SLR.structure.machine.node.LRItemNode;
+import parser.strategy.SLR.structure.machine.SLRStateMachine;
+import parser.strategy.SLR.structure.machine.transition.LRTransition;
 import token.*;
 import utils.StringUtilsPlus;
 
@@ -352,7 +348,7 @@ public class GuiIntegration implements DevGuiListener {
 
     @Override
     public JPanel getLRStateMachineGraph() {
-        LRStateMachine stateMachine = ((SLR) syntaxAnalyzer.getSyntaxParser().getParseStrategy()).getStateMachine();
+        SLRStateMachine stateMachine = ((SLR) syntaxAnalyzer.getSyntaxParser().getParseStrategy()).getStateMachine();
 
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
