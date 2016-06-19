@@ -65,26 +65,29 @@ public class EasyCC {
         options.addOption(includeOption);
 
         CommandLineParser parser = new DefaultParser();
-        CommandLine cmdLine = parser.parse(options, args);
 
-        if (cmdLine.hasOption(HELP)) {
-            cliHelp(options);
+        try {
+            CommandLine cmdLine = parser.parse(options, args);
 
-        } else if(cmdLine.hasOption(GUI)) {
-            startGui();
+            if (cmdLine.hasOption(HELP)) {
+                cliHelp(options);
 
-        } else if(cmdLine.hasOption(INPUT)){
-            init();
-            String[] fileNameArray = cmdLine.getOptionValues(INPUT);
-            for(String fileName : fileNameArray) {
-                File file = new File(fileName);
-                if(file.exists()) {
-                    compile(FileUtils.readFileToString(file));
-                } else {
-                    System.err.println("Skipping: " + fileName + ". File " + file.getAbsolutePath() + " was not found");
+            } else if(cmdLine.hasOption(GUI)) {
+                startGui();
+
+            } else if(cmdLine.hasOption(INPUT)){
+                init();
+                String[] fileNameArray = cmdLine.getOptionValues(INPUT);
+                for(String fileName : fileNameArray) {
+                    File file = new File(fileName);
+                    if(file.exists()) {
+                        compile(FileUtils.readFileToString(file));
+                    } else {
+                        System.err.println("Skipping: " + fileName + ". File " + file.getAbsolutePath() + " was not found");
+                    }
                 }
             }
-        } else {
+        } catch (ParseException e) {
             cliHelp(options);
         }
     }
