@@ -1,14 +1,30 @@
 package parser.strategy.SLR;
 
 import grammar.Grammar;
+import org.apache.commons.lang3.StringUtils;
 import parser.strategy.ParseStrategy;
 import parser.strategy.ParseStrategyListener;
+import parser.strategy.SLR.structure.machine.LRItem;
+import parser.strategy.SLR.structure.machine.LRItemNode;
+import parser.strategy.SLR.structure.machine.LRStateMachine;
 import token.AbstractToken;
 import token.NonTerminalToken;
 
 public class SLR extends ParseStrategy {
+
+    private LRStateMachine stateMachine;
+
     public SLR(Grammar grammar) {
         super(grammar);
+        stateMachine = new LRStateMachine(grammar);
+
+        stateMachine.construct();
+        for(LRItemNode node : stateMachine.getNodes()) {
+            System.out.println("-------NEW NODE--------");
+            for(LRItem item : node.getItemList()){
+                System.out.println(item.getLHS() + " -> " + StringUtils.join(item.getRHS(), " "));
+            }
+        }
     }
 
     @Override
@@ -19,15 +35,5 @@ public class SLR extends ParseStrategy {
     @Override
     public NonTerminalToken getDerivationRoot() {
         return null;
-    }
-
-    @Override
-    public void setParseStrategyListener(ParseStrategyListener parseStrategyListener) {
-        super.setParseStrategyListener(parseStrategyListener);
-    }
-
-    @Override
-    public ParseStrategyListener getParseStrategyListener() {
-        return super.getParseStrategyListener();
     }
 }
