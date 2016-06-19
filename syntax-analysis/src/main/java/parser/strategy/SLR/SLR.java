@@ -27,6 +27,14 @@ public class SLR extends ParseStrategy {
         }
     }
 
+    /**
+     * Get LR state machine
+     * @return LR state machine
+     */
+    public LRStateMachine getStateMachine() {
+        return stateMachine;
+    }
+
     @Override
     public boolean parse(AbstractToken lexicalTokenList) {
         return false;

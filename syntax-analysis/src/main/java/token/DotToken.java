@@ -7,7 +7,7 @@ package token;
 public class DotToken extends AbstractSyntaxToken {
 
     public DotToken() {
-        super(".");
+        super("\u2022");
     }
 
     public DotToken(AbstractSyntaxToken abstractSyntaxToken) {

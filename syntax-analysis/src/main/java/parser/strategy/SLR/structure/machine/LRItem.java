@@ -1,5 +1,6 @@
 package parser.strategy.SLR.structure.machine;
 
+import org.apache.commons.lang3.StringUtils;
 import token.AbstractSyntaxToken;
 import token.DotToken;
 
@@ -100,5 +101,10 @@ public class LRItem {
             }
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return LHS + " -> " + StringUtils.join(RHS, " ");
     }
 }

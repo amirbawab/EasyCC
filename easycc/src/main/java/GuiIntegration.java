@@ -22,6 +22,10 @@ import parser.strategy.LLPP.data.LLPPDataEntry;
 import parser.strategy.LLPP.data.LLPPDataErrorEntry;
 import parser.strategy.LLPP.data.LLPPDataFineEntry;
 import parser.strategy.SLR.SLR;
+import parser.strategy.SLR.structure.machine.LRItem;
+import parser.strategy.SLR.structure.machine.LRItemNode;
+import parser.strategy.SLR.structure.machine.LRStateMachine;
+import parser.strategy.SLR.structure.machine.LRTransition;
 import token.*;
 import utils.StringUtilsPlus;
 
@@ -344,5 +348,86 @@ public class GuiIntegration implements DevGuiListener {
     @Override
     public JPanel getStateMachineGraph() {
         return GuiHelper.stateMachineToPanel(lexicalAnalyzer.getStateMachine());
+    }
+
+    @Override
+    public JPanel getLRStateMachineGraph() {
+        LRStateMachine stateMachine = ((SLR) syntaxAnalyzer.getSyntaxParser().getParseStrategy()).getStateMachine();
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+
+        mxGraph graph = new mxGraph();
+        Object parent = graph.getDefaultParent();
+
+        // Configure graph
+        graph.setAutoSizeCells(true);
+
+        // Start drawing
+        graph.getModel().beginUpdate();
+
+        try{
+            // Create and add nodes
+            Map<LRItemNode, Object> vertexMap = new HashMap<>();
+            Set<LRItemNode> nodes = stateMachine.getNodes();
+            for(LRItemNode itemNode : nodes) {
+
+                String nodeValue = "";
+                for(LRItem item : itemNode.getItemList()) {
+                    nodeValue += item.toString() + "\n";
+                }
+                Object vertex = graph.insertVertex(parent, null, nodeValue, 20, 20, 80, 30);
+                graph.updateCellSize(vertex);
+                vertexMap.put(itemNode, vertex);
+            }
+
+            // Add edges
+            for(LRItemNode itemNode : nodes) {
+                for(LRTransition transition : itemNode.getTransitionList()) {
+                    graph.insertEdge(parent, null, transition.getValue().getValue(), vertexMap.get(transition.getFromItemNode()), vertexMap.get(transition.getToItemNode()));
+                }
+            }
+
+            mxCircleLayout layout = new mxCircleLayout(graph);
+            layout.execute(parent);
+        }
+        finally
+        {
+            graph.getModel().endUpdate();
+        }
+
+        final mxGraphComponent graphComponent = new mxGraphComponent(graph);
+        graphComponent.setEnabled(true);
+        graphComponent.setConnectable(false);
+
+        // Add wheel listener
+        graphComponent.addMouseWheelListener(new MouseWheelListener() {
+            final int MAX_ZOOM = 10;
+            final int MIN_ZOOM = -10;
+            int zoomValue = 0;
+
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                if((e.getModifiers() & InputEvent.CTRL_MASK) == InputEvent.CTRL_MASK) {
+                    if (e.getWheelRotation() < 0 && zoomValue < MAX_ZOOM) {
+                        graphComponent.zoomIn();
+                        zoomValue++;
+
+                    } else if(e.getWheelRotation() > 0 && zoomValue > MIN_ZOOM) {
+                        graphComponent.zoomOut();
+                        zoomValue--;
+                    }
+                }
+            }
+        });
+
+        // Add component
+        panel.add(graphComponent, BorderLayout.CENTER);
+        return panel;
+    }
+
+    @Override
+    public boolean isLR() {
+        return ! (syntaxAnalyzer.getSyntaxParser().getParseStrategy() instanceof LLPP);
     }
 }

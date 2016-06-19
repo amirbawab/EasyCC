@@ -16,7 +16,7 @@ public class MainMenu extends JMenuBar{
 
 	// Components
 	private JMenu fileMenu, lexicalAnalysisMenu, parserMenu;
-	private JMenuItem stateMachineMenuItem, stateTableMenuItem, firstFollowMenuItem, parsingTable, exitMenuItem;
+	private JMenuItem stateMachineMenuItem, stateTableMenuItem, firstFollowMenuItem, parsingTableMenuItem, LRStateMachineMenuItem, exitMenuItem;
 	private JFrame parent;
 	private MainMenuListener mainMenuListener;
 	
@@ -26,6 +26,7 @@ public class MainMenu extends JMenuBar{
 		STATE_TABLE,
 		FIRST_FOLLOW,
 		PARSING_TABLE,
+		LR_STATE_MACHINE,
 		EXIT
 	}
 	
@@ -37,18 +38,20 @@ public class MainMenu extends JMenuBar{
 		// Init components
 		this.fileMenu = new JMenu("File");
 		this.lexicalAnalysisMenu = new JMenu("Lexical Analysis");
-		this.parserMenu = new JMenu("Parser");
+		this.parserMenu = new JMenu("Syntax Analysis");
 		this.stateMachineMenuItem = new JMenuItem("State machine");
 		this.stateTableMenuItem = new JMenuItem("State transition table");
 		this.firstFollowMenuItem = new JMenuItem("First and follow sets");
-		this.parsingTable = new JMenuItem("Parsing table");
+		this.LRStateMachineMenuItem = new JMenuItem("LR State machine");
+		this.parsingTableMenuItem = new JMenuItem("LL Parsing table");
 		this.exitMenuItem = new JMenuItem("Exit");
 		
 		// Add submenu
 		this.lexicalAnalysisMenu.add(stateMachineMenuItem);
 		this.lexicalAnalysisMenu.add(stateTableMenuItem);
 		this.parserMenu.add(firstFollowMenuItem);
-		this.parserMenu.add(parsingTable);
+		this.parserMenu.add(parsingTableMenuItem);
+		this.parserMenu.add(LRStateMachineMenuItem);
 		this.fileMenu.add(exitMenuItem);
 		
 		// On STATE_MACHINE
@@ -82,12 +85,22 @@ public class MainMenu extends JMenuBar{
 		});
 		
 		// Parsing table
-		this.parsingTable.addActionListener(new ActionListener() {
+		this.parsingTableMenuItem.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(mainMenuListener != null)
 					mainMenuListener.menuClicked(Button.PARSING_TABLE);
+			}
+		});
+
+		// On LR state machine
+		this.LRStateMachineMenuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(mainMenuListener != null)
+					mainMenuListener.menuClicked(Button.LR_STATE_MACHINE);
 			}
 		});
 		
@@ -114,5 +127,14 @@ public class MainMenu extends JMenuBar{
 	 */
 	public void setMainMenuListener(MainMenuListener mainMenuListener) {
 		this.mainMenuListener = mainMenuListener;
+	}
+
+	/**
+	 * Specify if the parser is LL or LR
+	 * @param isLR
+	 */
+	public void setLR(boolean isLR) {
+		LRStateMachineMenuItem.setEnabled(isLR);
+		parsingTableMenuItem.setEnabled(!isLR);
 	}
 }

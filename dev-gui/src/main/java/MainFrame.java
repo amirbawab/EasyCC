@@ -7,12 +7,7 @@ import data.SyntaxAnalysisRow;
 import data.structure.ConsoleData;
 import listener.DevGuiListener;
 import menu.MainMenu;
-import menu.dialogs.StateMachineDialog;
-import menu.dialogs.FirstFollowDialog;
-import menu.dialogs.ParsingTableDialog;
-import menu.dialogs.ParsingTableErrorsDialog;
-import menu.dialogs.ParsingTableRulesDialog;
-import menu.dialogs.StateTableDialog;
+import menu.dialogs.*;
 import menu.listeners.MainMenuListener;
 import tool.ToolBarPanel;
 import tool.ToolBarPanel.Button;
@@ -38,6 +33,13 @@ public class MainFrame extends JFrame {
 	private ToolBarPanel toolBarPanel;
 	private MainMenu mainMenu;
 	private BottomPanel bottomPanel;
+
+	// Parse type
+	public enum Parser {
+		LL,
+		LR
+	}
+	private Parser parserType = Parser.LL;
 
 	/**
 	 * TODO Remove main method
@@ -214,6 +216,13 @@ public class MainFrame extends JFrame {
 						new StateTableDialog(MainFrame.this, stateTransitionTable.getHeader(), stateTransitionTable.getData());
 					}
 					break;
+
+				case LR_STATE_MACHINE:
+					// Open dialog
+					if(devGuilistener != null) {
+						new LRStateMachineDialog(MainFrame.this, devGuilistener.getLRStateMachineGraph());
+					}
+					break;
 					
 				case EXIT:
 					MainFrame.this.dispatchEvent(new WindowEvent(MainFrame.this, WindowEvent.WINDOW_CLOSING));
@@ -257,5 +266,8 @@ public class MainFrame extends JFrame {
 	 */
 	public void setDevGUIListener(DevGuiListener abIDElistener) {
 		this.devGuilistener = abIDElistener;
+
+		// Update menu
+		mainMenu.setLR(devGuilistener.isLR());
 	}
 }

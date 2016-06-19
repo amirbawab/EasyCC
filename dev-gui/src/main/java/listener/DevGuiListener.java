@@ -32,5 +32,6 @@ public interface DevGuiListener {
 	void setLLPPTableErrors(GenericTable genericTable);
 	void setFirstAndFollowSets(GenericTable genericTable);
 	JPanel getStateMachineGraph();
-	
+	JPanel getLRStateMachineGraph();
+	boolean isLR();
 }
