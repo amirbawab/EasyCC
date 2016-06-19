@@ -369,7 +369,7 @@ public class GuiIntegration implements DevGuiListener {
         try{
             // Create and add nodes
             Map<LRItemNode, Object> vertexMap = new HashMap<>();
-            Set<LRItemNode> nodes = stateMachine.getNodes();
+            List<LRItemNode> nodes = stateMachine.getNodes();
             for(LRItemNode itemNode : nodes) {
 
                 String nodeValue = "";

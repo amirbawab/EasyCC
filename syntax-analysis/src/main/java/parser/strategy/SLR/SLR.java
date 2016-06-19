@@ -17,14 +17,6 @@ public class SLR extends ParseStrategy {
     public SLR(Grammar grammar) {
         super(grammar);
         stateMachine = new LRStateMachine(grammar);
-
-        stateMachine.construct();
-        for(LRItemNode node : stateMachine.getNodes()) {
-            System.out.println("-------NEW NODE--------");
-            for(LRItem item : node.getItemList()){
-                System.out.println(item.getLHS() + " -> " + StringUtils.join(item.getRHS(), " "));
-            }
-        }
     }
 
     /**

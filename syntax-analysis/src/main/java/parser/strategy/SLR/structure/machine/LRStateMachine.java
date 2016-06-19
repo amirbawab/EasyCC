@@ -1,7 +1,6 @@
 package parser.strategy.SLR.structure.machine;
 
 import grammar.Grammar;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import token.*;
@@ -15,6 +14,7 @@ import java.util.*;
 public class LRStateMachine {
 
     private LRItemNode rootNode;
+    private List<LRItemNode> nodes;
     private Grammar grammar;
     private AbstractSyntaxToken dotToken;
 
@@ -23,10 +23,17 @@ public class LRStateMachine {
 
     public LRStateMachine(Grammar grammar) {
         this.grammar = grammar;
+        nodes = new ArrayList<>();
         dotToken = SyntaxTokenFactory.createDotToken();
+
+        // Construct the state machine based  on the grammar
+        construct();
     }
 
-    public void construct() {
+    /**
+     * Construct the nodes and transition of the state machine
+     */
+    private void construct() {
         List<List<AbstractSyntaxToken>> startProductions = grammar.getProductions().get(grammar.getStart());
         Map<String, LRItemNode> nodeMap = new HashMap<>();
         rootNode = new LRItemNode();
@@ -62,6 +69,7 @@ public class LRStateMachine {
             // Dequeue node and add closure items
             LRItemNode topNode = nodeQueue.poll();
             addClosure(topNode);
+            nodes.add(topNode);
 
             // Loop on all items
             for(LRItem item : topNode.getItemList()) {
@@ -109,21 +117,8 @@ public class LRStateMachine {
      * Get nodes
      * @return nodes
      */
-    public Set<LRItemNode> getNodes() {
-        Set<LRItemNode> visitedNode = new HashSet<>();
-        Queue<LRItemNode> nodeQueue = new LinkedList<>();
-        nodeQueue.offer(rootNode);
-        visitedNode.add(rootNode);
-        while(!nodeQueue.isEmpty()) {
-            LRItemNode topNode = nodeQueue.poll();
-            for(LRTransition transition : topNode.getTransitionList()) {
-                if(!visitedNode.contains(transition.getToItemNode())) {
-                    visitedNode.add(transition.getToItemNode());
-                    nodeQueue.offer(transition.getToItemNode());
-                }
-            }
-        }
-        return visitedNode;
+    public List<LRItemNode> getNodes() {
+        return nodes;
     }
 
     /**
@@ -143,7 +138,7 @@ public class LRStateMachine {
      * Generate item closure
      * @param itemNode
      */
-    public void addClosure(LRItemNode itemNode) {
+    private void addClosure(LRItemNode itemNode) {
 
         Set<String> LHSVisited = new HashSet<>();
         // Loop on all items of the node
