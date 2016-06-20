@@ -1,8 +1,7 @@
 package parser.strategy.SLR.structure.machine.item;
 
 import org.apache.commons.lang3.StringUtils;
-import token.AbstractSyntaxToken;
-import token.DotToken;
+import token.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +14,19 @@ public class LRItem {
 
     private String LHS;
     private List<AbstractSyntaxToken> RHS;
+    private List<AbstractSyntaxToken> rule;
+    private static AbstractSyntaxToken dotToken = SyntaxTokenFactory.createDotToken();
 
-    public LRItem() {
+    public LRItem(String LHS, List<AbstractSyntaxToken> rule) {
+        this.rule = rule;
+        this.LHS = LHS;
         RHS = new ArrayList<>();
+        RHS.add(dotToken);
+        for(AbstractSyntaxToken syntaxToken : rule) {
+            if(syntaxToken instanceof TerminalToken || syntaxToken instanceof NonTerminalToken) {
+                RHS.add(syntaxToken);
+            }
+        }
     }
 
     /**
@@ -26,6 +35,7 @@ public class LRItem {
      */
     public LRItem(LRItem item) {
         LHS = item.LHS;
+        rule = item.rule;
         RHS = new ArrayList<>(item.getRHS());
     }
 
@@ -33,8 +43,12 @@ public class LRItem {
         return LHS;
     }
 
-    public void setLHS(String LHS) {
-        this.LHS = LHS;
+    public List<AbstractSyntaxToken> getRule() {
+        return rule;
+    }
+
+    public void setRule(List<AbstractSyntaxToken> rule) {
+        this.rule = rule;
     }
 
     public List<AbstractSyntaxToken> getRHS() {

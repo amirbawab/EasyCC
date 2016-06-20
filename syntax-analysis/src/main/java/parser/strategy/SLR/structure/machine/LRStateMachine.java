@@ -18,11 +18,9 @@ public abstract class LRStateMachine {
     List<LRItemNode> nodes;
     LRItemNode rootNode;
     Grammar grammar;
-    AbstractSyntaxToken dotToken;
 
     LRStateMachine(Grammar grammar) {
         this.grammar = grammar;
-        dotToken = SyntaxTokenFactory.createDotToken();
         nodes = new ArrayList<>();
     }
     abstract void addClosure(LRItemNode itemNode);
@@ -46,5 +44,13 @@ public abstract class LRStateMachine {
             key += "::" + item.getRHS().get(i).getOriginalValue();
         }
         return key;
+    }
+
+    /**
+     * Get state machine grammar
+     * @return grammar
+     */
+    public Grammar getGrammar() {
+        return grammar;
     }
 }

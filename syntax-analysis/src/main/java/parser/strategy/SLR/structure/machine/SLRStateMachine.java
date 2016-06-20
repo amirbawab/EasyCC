@@ -42,18 +42,8 @@ public class SLRStateMachine extends LRStateMachine {
         // Loop on all start non-terminal productions
         for(List<AbstractSyntaxToken> production : startProductions) {
 
-            // Place a dot token at the beginning of the item
-            LRItem item = new LRItem();
-            item.setLHS(grammar.getStart());
-            item.getRHS().add(dotToken);
-            for(AbstractSyntaxToken syntaxToken : production) {
-                if(syntaxToken instanceof TerminalToken || syntaxToken instanceof NonTerminalToken) {
-                    item.getRHS().add(syntaxToken);
-                }
-            }
-
             // Add item to the node
-            rootNode.addItem(item);
+            rootNode.addItem(new LRItem(grammar.getStart(), production));
         }
 
         nodeMap.put(generateItemKey(rootNode.getItemList().get(0)), rootNode);
@@ -136,15 +126,7 @@ public class SLRStateMachine extends LRStateMachine {
                     // Get and loop on productions for the non-terminal token
                     List<List<AbstractSyntaxToken>> productions = grammar.getProductions().get(tokenAfterDot.getValue());
                     for (List<AbstractSyntaxToken> production : productions) {
-                        LRItem newItem = new LRItem();
-                        newItem.setLHS(tokenAfterDot.getValue());
-                        newItem.getRHS().add(dotToken);
-                        for (AbstractSyntaxToken syntaxToken : production) {
-                            if(syntaxToken instanceof TerminalToken || syntaxToken instanceof NonTerminalToken) {
-                                newItem.getRHS().add(syntaxToken);
-                            }
-                        }
-                        itemNode.getItemList().add(newItem);
+                        itemNode.getItemList().add(new LRItem(tokenAfterDot.getValue(), production));
                     }
                 }
             }
