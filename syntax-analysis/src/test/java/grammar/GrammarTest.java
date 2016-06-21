@@ -101,4 +101,23 @@ public class GrammarTest {
     public void test_followSet_epsilon() {
         assertEquals(grammar.getFollowSetOf(EPSILON), null);
     }
+
+    @Test
+    public void test_getStart_success() {
+        assertEquals(grammar.getStart(), "E");
+    }
+
+    @Test
+    public void test_getNonTerminals_success() {
+        Set<String> nonTerminals = new HashSet<>(Arrays.asList("E", "X", "T", "Y", "F"));
+
+        assertEquals(grammar.getNonTerminals(), nonTerminals);
+    }
+
+    @Test
+    public void test_getTerminals_success() {
+        Set<String> terminals = new HashSet<>(Arrays.asList("$", "+", "*", "(", ")", "id"));
+
+        assertEquals(grammar.getTerminals(), terminals);
+    }
 }
