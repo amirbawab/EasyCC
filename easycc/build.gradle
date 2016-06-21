@@ -13,7 +13,7 @@ version = '1.0'
 mainClassName = "EasyCC"
 
 dependencies {
-    compile project(':easycc:code-generation')
+    compile project(':code-generation')
     compile project(':dev-gui')
     compile group: 'commons-cli', name: 'commons-cli', version: '1.3.1'
     testCompile group: 'junit', name: 'junit', version: '4.12'
