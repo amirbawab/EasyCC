@@ -122,7 +122,8 @@ public class LRTable {
      */
     public String[] prettifyActionHeader() {
         String[] header = new String[stateMachine.getGrammar().getTerminals().size()+1];
-        for(String terminal : header) {
+        header[0] = "Node";
+        for(String terminal : stateMachine.getGrammar().getTerminals()) {
             int terminalId = terminalIndex.get(terminal);
             header[terminalId+1] = terminal;
         }
@@ -139,7 +140,15 @@ public class LRTable {
             data[row] = new String[action[row].length+1];
             data[row][0] = Integer.toString(row);
             for(int col = 0; col < action[row].length; col++) {
-                data[row][col+1] = action[row][col].toString();
+                if(action[row][col] instanceof LRReduceCell) {
+                    data[row][col + 1] = "R" + ((LRReduceCell)action[row][col]).getRuleId();
+
+                } else if(action[row][col] instanceof LRShiftCell) {
+                    data[row][col + 1] = "S" + ((LRShiftCell)action[row][col]).getNodeId();
+
+                } else {
+                    data[row][col + 1] = "";
+                }
             }
         }
         return data;
@@ -151,7 +160,8 @@ public class LRTable {
      */
     public String[] prettifyGoToHeader() {
         String[] header = new String[stateMachine.getGrammar().getNonTerminals().size()+1];
-        for(String nonTerminal : header) {
+        header[0] = "Node";
+        for(String nonTerminal : stateMachine.getGrammar().getNonTerminals()) {
             int nonTerminalId = nonTerminalIndex.get(nonTerminal);
             header[nonTerminalId+1] = nonTerminal;
         }
@@ -168,7 +178,11 @@ public class LRTable {
             data[row] = new String[goTo[row].length+1];
             data[row][0] = Integer.toString(row);
             for(int col = 0; col < goTo[row].length; col++) {
-                data[row][col+1] = Integer.toString(goTo[row][col]);
+                if(goTo[row][col] == GO_TO_EMPTY) {
+                    data[row][col + 1] = "";
+                } else {
+                    data[row][col + 1] = Integer.toString(goTo[row][col]);
+                }
             }
         }
         return data;
