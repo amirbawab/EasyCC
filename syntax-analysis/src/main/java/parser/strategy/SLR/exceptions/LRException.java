@@ -1,4 +1,4 @@
-package parser.strategy.SLR.structure.exceptions;
+package parser.strategy.SLR.exceptions;
 
 /**
  * Exception related to SLR

@@ -2,7 +2,7 @@ package parser.strategy.SLR.structure.table;
 
 import com.bethecoder.ascii_table.ASCIITable;
 import org.apache.commons.lang3.StringUtils;
-import parser.strategy.SLR.structure.exceptions.LRException;
+import parser.strategy.SLR.exceptions.LRException;
 import parser.strategy.SLR.structure.machine.LRStateMachine;
 import parser.strategy.SLR.structure.machine.item.LRItem;
 import parser.strategy.SLR.structure.machine.node.LRItemNode;
