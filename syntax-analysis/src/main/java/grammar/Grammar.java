@@ -99,78 +99,65 @@ public class Grammar {
      */
     private void computeFirst() {
 
-        // Rules iterator
-        Iterator<Map.Entry<String, List<List<AbstractSyntaxToken>>>> it = productions.entrySet().iterator();
-
-        // While more rules
-        while (it.hasNext()) {
-            computeFirst(SyntaxTokenFactory.createNonTerminalToken(it.next().getKey()));
+        // Initialize an empty set for each production in the grammar
+        for (List<List<AbstractSyntaxToken>> productionList : productions.values()) {
+            for(List<AbstractSyntaxToken> production : productionList) {
+                ruleFirstSetMap.put(production, new HashSet<>());
+            }
         }
-    }
 
-    /**
-     * Compute the first set of a non terminal recursively
-     * @param token
-     * @return first set of a non-terminal
-     */
-    private Set<String> computeFirst(AbstractSyntaxToken token) {
+        // Repeat the computation multiple times
+        for (int repeatX = 0; repeatX < productions.size(); ++repeatX) {
 
-        // Optimize
-        Set<String> tokenFirstSet = getFirstSetOf(token);
-        if(token instanceof NonTerminalToken && !tokenFirstSet.isEmpty())
-            return tokenFirstSet;
+            // Loop on all productions LHS
+            for (String LHS : productions.keySet()) {
 
-        // Get RHS
-        List<List<AbstractSyntaxToken>> RHS = productions.get(token.getValue());
+                // Get RHS
+                List<List<AbstractSyntaxToken>> RHS = productions.get(LHS);
 
-        // Loop on all productions
-        for(List<AbstractSyntaxToken> production : RHS) {
+                // Loop on all productions
+                for(List<AbstractSyntaxToken> production : RHS) {
 
-            // Calculate first set for each rule
-            Set<String> firstSet = new HashSet<>();
+                    // Calculate first set for each rule
+                    Set<String> firstSet = ruleFirstSetMap.get(production);
 
-            // Loop on production tokens
-            for(AbstractSyntaxToken syntaxToken : production) {
+                    // Loop on production tokens
+                    for(AbstractSyntaxToken syntaxToken : production) {
 
-                // If terminal or epsilon
-                if(syntaxToken instanceof TerminalToken || syntaxToken instanceof EpsilonToken) {
-                    firstSet.add(syntaxToken.getValue());
-                    break;
+                        // If terminal or epsilon
+                        if(syntaxToken instanceof TerminalToken || syntaxToken instanceof EpsilonToken) {
+                            firstSet.add(syntaxToken.getValue());
+                            break;
 
-                } else if(syntaxToken instanceof NonTerminalToken) {
+                        } else if(syntaxToken instanceof NonTerminalToken) {
 
-                    // Get first of token
-                    Set<String> syntaxTokenFirstSet = computeFirst(syntaxToken);
+                            // Get first of token
+                            Set<String> syntaxTokenFirstSet = getFirstSetOf(syntaxToken);
 
-                    // If doesn't have epsilon, or last token in the production
-                    if(!syntaxTokenFirstSet.contains(SyntaxHelper.EPSILON) || syntaxToken == production.get(production.size()-1)) {
+                            // If doesn't have epsilon, or last token in the production
+                            if(!syntaxTokenFirstSet.contains(SyntaxHelper.EPSILON) || syntaxToken == production.get(production.size()-1)) {
 
-                        // Superset
-                        firstSet.addAll(syntaxTokenFirstSet);
+                                // Superset
+                                firstSet.addAll(syntaxTokenFirstSet);
 
-                        // Don't try next token
-                        break;
+                                // Don't try next token
+                                break;
 
-                    } else {
+                            } else {
 
-                        // Superset minus epsilon
-                        for(String str : syntaxTokenFirstSet) {
-                            if (!str.equals(SyntaxHelper.EPSILON)) {
-                                firstSet.add(str);
+                                // Superset minus epsilon
+                                for(String str : syntaxTokenFirstSet) {
+                                    if (!str.equals(SyntaxHelper.EPSILON)) {
+                                        firstSet.add(str);
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
-
-            // Add first set
-            ruleFirstSetMap.put(production, firstSet);
         }
-
-        // Get first set
-        return getFirstSetOf(token);
     }
-
 
     /**
      * Compute the Follow set of all Non-Terminals
