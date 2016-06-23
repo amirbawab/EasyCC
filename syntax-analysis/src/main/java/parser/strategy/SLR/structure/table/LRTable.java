@@ -75,6 +75,7 @@ public class LRTable {
         for(LRItemNode node : stateMachine.getNodes()) {
             int nodeId = nodeIndex.get(node);
 
+            // Loop on all items of a node
             for(LRItem item : node.getItemList()) {
                 AbstractSyntaxToken tokenAfterDot = item.getTokenAfterDot();
 

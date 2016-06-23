@@ -58,7 +58,7 @@ public class SLR extends ParseStrategy {
 
         // Cond 1
         List<List<AbstractSyntaxToken>> startProductions = grammar.getProductions().get(grammar.getStart());
-        if(startProductions.size() != 1 || startProductions.get(0).size() != 1) {
+        if(startProductions.size() != 1 || startProductions.get(0).size() != 1 || !(startProductions.get(0).get(0) instanceof NonTerminalToken)) {
             String message = "The initial production should be of the form A -> B";
             l.error(message);
             throw new SLRException(message);
