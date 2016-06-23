@@ -55,6 +55,7 @@ public class SLRStateMachine extends LRStateMachine {
             // Dequeue node and add closure items
             LRItemNode topNode = nodeQueue.poll();
             addClosure(topNode);
+            topNode.setId(nodes.size());
             nodes.add(topNode);
 
             // Loop on all items

@@ -14,6 +14,7 @@ import java.util.List;
 public class LRItemNode {
 
     // Node components
+    private int id;
     private List<LRItem> itemList;
     private List<LRTransition> transitionList;
 
@@ -73,5 +74,21 @@ public class LRItemNode {
      */
     public List<LRItem> getItemList() {
         return itemList;
+    }
+
+    /**
+     * Get node id
+     * @return id
+     */
+    public int getId() {
+        return id;
+    }
+
+    /**
+     * Set node id
+     * @param id
+     */
+    public void setId(int id) {
+        this.id = id;
     }
 }

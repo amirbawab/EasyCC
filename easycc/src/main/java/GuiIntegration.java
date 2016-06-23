@@ -368,7 +368,7 @@ public class GuiIntegration implements DevGuiListener {
             List<LRItemNode> nodes = stateMachine.getNodes();
             for(LRItemNode itemNode : nodes) {
 
-                String nodeValue = "";
+                String nodeValue = "State " + itemNode.getId() + "\n\n";
                 for(LRItem item : itemNode.getItemList()) {
                     nodeValue += item.toString() + "\n";
                 }

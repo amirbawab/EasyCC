@@ -27,7 +27,6 @@ public class LRTable {
     private int goTo[][];
     private Map<String, Integer> terminalIndex;
     private Map<String, Integer> nonTerminalIndex;
-    private Map<LRItemNode, Integer> nodeIndex;
     private List<LRReduceCell> reduceCellList;
     private final int GO_TO_EMPTY = -1;
 
@@ -35,7 +34,6 @@ public class LRTable {
         this.stateMachine = stateMachine;
         terminalIndex = new HashMap<>();
         nonTerminalIndex = new HashMap<>();
-        nodeIndex = new LinkedHashMap<>();
         reduceCellList = new ArrayList<>();
 
         // Assign indices for terminals
@@ -46,11 +44,6 @@ public class LRTable {
         // Assign indices for non-terminals
         for(String nonTerminal : stateMachine.getGrammar().getNonTerminals()) {
             nonTerminalIndex.put(nonTerminal, nonTerminalIndex.size());
-        }
-
-        // Assign indices for nodes
-        for(LRItemNode node : stateMachine.getNodes()) {
-            nodeIndex.put(node, nodeIndex.size());
         }
 
         action = new LRAbstractTableCell[stateMachine.getNodes().size()][terminalIndex.size()];
@@ -73,7 +66,6 @@ public class LRTable {
 
         // Loop on all nodes to populate the rows
         for(LRItemNode node : stateMachine.getNodes()) {
-            int nodeId = nodeIndex.get(node);
 
             // Loop on all items of a node
             for(LRItem item : node.getItemList()) {
@@ -91,26 +83,26 @@ public class LRTable {
                     // Loop on follow set
                     for(String terminal : stateMachine.getGrammar().getFollowSetOfNonTerminal(item.getLHS())) {
 
-                        if(action[nodeId][terminalIndex.get(terminal)] != null) {
+                        if(action[node.getId()][terminalIndex.get(terminal)] != null) {
                             throw new LRException("The provided grammar cannot be parsed with the selected parsing method. Try another one.");
                         }
-                        action[nodeId][terminalIndex.get(terminal)] = reduceCell;
+                        action[node.getId()][terminalIndex.get(terminal)] = reduceCell;
                     }
                 } else {
 
                     LRTransition transition = node.getTransition(tokenAfterDot);
                     if(transition.getValue() instanceof NonTerminalToken) {
-                        goTo[nodeId][nonTerminalIndex.get(transition.getValue().getValue())] = nodeIndex.get(transition.getToItemNode());
+                        goTo[node.getId()][nonTerminalIndex.get(transition.getValue().getValue())] = transition.getToItemNode().getId();
 
                     } else if(transition.getValue() instanceof TerminalToken) {
-                        if(action[nodeId][terminalIndex.get(transition.getValue().getValue())] != null) {
+                        if(action[node.getId()][terminalIndex.get(transition.getValue().getValue())] != null) {
                             throw new LRException("The provided grammar cannot be parsed with the selected parsing method. Try another one.");
                         }
 
                         LRShiftCell shiftCell = new LRShiftCell();
                         shiftCell.setNode(node);
-                        shiftCell.setNodeId(nodeId);
-                        action[nodeId][terminalIndex.get(transition.getValue().getValue())] = shiftCell;
+                        shiftCell.setNodeId(node.getId());
+                        action[node.getId()][terminalIndex.get(transition.getValue().getValue())] = shiftCell;
                     }
                 }
             }

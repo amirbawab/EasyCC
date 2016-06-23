@@ -119,6 +119,10 @@ public class LRItem {
 
     @Override
     public String toString() {
-        return LHS + " -> " + StringUtils.join(RHS, " ");
+        String output = LHS + " ->";
+        for(AbstractSyntaxToken token: RHS) {
+            output += " " + token.getValue();
+        }
+        return output;
     }
 }
