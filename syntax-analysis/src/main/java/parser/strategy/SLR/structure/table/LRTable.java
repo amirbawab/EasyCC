@@ -100,8 +100,8 @@ public class LRTable {
                         }
 
                         LRShiftCell shiftCell = new LRShiftCell();
-                        shiftCell.setNode(node);
-                        shiftCell.setNodeId(node.getId());
+                        shiftCell.setNode(transition.getToItemNode());
+                        shiftCell.setNodeId(transition.getToItemNode().getId());
                         action[node.getId()][terminalIndex.get(transition.getValue().getValue())] = shiftCell;
                     }
                 }
