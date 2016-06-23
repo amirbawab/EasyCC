@@ -26,7 +26,7 @@ lexicalAnalyzer {
 }
 
 syntaxAnalyzer {
-    grammarPath = "/calculator/syntax-grammar.cfg"
+    grammarPath = "/calculator/LR-syntax-grammar.cfg"
     messagesPath = "/calculator/syntax-messages.json"
     parseStrategy = "parser.strategy.SLR.SLR"
 }
