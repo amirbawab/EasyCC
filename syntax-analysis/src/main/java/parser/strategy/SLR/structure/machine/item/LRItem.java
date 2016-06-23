@@ -110,7 +110,7 @@ public class LRItem {
 
         // Compare RHS tokens
         for(int i=0; i < RHS.size(); i++) {
-            if(oItem.getRHS() == RHS.get(i)) {
+            if(oItem.getRHS().get(i) != RHS.get(i)) {
                 return false;
             }
         }

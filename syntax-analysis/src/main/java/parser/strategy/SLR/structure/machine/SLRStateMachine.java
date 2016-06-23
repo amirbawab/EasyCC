@@ -3,6 +3,7 @@ package parser.strategy.SLR.structure.machine;
 import grammar.Grammar;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import parser.strategy.SLR.exceptions.SLRException;
 import parser.strategy.SLR.structure.machine.item.LRItem;
 import parser.strategy.SLR.structure.machine.node.LRItemNode;
 import parser.strategy.SLR.structure.machine.transition.LRTransition;
@@ -35,8 +36,9 @@ public class SLRStateMachine extends LRStateMachine {
         rootNode = new LRItemNode();
 
         if(startProductions.size() == 0) {
-            l.error("No productions found for the start non-terminal.");
-            return;
+            String message = "No productions found for the start non-terminal.";
+            l.error(message);
+            throw new SLRException(message);
         }
 
         // Loop on all start non-terminal productions
@@ -95,7 +97,6 @@ public class SLRStateMachine extends LRStateMachine {
                         newTransition.getToItemNode().addItem(cloneItem);
                     }
                 }
-
             }
         }
     }
