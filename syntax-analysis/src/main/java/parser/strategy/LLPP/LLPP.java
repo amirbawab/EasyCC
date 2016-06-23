@@ -39,13 +39,15 @@ public class LLPP extends ParseStrategy {
 
     public LLPP(Grammar grammar) {
         super(grammar);
-        llppTable = new LLPPTable(grammar);
 
         // Check if the grammar is correct
         validate();
 
         // Check if the grammar can be optimized
         betterCompiler();
+
+        // Init components
+        llppTable = new LLPPTable(grammar);
 
         // Print table
         l.info("Printing Predictive parser table:\n" + llppTable);
@@ -271,15 +273,25 @@ public class LLPP extends ParseStrategy {
     /**
      * Check if the grammar is LL
      * A -> B | C
-     * Cond 1: First(B) ^ First(C) = {}
-     * Cond 2: If First(A) contains "", then First(A) & Follow(A) = {}
+     * Cond 1: No left recursion
+     * Cond 2: First(B) ^ First(C) = {}
+     * Cond 3: If First(A) contains "", then First(A) & Follow(A) = {}
      */
     private void validate() {
+
+        // Cond 1
+        for(String LHS : grammar.getProductions().keySet()) {
+            if (hasLeftRecursion(SyntaxTokenFactory.createNonTerminalToken(LHS), new HashSet<>())) {
+                String message = "Left hand side: " + LHS + " has a left recursion";
+                l.error(message);
+                throw new LLPPException(message);
+            }
+        }
 
         // Loop on non-terminal
         for(String nonTerminal : grammar.getProductions().keySet()) {
 
-            // Cond 1
+            // Cond 2
             Set<String> uniqueFirstSetValues = new HashSet<>();
             for(List<AbstractSyntaxToken> rule : grammar.getProductions().get(nonTerminal)) {
                 for(String token : grammar.getRuleFirstSetMap().get(rule)) {
@@ -293,7 +305,7 @@ public class LLPP extends ParseStrategy {
                 }
             }
 
-            // Cond 2
+            // Cond 3
             if(uniqueFirstSetValues.contains(SyntaxHelper.EPSILON) && (uniqueFirstSetValues.retainAll(grammar.getFollowSetOfNonTerminal(nonTerminal)) & !uniqueFirstSetValues.isEmpty())) {
                 String message = "The first and follow sets of the non-terminal: " + nonTerminal + " intersect at " + uniqueFirstSetValues;
                 l.error(message);
@@ -303,10 +315,50 @@ public class LLPP extends ParseStrategy {
     }
 
     /**
+     * Checks if the grammar has left recursion
+     * @param token
+     * @param visitedNonTerminals
+     * @return true if left recursion detected
+     */
+    private boolean hasLeftRecursion(AbstractSyntaxToken token, Set<String> visitedNonTerminals) {
+
+        // If visited more than once
+        if(visitedNonTerminals.contains(token.getValue())) {
+            return true;
+        }
+
+        // Mark non terminal as visited
+        visitedNonTerminals.add(token.getValue());
+
+        for(List<AbstractSyntaxToken> production : grammar.getProductions().get(token.getValue())) {
+            for(AbstractSyntaxToken syntaxToken : production) {
+                if(syntaxToken instanceof NonTerminalToken) {
+
+                    // Check recursively for left-recursion
+                    if(hasLeftRecursion(syntaxToken, visitedNonTerminals)) {
+                        return true;
+                    }
+
+                    // Stop checking when the first set of non-terminal does not contain epsilon
+                    if(!grammar.getFirstSetOf(syntaxToken).contains(SyntaxHelper.EPSILON)) {
+                        break;
+                    }
+                } else if(syntaxToken instanceof TerminalToken) {
+                    // Stop checking if token is a terminal
+                    break;
+                }
+            }
+        }
+
+        // No left recursion found
+        return false;
+    }
+
+    /**
      * Check if the grammar can be enhanced for better decisions by the compiler
      * Cond 1: Don't use terminals after the first token of a rule
      */
-    public void betterCompiler() {
+    private void betterCompiler() {
 
         // Loop on non-terminal
         for (String nonTerminal : grammar.getProductions().keySet()) {
