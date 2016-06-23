@@ -281,8 +281,9 @@ public class LLPP extends ParseStrategy {
 
         // Cond 1
         for(String LHS : grammar.getProductions().keySet()) {
-            if (hasLeftRecursion(SyntaxTokenFactory.createNonTerminalToken(LHS), new HashSet<>())) {
-                String message = "Left hand side: " + LHS + " has a left recursion";
+            AbstractSyntaxToken leftRecusiveToken = getLeftRecursion(SyntaxTokenFactory.createNonTerminalToken(LHS), new HashSet<>());
+            if (leftRecusiveToken != null) {
+                String message = "Left hand side: " + leftRecusiveToken.getValue() + " has a left recursion";
                 l.error(message);
                 throw new LLPPException(message);
             }
@@ -318,13 +319,13 @@ public class LLPP extends ParseStrategy {
      * Checks if the grammar has left recursion
      * @param token
      * @param visitedNonTerminals
-     * @return true if left recursion detected
+     * @return token if left recursion detected. Otherwise return null
      */
-    private boolean hasLeftRecursion(AbstractSyntaxToken token, Set<String> visitedNonTerminals) {
+    private AbstractSyntaxToken getLeftRecursion(AbstractSyntaxToken token, Set<String> visitedNonTerminals) {
 
         // If visited more than once
         if(visitedNonTerminals.contains(token.getValue())) {
-            return true;
+            return token;
         }
 
         // Mark non terminal as visited
@@ -335,8 +336,9 @@ public class LLPP extends ParseStrategy {
                 if(syntaxToken instanceof NonTerminalToken) {
 
                     // Check recursively for left-recursion
-                    if(hasLeftRecursion(syntaxToken, visitedNonTerminals)) {
-                        return true;
+                    AbstractSyntaxToken result = getLeftRecursion(syntaxToken, visitedNonTerminals);
+                    if(result != null) {
+                        return result;
                     }
 
                     // Stop checking when the first set of non-terminal does not contain epsilon
@@ -351,7 +353,7 @@ public class LLPP extends ParseStrategy {
         }
 
         // No left recursion found
-        return false;
+        return null;
     }
 
     /**
