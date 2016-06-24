@@ -6,20 +6,27 @@ import org.apache.logging.log4j.Logger;
 import parser.strategy.ParseStrategy;
 import parser.strategy.SLR.exceptions.SLRException;
 import parser.strategy.SLR.structure.machine.SLRStateMachine;
+import parser.strategy.SLR.structure.machine.node.LRItemNode;
 import parser.strategy.SLR.structure.table.LRTable;
-import token.AbstractSyntaxToken;
-import token.AbstractToken;
-import token.NonTerminalToken;
+import parser.strategy.SLR.structure.table.cell.LRAbstractTableCell;
+import parser.strategy.SLR.structure.table.cell.LRReduceCell;
+import parser.strategy.SLR.structure.table.cell.LRShiftCell;
+import token.*;
 
 import java.util.List;
+import java.util.Stack;
 
 public class SLR extends ParseStrategy {
 
     // Logger
     private Logger l = LogManager.getFormatterLogger(getClass());
 
+    // Components
     private SLRStateMachine stateMachine;
     private LRTable table;
+
+    // Root of parser
+    private NonTerminalToken treeRoot;
 
     public SLR(Grammar grammar) {
         super(grammar);
@@ -44,8 +51,118 @@ public class SLR extends ParseStrategy {
     }
 
     @Override
-    public boolean parse(AbstractToken lexicalTokenList) {
-        return false;
+    public boolean parse(AbstractToken firstLexicalTokens) {
+
+        // Log
+        l.info("Start parsing input ...");
+
+        // Prepare stack
+        Stack<Object> parserStack = new Stack<>();
+
+        // True if error detected
+        boolean error = false;
+
+        // True if the parser is in panic mode
+        boolean stable = true;
+
+        // Int phases
+        int phases = 1;
+
+        // If listener is set then update the number of parse phases
+        if(parseStrategyListener != null) {
+
+            // Required to reset data
+            parseStrategyListener.init();
+            phases = parseStrategyListener.getParsePhase();
+
+            // If no phase or phase 0 has been specified
+            if(phases == 0) {
+                l.error("Exiting parser because no actions has been specified for phase 1");
+                return false;
+            }
+        }
+
+        l.info("Total parses: " + phases);
+
+        // Prepare lexical token
+        AbstractToken lexicalToken = null;
+
+        // Run multiple times
+        for(int phase = 1; phase <= phases; phase++) {
+
+            // Push initial entry
+            parserStack.push(stateMachine.getNodes().get(0));
+
+            // Reset input token
+            lexicalToken = firstLexicalTokens;
+
+            while (!parserStack.isEmpty()) {
+
+                // Get the top entry
+                LRItemNode topEntry = (LRItemNode) parserStack.peek();
+
+                // Get action cell
+                LRAbstractTableCell actionCell = table.getActionCell(topEntry.getId(), lexicalToken.getToken());
+
+                if(actionCell instanceof LRShiftCell) {
+                    LRShiftCell shiftCell = (LRShiftCell) actionCell;
+                    parserStack.push(lexicalToken);
+                    parserStack.push(shiftCell.getNode());
+                    lexicalToken = lexicalToken.getNext();
+
+                } else if(actionCell instanceof LRReduceCell) {
+                    LRReduceCell reduceCell = (LRReduceCell) actionCell;
+
+                    // Create parent token
+                    NonTerminalToken parentToken = SyntaxTokenFactory.createNonTerminalToken(reduceCell.getItem().getLHS());
+
+                    // Get rule
+                    List<AbstractSyntaxToken> rule = reduceCell.getItem().getRuleCopy();
+                    for(int i=0; i < rule.size(); i++) {
+                        if(rule.get(i) instanceof NonTerminalToken) {
+                            parserStack.pop();
+                            parentToken.addChild((AbstractSyntaxToken) parserStack.pop());
+
+                        } else if(rule.get(i) instanceof TerminalToken) {
+                            parserStack.pop();
+                            ((TerminalToken) rule.get(i)).setLexicalToken((LexicalToken) parserStack.pop());
+                            parentToken.addChild(rule.get(i));
+
+                        } else if(rule.get(i) instanceof EpsilonToken) {
+                            parentToken.addChild(rule.get(i));
+                        }
+                    }
+
+                    // Get the top entry
+                    topEntry = (LRItemNode) parserStack.peek();
+
+                    // Check LHS is the initial production
+                    if(parentToken.getValue().equals(grammar.getStart())) {
+                        parserStack.pop();
+                        treeRoot = parentToken;
+
+                    } else {
+                        // Push LHS
+                        parserStack.push(parentToken);
+
+                        // Push go to
+                        int goToNode = table.getGoToCell(topEntry.getId(), parentToken.getValue());
+                        if (goToNode == LRTable.GO_TO_EMPTY) {
+                            String message = "GOTO[" + topEntry.getId() + "][" + parentToken.getValue() + "] result was not found. Please report this problem.";
+                            l.fatal(message);
+                            throw new RuntimeException(message);
+                        }
+
+                        parserStack.push(stateMachine.getNodes().get(goToNode));
+                    }
+                } else {
+
+                    error = true;
+                }
+            }
+        }
+
+        return error;
     }
 
     /**

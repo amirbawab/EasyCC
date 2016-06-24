@@ -28,7 +28,7 @@ public class LRTable {
     private Map<String, Integer> terminalIndex;
     private Map<String, Integer> nonTerminalIndex;
     private List<LRReduceCell> reduceCellList;
-    private final int GO_TO_EMPTY = -1;
+    public static final int GO_TO_EMPTY = -1;
 
     public LRTable(LRStateMachine stateMachine) {
         this.stateMachine = stateMachine;
@@ -107,6 +107,26 @@ public class LRTable {
                 }
             }
         }
+    }
+
+    /**
+     * Get action cell by node and terminal
+     * @param nodeId
+     * @param terminal
+     * @return cell
+     */
+    public LRAbstractTableCell getActionCell(int nodeId, String terminal) {
+        return action[nodeId][terminalIndex.get(terminal)];
+    }
+
+    /**
+     * Get goto cell by node and terminal
+     * @param nodeId
+     * @param nonTerminal
+     * @return cell
+     */
+    public int getGoToCell(int nodeId, String nonTerminal) {
+        return goTo[nodeId][nonTerminalIndex.get(nonTerminal)];
     }
 
     /**

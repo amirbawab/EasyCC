@@ -5,6 +5,7 @@ import token.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A node in the LR state machine
@@ -43,8 +44,23 @@ public class LRItem {
         return LHS;
     }
 
+    /**
+     * Get rule
+     * Note: This method should be used carefully.
+     * Usually a copy of the rule is what is really needed.
+     * @see #getRuleCopy()
+     * @return
+     */
     public List<AbstractSyntaxToken> getRule() {
         return rule;
+    }
+
+    /**
+     * Get a copy of a rule
+     * @return rule
+     */
+    public List<AbstractSyntaxToken> getRuleCopy() {
+        return rule.stream().map(AbstractSyntaxToken::copy).collect(Collectors.toList());
     }
 
     public void setRule(List<AbstractSyntaxToken> rule) {
