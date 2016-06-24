@@ -8,6 +8,7 @@ import parser.strategy.SLR.structure.machine.item.LRItem;
 import parser.strategy.SLR.structure.machine.node.LRItemNode;
 import parser.strategy.SLR.structure.machine.transition.LRTransition;
 import parser.strategy.SLR.structure.table.cell.LRAbstractTableCell;
+import parser.strategy.SLR.structure.table.cell.LRAcceptCell;
 import parser.strategy.SLR.structure.table.cell.LRReduceCell;
 import parser.strategy.SLR.structure.table.cell.LRShiftCell;
 import token.AbstractSyntaxToken;
@@ -75,7 +76,12 @@ public class LRTable {
                 if(tokenAfterDot == null) {
 
                     // Create a reduce cell
-                    LRReduceCell reduceCell = new LRReduceCell();
+                    LRReduceCell reduceCell;
+                    if(item.getLHS().equals(stateMachine.getGrammar().getStart())) {
+                        reduceCell = new LRAcceptCell();
+                    } else {
+                        reduceCell = new LRReduceCell();
+                    }
                     reduceCell.setItem(item);
                     reduceCell.setRuleId(reduceCellList.size());
                     reduceCellList.add(reduceCell);
@@ -155,6 +161,10 @@ public class LRTable {
             for(int col = 0; col < action[row].length; col++) {
                 if(action[row][col] instanceof LRReduceCell) {
                     data[row][col + 1] = "R" + ((LRReduceCell)action[row][col]).getRuleId();
+
+                    if(action[row][col] instanceof LRAcceptCell) {
+                        data[row][col + 1] += "(acc)";
+                    }
 
                 } else if(action[row][col] instanceof LRShiftCell) {
                     data[row][col + 1] = "S" + ((LRShiftCell)action[row][col]).getNodeId();
