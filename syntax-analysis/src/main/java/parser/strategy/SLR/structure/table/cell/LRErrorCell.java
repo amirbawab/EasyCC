@@ -5,19 +5,23 @@ package parser.strategy.SLR.structure.table.cell;
  */
 
 public class LRErrorCell extends LRAbstractTableCell{
-    public static final int POP = 1;
-    public static final int SCAN = 2;
 
-    private int decision;
+    public enum Type {
+        POP,
+        SCAN,
+        PUSH
+    }
+
+    private Type decision;
     private String nonTerminal;
     private String message;
 
-    public LRErrorCell(int decision, String message) {
+    public LRErrorCell(Type decision, String message) {
         this.decision = decision;
         this.message = message;
     }
 
-    public int getDecision() {
+    public Type getDecision() {
         return decision;
     }
 

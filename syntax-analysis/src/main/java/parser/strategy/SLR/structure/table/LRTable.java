@@ -7,10 +7,7 @@ import parser.strategy.SLR.structure.machine.LRStateMachine;
 import parser.strategy.SLR.structure.machine.item.LRItem;
 import parser.strategy.SLR.structure.machine.node.LRItemNode;
 import parser.strategy.SLR.structure.machine.transition.LRTransition;
-import parser.strategy.SLR.structure.table.cell.LRAbstractTableCell;
-import parser.strategy.SLR.structure.table.cell.LRAcceptCell;
-import parser.strategy.SLR.structure.table.cell.LRReduceCell;
-import parser.strategy.SLR.structure.table.cell.LRShiftCell;
+import parser.strategy.SLR.structure.table.cell.*;
 import token.AbstractSyntaxToken;
 import token.NonTerminalToken;
 import token.TerminalToken;
@@ -56,14 +53,14 @@ public class LRTable {
         }
 
         // Populate action and goto tables
-        populate();
+        buildTable();
     }
 
     /**
      * Populate action and goto tables
      * @throws LRException
      */
-    private void populate() {
+    private void buildTable() {
 
         // Loop on all nodes to populate the rows
         for(LRItemNode node : stateMachine.getNodes()) {
@@ -110,6 +107,39 @@ public class LRTable {
                         shiftCell.setNodeId(transition.getToItemNode().getId());
                         action[node.getId()][terminalIndex.get(transition.getValue().getValue())] = shiftCell;
                     }
+                }
+            }
+        }
+
+        // Add error cells
+        for(int nodeId=0; nodeId < action.length; nodeId++){
+            for(String terminal : stateMachine.getGrammar().getTerminals()) {
+                if(action[nodeId][terminalIndex.get(terminal)] == null) {
+
+                    LRErrorCell errorCell = null;
+                    boolean goToFound = false;
+                    for(String nonTerminal : stateMachine.getGrammar().getNonTerminals()) {
+                        if(goTo[nodeId][nonTerminalIndex.get(nonTerminal)] != GO_TO_EMPTY) {
+                            goToFound = true;
+                            LRAbstractTableCell actionCell = action[goTo[nodeId][nonTerminalIndex.get(nonTerminal)]][terminalIndex.get(terminal)];
+                            if(actionCell instanceof LRShiftCell || actionCell instanceof LRReduceCell) {
+                                errorCell = new LRErrorCell(LRErrorCell.Type.PUSH, null);
+                                errorCell.setNonTerminal(nonTerminal);
+                                break;
+                            }
+                        }
+                    }
+
+                    if(goToFound) {
+                        if(errorCell == null) {
+                            errorCell = new LRErrorCell(LRErrorCell.Type.SCAN, null);
+                        }
+                    } else {
+                        errorCell = new LRErrorCell(LRErrorCell.Type.POP, null);
+                    }
+
+                    // Add error cell
+                    action[nodeId][terminalIndex.get(terminal)] = errorCell;
                 }
             }
         }
@@ -169,8 +199,18 @@ public class LRTable {
                 } else if(action[row][col] instanceof LRShiftCell) {
                     data[row][col + 1] = "S" + ((LRShiftCell)action[row][col]).getNodeId();
 
-                } else {
-                    data[row][col + 1] = "";
+                } else if(action[row][col] instanceof LRErrorCell) {
+                    LRErrorCell errorCell = (LRErrorCell) action[row][col];
+
+                    if(errorCell.getDecision() == LRErrorCell.Type.POP) {
+                        data[row][col + 1] = "Pop";
+
+                    } else if(errorCell.getDecision() == LRErrorCell.Type.PUSH) {
+                        data[row][col + 1] = "Push";
+
+                    } else if(errorCell.getDecision() == LRErrorCell.Type.SCAN) {
+                        data[row][col + 1] = "Scan";
+                    }
                 }
             }
         }
