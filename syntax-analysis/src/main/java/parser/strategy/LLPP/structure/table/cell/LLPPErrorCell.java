@@ -1,4 +1,4 @@
-package parser.strategy.LLPP.table.cell;
+package parser.strategy.LLPP.structure.table.cell;
 
 /**
  * A table cell carrying information about an error

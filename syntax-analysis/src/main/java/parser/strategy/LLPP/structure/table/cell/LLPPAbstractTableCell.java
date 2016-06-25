@@ -1,4 +1,4 @@
-package parser.strategy.LLPP.table.cell;
+package parser.strategy.LLPP.structure.table.cell;
 
 /**
  * Abstract table cell

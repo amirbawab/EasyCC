@@ -7,10 +7,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import parser.strategy.LLPP.data.LLPPData;
 import parser.strategy.LLPP.exceptions.LLPPException;
-import parser.strategy.LLPP.table.LLPPTable;
-import parser.strategy.LLPP.table.cell.LLPPAbstractTableCell;
-import parser.strategy.LLPP.table.cell.LLPPErrorCell;
-import parser.strategy.LLPP.table.cell.LLPPRuleCell;
+import parser.strategy.LLPP.structure.table.LLPPTable;
+import parser.strategy.LLPP.structure.table.cell.LLPPAbstractTableCell;
+import parser.strategy.LLPP.structure.table.cell.LLPPErrorCell;
+import parser.strategy.LLPP.structure.table.cell.LLPPRuleCell;
 import parser.strategy.ParseStrategy;
 import token.*;
 

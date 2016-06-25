@@ -1,4 +1,4 @@
-package parser.strategy.LLPP.table;
+package parser.strategy.LLPP.structure.table;
 
 import com.bethecoder.ascii_table.ASCIITable;
 import core.config.SyntaxConfig;
@@ -7,9 +7,9 @@ import helper.SyntaxHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import parser.strategy.LLPP.table.cell.LLPPAbstractTableCell;
-import parser.strategy.LLPP.table.cell.LLPPErrorCell;
-import parser.strategy.LLPP.table.cell.LLPPRuleCell;
+import parser.strategy.LLPP.structure.table.cell.LLPPAbstractTableCell;
+import parser.strategy.LLPP.structure.table.cell.LLPPErrorCell;
+import parser.strategy.LLPP.structure.table.cell.LLPPRuleCell;
 import token.AbstractSyntaxToken;
 import token.AbstractToken;
 import token.EndOfFileToken;
