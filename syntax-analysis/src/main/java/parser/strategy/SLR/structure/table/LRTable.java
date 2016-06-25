@@ -123,8 +123,11 @@ public class LRTable {
                         if(goTo[nodeId][nonTerminalIndex.get(nonTerminal)] != GO_TO_EMPTY) {
                             goToFound = true;
                             LRAbstractTableCell actionCell = action[goTo[nodeId][nonTerminalIndex.get(nonTerminal)]][terminalIndex.get(terminal)];
+
+                            // Shift and Reduce (Reduce includes Accept)
                             if(actionCell instanceof LRShiftCell || actionCell instanceof LRReduceCell) {
                                 errorCell = new LRErrorCell(LRErrorCell.Type.PUSH, null);
+                                errorCell.setItemNode(stateMachine.getNodes().get(goTo[nodeId][nonTerminalIndex.get(nonTerminal)]));
                                 errorCell.setNonTerminal(nonTerminal);
                                 break;
                             }

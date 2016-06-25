@@ -1,5 +1,7 @@
 package parser.strategy.SLR.structure.table.cell;
 
+import parser.strategy.SLR.structure.machine.node.LRItemNode;
+
 /**
  * Represent an error cell in the LR Table
  */
@@ -14,6 +16,7 @@ public class LRErrorCell extends LRAbstractTableCell{
 
     private Type decision;
     private String nonTerminal;
+    private LRItemNode itemNode;
     private String message;
 
     public LRErrorCell(Type decision, String message) {
@@ -35,5 +38,13 @@ public class LRErrorCell extends LRAbstractTableCell{
 
     public String getMessage() {
         return message;
+    }
+
+    public LRItemNode getItemNode() {
+        return itemNode;
+    }
+
+    public void setItemNode(LRItemNode itemNode) {
+        this.itemNode = itemNode;
     }
 }

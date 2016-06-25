@@ -7,8 +7,12 @@ import parser.strategy.ParseStrategy;
 import parser.strategy.SLR.exceptions.SLRException;
 import parser.strategy.SLR.structure.machine.SLRStateMachine;
 import parser.strategy.SLR.structure.machine.node.LRItemNode;
+import parser.strategy.SLR.structure.parse.stack.LRAbstrackStackEntry;
+import parser.strategy.SLR.structure.parse.stack.LRLexicalEntry;
+import parser.strategy.SLR.structure.parse.stack.LRSyntaxEntry;
 import parser.strategy.SLR.structure.table.LRTable;
 import parser.strategy.SLR.structure.table.cell.LRAbstractTableCell;
+import parser.strategy.SLR.structure.table.cell.LRErrorCell;
 import parser.strategy.SLR.structure.table.cell.LRReduceCell;
 import parser.strategy.SLR.structure.table.cell.LRShiftCell;
 import token.*;
@@ -57,7 +61,7 @@ public class SLR extends ParseStrategy {
         l.info("Start parsing input ...");
 
         // Prepare stack
-        Stack<Object> parserStack = new Stack<>();
+        Stack<LRAbstrackStackEntry> parserStack = new Stack<>();
 
         // True if error detected
         boolean error = false;
@@ -91,7 +95,10 @@ public class SLR extends ParseStrategy {
         for(int phase = 1; phase <= phases; phase++) {
 
             // Push initial entry
-            parserStack.push(stateMachine.getNodes().get(0));
+            LRSyntaxEntry initialEntry = new LRSyntaxEntry();
+            initialEntry.setNode(stateMachine.getNodes().get(0));
+            initialEntry.setSyntaxToken(SyntaxTokenFactory.createEndOfStackToken());
+            parserStack.push(initialEntry);
 
             // Reset input token
             lexicalToken = firstLexicalTokens;
@@ -99,15 +106,17 @@ public class SLR extends ParseStrategy {
             while (!parserStack.isEmpty()) {
 
                 // Get the top entry
-                LRItemNode topEntry = (LRItemNode) parserStack.peek();
+                LRItemNode topEntry = parserStack.peek().getNode();
 
                 // Get action cell
                 LRAbstractTableCell actionCell = table.getActionCell(topEntry.getId(), lexicalToken.getToken());
 
                 if(actionCell instanceof LRShiftCell) {
                     LRShiftCell shiftCell = (LRShiftCell) actionCell;
-                    parserStack.push(lexicalToken);
-                    parserStack.push(shiftCell.getNode());
+                    LRLexicalEntry lexicalEntry = new LRLexicalEntry();
+                    lexicalEntry.setLexicalToken(lexicalToken);
+                    lexicalEntry.setNode(shiftCell.getNode());
+                    parserStack.push(lexicalEntry);
                     lexicalToken = lexicalToken.getNext();
 
                 } else if(actionCell instanceof LRReduceCell) {
@@ -121,11 +130,11 @@ public class SLR extends ParseStrategy {
                     for(int i=0; i < rule.size(); i++) {
                         if(rule.get(i) instanceof NonTerminalToken) {
                             parserStack.pop();
-                            parentToken.addChild((AbstractSyntaxToken) parserStack.pop());
+                            parentToken.addChild(((LRSyntaxEntry) parserStack.pop()).getSyntaxToken());
 
                         } else if(rule.get(i) instanceof TerminalToken) {
                             parserStack.pop();
-                            ((TerminalToken) rule.get(i)).setLexicalToken((LexicalToken) parserStack.pop());
+                            ((TerminalToken) rule.get(i)).setLexicalToken(((LRLexicalEntry) parserStack.pop()).getLexicalToken());
                             parentToken.addChild(rule.get(i));
 
                         } else if(rule.get(i) instanceof EpsilonToken) {
@@ -134,7 +143,7 @@ public class SLR extends ParseStrategy {
                     }
 
                     // Get the top entry
-                    topEntry = (LRItemNode) parserStack.peek();
+                    topEntry = parserStack.peek().getNode();
 
                     // Check LHS is the initial production
                     if(parentToken.getValue().equals(grammar.getStart())) {
@@ -143,7 +152,9 @@ public class SLR extends ParseStrategy {
 
                     } else {
                         // Push LHS
-                        parserStack.push(parentToken);
+                        LRSyntaxEntry syntaxEntry = new LRSyntaxEntry();
+                        syntaxEntry.setSyntaxToken(parentToken);
+                        parserStack.push(syntaxEntry);
 
                         // Push go to
                         int goToNode = table.getGoToCell(topEntry.getId(), parentToken.getValue());
@@ -152,11 +163,26 @@ public class SLR extends ParseStrategy {
                             l.fatal(message);
                             throw new RuntimeException(message);
                         }
-
-                        parserStack.push(stateMachine.getNodes().get(goToNode));
+                        syntaxEntry.setNode(stateMachine.getNodes().get(goToNode));
+                        parserStack.push(syntaxEntry);
                     }
-                } else {
+                } else if(actionCell instanceof LRErrorCell) {
 
+                    LRErrorCell errorCell = (LRErrorCell) actionCell;
+
+                    switch (errorCell.getDecision()) {
+                        case POP:
+                            parserStack.pop();
+                            break;
+                        case SCAN:
+                            lexicalToken = lexicalToken.getNext();
+                            break;
+                        case PUSH:
+                            LRSyntaxEntry syntaxEntry = new LRSyntaxEntry();
+                            syntaxEntry.setSyntaxToken(SyntaxTokenFactory.createNonTerminalToken(errorCell.getNonTerminal()));
+                            syntaxEntry.setNode(errorCell.getItemNode());
+                            parserStack.push(syntaxEntry);
+                    }
                     error = true;
                 }
             }
