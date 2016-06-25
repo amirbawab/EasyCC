@@ -1,6 +1,7 @@
 package parser.strategy.SLR.structure.table;
 
 import com.bethecoder.ascii_table.ASCIITable;
+import core.config.SyntaxConfig;
 import helper.SyntaxHelper;
 import org.apache.commons.lang3.StringUtils;
 import parser.strategy.SLR.exceptions.LRException;
@@ -27,6 +28,7 @@ public class LRTable {
     private Map<String, Integer> terminalIndex;
     private Map<String, Integer> nonTerminalIndex;
     private List<LRReduceCell> reduceCellList;
+    private Map<String, Integer> messageCellMap;
     public static final int GO_TO_EMPTY = -1;
 
     public LRTable(LRStateMachine stateMachine) {
@@ -34,6 +36,7 @@ public class LRTable {
         terminalIndex = new HashMap<>();
         nonTerminalIndex = new HashMap<>();
         reduceCellList = new ArrayList<>();
+        messageCellMap = new HashMap<>();
 
         // Assign indices for terminals
         for(String terminal : stateMachine.getGrammar().getTerminals()) {
@@ -112,6 +115,9 @@ public class LRTable {
             }
         }
 
+        // Create entry for the default message
+        messageCellMap.put(SyntaxConfig.getInstance().getSyntaxMessageConfig().getDefaultMessage(), messageCellMap.size());
+
         // Add error cells
         for(int nodeId=0; nodeId < action.length; nodeId++){
             for(String terminal : stateMachine.getGrammar().getTerminals()) {
@@ -134,15 +140,25 @@ public class LRTable {
                         }
                     }
 
-                    if(goToFound) {
-                        if(errorCell == null && !terminal.equals(SyntaxHelper.END_OF_STACK)) {
-                            errorCell = new LRErrorCell(LRErrorCell.Type.SCAN, null);
+                    // If cell was not assigned
+                    if(errorCell == null) {
+
+                        // If go to found but not cell not assigned
+                        if (goToFound) {
+
+                            // Terminal should pop the stack
+                            if (terminal.equals(SyntaxHelper.END_OF_STACK)) {
+                                errorCell = new LRErrorCell(LRErrorCell.Type.POP, null);
+                            } else {
+                                errorCell = new LRErrorCell(LRErrorCell.Type.SCAN, null);
+                            }
                         } else {
                             errorCell = new LRErrorCell(LRErrorCell.Type.POP, null);
                         }
-                    } else {
-                        errorCell = new LRErrorCell(LRErrorCell.Type.POP, null);
                     }
+
+//                    String message = SyntaxConfig.getInstance().getMessage(nonTerminal, terminal);
+//                    messageCellMap.putIfAbsent(message, messageCellMap.size());
 
                     // Add error cell
                     action[nodeId][terminalIndex.get(terminal)] = errorCell;
