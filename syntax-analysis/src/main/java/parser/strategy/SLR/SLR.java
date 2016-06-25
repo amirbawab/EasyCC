@@ -11,10 +11,7 @@ import parser.strategy.SLR.structure.parse.stack.LRAbstrackStackEntry;
 import parser.strategy.SLR.structure.parse.stack.LRLexicalEntry;
 import parser.strategy.SLR.structure.parse.stack.LRSyntaxEntry;
 import parser.strategy.SLR.structure.table.LRTable;
-import parser.strategy.SLR.structure.table.cell.LRAbstractTableCell;
-import parser.strategy.SLR.structure.table.cell.LRErrorCell;
-import parser.strategy.SLR.structure.table.cell.LRReduceCell;
-import parser.strategy.SLR.structure.table.cell.LRShiftCell;
+import parser.strategy.SLR.structure.table.cell.*;
 import token.*;
 
 import java.util.List;
@@ -129,11 +126,9 @@ public class SLR extends ParseStrategy {
                     List<AbstractSyntaxToken> rule = reduceCell.getItem().getRuleCopy();
                     for(int i=0; i < rule.size(); i++) {
                         if(rule.get(i) instanceof NonTerminalToken) {
-                            parserStack.pop();
                             parentToken.addChild(((LRSyntaxEntry) parserStack.pop()).getSyntaxToken());
 
                         } else if(rule.get(i) instanceof TerminalToken) {
-                            parserStack.pop();
                             ((TerminalToken) rule.get(i)).setLexicalToken(((LRLexicalEntry) parserStack.pop()).getLexicalToken());
                             parentToken.addChild(rule.get(i));
 
@@ -145,8 +140,8 @@ public class SLR extends ParseStrategy {
                     // Get the top entry
                     topEntry = parserStack.peek().getNode();
 
-                    // Check LHS is the initial production
-                    if(parentToken.getValue().equals(grammar.getStart())) {
+                    // Check if LHS is the initial production
+                    if(actionCell instanceof LRAcceptCell) {
                         parserStack.pop();
                         treeRoot = parentToken;
 
@@ -154,9 +149,8 @@ public class SLR extends ParseStrategy {
                         // Push LHS
                         LRSyntaxEntry syntaxEntry = new LRSyntaxEntry();
                         syntaxEntry.setSyntaxToken(parentToken);
-                        parserStack.push(syntaxEntry);
 
-                        // Push go to
+                        // Set go to
                         int goToNode = table.getGoToCell(topEntry.getId(), parentToken.getValue());
                         if (goToNode == LRTable.GO_TO_EMPTY) {
                             String message = "GOTO[" + topEntry.getId() + "][" + parentToken.getValue() + "] result was not found. Please report this problem.";
