@@ -1,6 +1,7 @@
 package parser.strategy.SLR.structure.table;
 
 import com.bethecoder.ascii_table.ASCIITable;
+import helper.SyntaxHelper;
 import org.apache.commons.lang3.StringUtils;
 import parser.strategy.SLR.exceptions.LRException;
 import parser.strategy.SLR.structure.machine.LRStateMachine;
@@ -131,8 +132,10 @@ public class LRTable {
                     }
 
                     if(goToFound) {
-                        if(errorCell == null) {
+                        if(errorCell == null && !terminal.equals(SyntaxHelper.END_OF_STACK)) {
                             errorCell = new LRErrorCell(LRErrorCell.Type.SCAN, null);
+                        } else {
+                            errorCell = new LRErrorCell(LRErrorCell.Type.POP, null);
                         }
                     } else {
                         errorCell = new LRErrorCell(LRErrorCell.Type.POP, null);
