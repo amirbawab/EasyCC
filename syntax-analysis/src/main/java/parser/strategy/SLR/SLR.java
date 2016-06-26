@@ -130,7 +130,7 @@ public class SLR extends ParseStrategy {
                 LRItemNode topEntry = parserStack.peek().getNode();
 
                 // Get action cell
-                LRAbstractTableCell actionCell = table.getActionCell(topEntry.getId(), lexicalToken.getToken());
+                LRAbstractTableCell actionCell = table.getActionCell(topEntry, lexicalToken);
 
                 if(actionCell instanceof LRShiftCell) {
                     LRShiftCell shiftCell = (LRShiftCell) actionCell;

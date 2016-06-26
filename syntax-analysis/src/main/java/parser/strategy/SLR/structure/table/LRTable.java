@@ -10,9 +10,7 @@ import parser.strategy.SLR.structure.machine.item.LRItem;
 import parser.strategy.SLR.structure.machine.node.LRItemNode;
 import parser.strategy.SLR.structure.machine.transition.LRTransition;
 import parser.strategy.SLR.structure.table.cell.*;
-import token.AbstractSyntaxToken;
-import token.NonTerminalToken;
-import token.TerminalToken;
+import token.*;
 
 import java.util.*;
 
@@ -169,12 +167,15 @@ public class LRTable {
 
     /**
      * Get action cell by node and terminal
-     * @param nodeId
+     * @param node
      * @param terminal
      * @return cell
      */
-    public LRAbstractTableCell getActionCell(int nodeId, String terminal) {
-        return action[nodeId][terminalIndex.get(terminal)];
+    public LRAbstractTableCell getActionCell(LRItemNode node, AbstractToken terminal) {
+        if(terminal instanceof EndOfFileToken) {
+            return action[node.getId()][terminalIndex.get(SyntaxHelper.END_OF_STACK)];
+        }
+        return action[node.getId()][terminalIndex.get(terminal.getToken())];
     }
 
     /**
