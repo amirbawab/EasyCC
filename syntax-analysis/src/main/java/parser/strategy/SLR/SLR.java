@@ -155,7 +155,7 @@ public class SLR extends ParseStrategy {
 
                     // Get rule
                     List<AbstractSyntaxToken> rule = reduceCell.getItem().getRuleCopy();
-                    for(int i=0; i < rule.size(); i++) {
+                    for(int i=rule.size()-1; i >= 0; --i) {
                         if(rule.get(i) instanceof NonTerminalToken) {
                             LRSyntaxEntry syntaxEntry = (LRSyntaxEntry) parserStack.pop();
                             RHSEntries.add(syntaxEntry);
