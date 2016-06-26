@@ -18,6 +18,9 @@ import parser.strategy.LLPP.data.LLPPDataEntry;
 import parser.strategy.LLPP.data.LLPPDataErrorEntry;
 import parser.strategy.LLPP.data.LLPPDataFineEntry;
 import parser.strategy.SLR.SLR;
+import parser.strategy.SLR.data.LRDataEntry;
+import parser.strategy.SLR.data.LRDataErrorEntry;
+import parser.strategy.SLR.data.LRDataFineEntry;
 import parser.strategy.SLR.structure.machine.item.LRItem;
 import parser.strategy.SLR.structure.machine.node.LRItemNode;
 import parser.strategy.SLR.structure.machine.SLRStateMachine;
@@ -98,22 +101,44 @@ public class GuiIntegration implements DevGuiListener {
     public ConsoleData<SyntaxAnalysisRow> getParserOutput() {
 
         ConsoleData<SyntaxAnalysisRow> rows = new ConsoleData<>();
-        if(lexicalCompiles && syntaxAnalyzer.getSyntaxParser().getParseStrategy() instanceof LLPP) {
-            LLPP llpp = (LLPP) syntaxAnalyzer.getSyntaxParser().getParseStrategy();
-            if(llpp.getLlppData() != null) {
-                for (int row = 0; row < llpp.getLlppData().getEntryList().size(); row++) {
+        if(lexicalCompiles) {
+            if (syntaxAnalyzer.getSyntaxParser().getParseStrategy() instanceof LLPP) {
+                LLPP llpp = (LLPP) syntaxAnalyzer.getSyntaxParser().getParseStrategy();
+                if (llpp.getLlppData() != null) {
+                    for (int row = 0; row < llpp.getLlppData().getEntryList().size(); row++) {
 
-                    // Get current
-                    LLPPDataEntry entry = llpp.getLlppData().getEntryList().get(row);
+                        // Get current
+                        LLPPDataEntry entry = llpp.getLlppData().getEntryList().get(row);
 
-                    // If error
-                    if (entry instanceof LLPPDataFineEntry) {
-                        LLPPDataFineEntry dataFineEntry = (LLPPDataFineEntry) entry;
-                        rows.add(new SyntaxAnalysisRow(dataFineEntry.getStepNumber(), dataFineEntry.getStackContent(), dataFineEntry.getInputContent(), dataFineEntry.getProductionContent(), dataFineEntry.getDerivationContent()));
+                        // If error
+                        if (entry instanceof LLPPDataFineEntry) {
+                            LLPPDataFineEntry dataFineEntry = (LLPPDataFineEntry) entry;
+                            rows.add(new SyntaxAnalysisRow(dataFineEntry.getStepNumber(), dataFineEntry.getStackContent(), dataFineEntry.getInputContent(), dataFineEntry.getProductionContent(), dataFineEntry.getDerivationContent()));
 
-                    } else if (entry instanceof LLPPDataErrorEntry) {
-                        LLPPDataErrorEntry dataErrorEntry = (LLPPDataErrorEntry) entry;
-                        rows.add(new SyntaxAnalysisRow(dataErrorEntry.getStepNumber(), dataErrorEntry.getStackContent(), dataErrorEntry.getInputContent(), "", dataErrorEntry.getMessage()));
+                        } else if (entry instanceof LLPPDataErrorEntry) {
+                            LLPPDataErrorEntry dataErrorEntry = (LLPPDataErrorEntry) entry;
+                            rows.add(new SyntaxAnalysisRow(dataErrorEntry.getStepNumber(), dataErrorEntry.getStackContent(), dataErrorEntry.getInputContent(), "", dataErrorEntry.getMessage()));
+                        }
+                    }
+                }
+
+            } else if(syntaxAnalyzer.getSyntaxParser().getParseStrategy() instanceof SLR) {
+                SLR slr = (SLR) syntaxAnalyzer.getSyntaxParser().getParseStrategy();
+                if (slr.getLrData() != null) {
+                    for (int row = 0; row < slr.getLrData().getEntryList().size(); row++) {
+
+                        // Get current
+                        LRDataEntry entry = slr.getLrData().getEntryList().get(row);
+
+                        // If error
+                        if (entry instanceof LRDataFineEntry) {
+                            LRDataFineEntry dataFineEntry = (LRDataFineEntry) entry;
+                            rows.add(new SyntaxAnalysisRow(dataFineEntry.getStepNumber(), dataFineEntry.getStackContent(), dataFineEntry.getInputContent(), dataFineEntry.getProductionContent(), dataFineEntry.getDerivationContent()));
+
+                        } else if (entry instanceof LRDataErrorEntry) {
+                            LRDataErrorEntry dataErrorEntry = (LRDataErrorEntry) entry;
+                            rows.add(new SyntaxAnalysisRow(dataErrorEntry.getStepNumber(), dataErrorEntry.getStackContent(), dataErrorEntry.getInputContent(), "", dataErrorEntry.getMessage()));
+                        }
                     }
                 }
             }

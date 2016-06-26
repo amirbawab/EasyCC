@@ -1,10 +1,8 @@
 package parser.strategy.SLR;
 
 import grammar.Grammar;
-import helper.SyntaxHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import parser.strategy.LLPP.structure.table.LLPPTable;
 import parser.strategy.ParseStrategy;
 import parser.strategy.SLR.data.LRData;
 import parser.strategy.SLR.exceptions.SLRException;
@@ -239,6 +237,14 @@ public class SLR extends ParseStrategy {
         }
 
         return true;
+    }
+
+    /**
+     * Get data
+     * @return
+     */
+    public LRData getLrData() {
+        return lrData;
     }
 
     /**
