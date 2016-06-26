@@ -122,36 +122,36 @@ public class LRTable {
                 if(action[nodeId][terminalIndex.get(terminal)] == null) {
 
                     LRErrorCell errorCell = null;
-                    boolean goToFound = false;
-                    for(String nonTerminal : stateMachine.getGrammar().getNonTerminals()) {
-                        if(goTo[nodeId][nonTerminalIndex.get(nonTerminal)] != GO_TO_EMPTY) {
-                            goToFound = true;
-                            LRAbstractTableCell actionCell = action[goTo[nodeId][nonTerminalIndex.get(nonTerminal)]][terminalIndex.get(terminal)];
 
-                            // Shift and Reduce (Reduce includes Accept)
-                            if(actionCell instanceof LRShiftCell || actionCell instanceof LRReduceCell) {
-                                errorCell = new LRErrorCell(LRErrorCell.Type.PUSH, null);
-                                errorCell.setItemNode(stateMachine.getNodes().get(goTo[nodeId][nonTerminalIndex.get(nonTerminal)]));
-                                errorCell.setNonTerminal(nonTerminal);
-                                break;
+                    // Terminal should pop the stack
+                    if (terminal.equals(SyntaxHelper.END_OF_STACK)) {
+                        errorCell = new LRErrorCell(LRErrorCell.Type.POP, null);
+                    } else {
+                        boolean goToFound = false;
+                        for(String nonTerminal : stateMachine.getGrammar().getNonTerminals()) {
+                            if(goTo[nodeId][nonTerminalIndex.get(nonTerminal)] != GO_TO_EMPTY) {
+                                goToFound = true;
+                                LRAbstractTableCell actionCell = action[goTo[nodeId][nonTerminalIndex.get(nonTerminal)]][terminalIndex.get(terminal)];
+
+                                // Shift and Reduce (Reduce includes Accept)
+                                if(actionCell instanceof LRShiftCell || actionCell instanceof LRReduceCell) {
+                                    errorCell = new LRErrorCell(LRErrorCell.Type.PUSH, null);
+                                    errorCell.setItemNode(stateMachine.getNodes().get(goTo[nodeId][nonTerminalIndex.get(nonTerminal)]));
+                                    errorCell.setNonTerminal(nonTerminal);
+                                    break;
+                                }
                             }
                         }
-                    }
 
-                    // If cell was not assigned
-                    if(errorCell == null) {
+                        // If cell was not assigned
+                        if(errorCell == null) {
 
-                        // If go to found but not cell not assigned
-                        if (goToFound) {
-
-                            // Terminal should pop the stack
-                            if (terminal.equals(SyntaxHelper.END_OF_STACK)) {
-                                errorCell = new LRErrorCell(LRErrorCell.Type.POP, null);
-                            } else {
+                            // If go to found but cell not assigned
+                            if (goToFound) {
                                 errorCell = new LRErrorCell(LRErrorCell.Type.SCAN, null);
+                            } else {
+                                errorCell = new LRErrorCell(LRErrorCell.Type.POP, null);
                             }
-                        } else {
-                            errorCell = new LRErrorCell(LRErrorCell.Type.POP, null);
                         }
                     }
 
