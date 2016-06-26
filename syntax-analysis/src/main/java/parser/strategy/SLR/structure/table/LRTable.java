@@ -125,7 +125,7 @@ public class LRTable {
                 if(goTo[nodeId][nonTerminalIndex.get(nonTerminal)] != GO_TO_EMPTY) {
                     for (String terminal : stateMachine.getGrammar().getTerminals()) {
                         LRAbstractTableCell actionCell = action[goTo[nodeId][nonTerminalIndex.get(nonTerminal)]][terminalIndex.get(terminal)];
-                        if (actionCell instanceof LRShiftCell || actionCell instanceof LRReduceCell /* includes accept */) {
+                        if (actionCell instanceof LRShiftCell || actionCell instanceof LRAcceptCell) {
                             errorRecoveryMapList.get(nodeId).putIfAbsent(terminal, nonTerminal);
                         }
                     }
