@@ -204,8 +204,10 @@ public class SLR extends ParseStrategy {
                 } else {
 
                     // Keep popping until finding goto options with entries in the map
-                    while(!parserStack.isEmpty() && table.getErrorRecoveryMapList().get(topEntry.getId()).isEmpty()) {
-                        topEntry = parserStack.pop().getNode();
+                    // Worst case, the root node will stay in the stack
+                    while(table.getErrorRecoveryMapList().get(topEntry.getId()).isEmpty()) {
+                        parserStack.pop();
+                        topEntry = parserStack.peek().getNode();
                     }
 
                     // Keep scanning until finding a token in the map
@@ -213,7 +215,7 @@ public class SLR extends ParseStrategy {
                         lexicalToken = lexicalToken.getNext();
                     }
 
-                    if(lexicalToken != null && !parserStack.isEmpty()) {
+                    if(lexicalToken != null) {
 
                         // Create and store the found value
                         LRSyntaxEntry syntaxEntry = new LRSyntaxEntry();
