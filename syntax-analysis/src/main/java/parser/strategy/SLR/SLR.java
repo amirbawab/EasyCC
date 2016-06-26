@@ -3,11 +3,13 @@ package parser.strategy.SLR;
 import grammar.Grammar;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import parser.strategy.LLPP.structure.table.LLPPTable;
 import parser.strategy.ParseStrategy;
+import parser.strategy.SLR.data.LRData;
 import parser.strategy.SLR.exceptions.SLRException;
 import parser.strategy.SLR.structure.machine.SLRStateMachine;
 import parser.strategy.SLR.structure.machine.node.LRItemNode;
-import parser.strategy.SLR.structure.parse.stack.LRAbstrackStackEntry;
+import parser.strategy.SLR.structure.parse.stack.LRAbstractStackEntry;
 import parser.strategy.SLR.structure.parse.stack.LRLexicalEntry;
 import parser.strategy.SLR.structure.parse.stack.LRSyntaxEntry;
 import parser.strategy.SLR.structure.table.LRTable;
@@ -28,6 +30,9 @@ public class SLR extends ParseStrategy {
 
     // Root of parser
     private NonTerminalToken treeRoot;
+
+    // Data storage
+    private LRData lrData;
 
     public SLR(Grammar grammar) {
         super(grammar);
@@ -58,7 +63,7 @@ public class SLR extends ParseStrategy {
         l.info("Start parsing input ...");
 
         // Prepare stack
-        Stack<LRAbstrackStackEntry> parserStack = new Stack<>();
+        Stack<LRAbstractStackEntry> parserStack = new Stack<>();
 
         // True if error detected
         boolean error = false;
@@ -99,6 +104,23 @@ public class SLR extends ParseStrategy {
 
             // Reset input token
             lexicalToken = firstLexicalTokens;
+
+            if(phase == 1) {
+                // Prepare storage
+                lrData = new LRData();
+
+                // Add all lexical tokens
+                AbstractToken lexicalTokenIter = firstLexicalTokens;
+                while(lexicalTokenIter != null) {
+                    LRLexicalEntry lexicalEntry = new LRLexicalEntry();
+                    lexicalEntry.setLexicalToken(lexicalToken);
+                    lrData.getDerivationList().add(lexicalEntry);
+                    lexicalTokenIter = lexicalTokenIter.getNext();
+                }
+
+                // New data entry
+                lrData.addFineEntry(parserStack, lexicalToken);
+            }
 
             while (!parserStack.isEmpty()) {
 
@@ -217,6 +239,6 @@ public class SLR extends ParseStrategy {
 
     @Override
     public NonTerminalToken getDerivationRoot() {
-        return null;
+        return treeRoot;
     }
 }

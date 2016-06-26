@@ -6,7 +6,7 @@ import token.AbstractSyntaxToken;
  * Stack entry containing a syntax token and a node
  */
 
-public class LRSyntaxEntry extends LRAbstrackStackEntry {
+public class LRSyntaxEntry extends LRAbstractStackEntry {
     private AbstractSyntaxToken syntaxToken;
 
     public AbstractSyntaxToken getSyntaxToken() {

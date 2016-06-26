@@ -6,7 +6,7 @@ import parser.strategy.SLR.structure.machine.node.LRItemNode;
  * Abstract class for all stack entries
  */
 
-public abstract class LRAbstrackStackEntry {
+public abstract class LRAbstractStackEntry {
     private LRItemNode node;
 
     public LRItemNode getNode() {
