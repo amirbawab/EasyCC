@@ -17,10 +17,10 @@ public class LRDataFineEntry extends LRDataEntry {
 
     // Components
     private LRSyntaxEntry productionLHS;
-    private List<AbstractSyntaxToken> productionRHS;
+    private List<LRAbstractStackEntry> productionRHS;
     private List<LRAbstractStackEntry> derivation;
 
-    public LRDataFineEntry(int stepNumber, List<LRAbstractStackEntry> parseStack, AbstractToken lexicalToken, LRSyntaxEntry productionLHS, List<AbstractSyntaxToken> productionRHS, List<LRAbstractStackEntry> derivation) {
+    public LRDataFineEntry(int stepNumber, List<LRAbstractStackEntry> parseStack, AbstractToken lexicalToken, LRSyntaxEntry productionLHS, List<LRAbstractStackEntry> productionRHS, List<LRAbstractStackEntry> derivation) {
         super(stepNumber, parseStack, lexicalToken);
         this.productionLHS = productionLHS;
         this.productionRHS = productionRHS;
@@ -34,8 +34,13 @@ public class LRDataFineEntry extends LRDataEntry {
     public String getProductionContent() {
         if(productionLHS != null) {
             String content = productionLHS.getSyntaxToken().getValue() + " =>";
-            for (AbstractSyntaxToken syntaxToken : productionRHS) {
-                content += " " + syntaxToken.getValue();
+            for (LRAbstractStackEntry stackEntry : productionRHS) {
+                if(stackEntry instanceof LRLexicalEntry) {
+                    content += " " + ((LRLexicalEntry) stackEntry).getLexicalToken().getToken();
+
+                } else if(stackEntry instanceof LRSyntaxEntry) {
+                    content += " " + ((LRSyntaxEntry) stackEntry).getSyntaxToken().getOriginalValue();
+                }
             }
             return content;
         }

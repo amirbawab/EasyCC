@@ -45,7 +45,7 @@ public abstract class LRDataEntry {
                 content += syntaxEntry.getSyntaxToken().getOriginalValue() + " " + syntaxEntry.getNode().getId() + " ";
             } else if(stackEntry instanceof LRLexicalEntry) {
                 LRLexicalEntry lexicalEntry = (LRLexicalEntry) stackEntry;
-                content += lexicalEntry.getLexicalToken().getValue() + " " + lexicalEntry.getNode().getId() + " ";
+                content += lexicalEntry.getLexicalToken().getToken() + " " + lexicalEntry.getNode().getId() + " ";
             }
         }
         return content;

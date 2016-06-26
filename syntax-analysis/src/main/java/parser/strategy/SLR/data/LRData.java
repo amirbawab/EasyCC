@@ -5,9 +5,7 @@ import org.apache.logging.log4j.Logger;
 import parser.strategy.SLR.structure.parse.stack.LRAbstractStackEntry;
 import parser.strategy.SLR.structure.parse.stack.LRLexicalEntry;
 import parser.strategy.SLR.structure.parse.stack.LRSyntaxEntry;
-import token.AbstractSyntaxToken;
-import token.AbstractToken;
-import token.NonTerminalToken;
+import token.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,30 +37,13 @@ public class LRData {
      * @param productionLHS
      * @param productionRHS
      */
-    public void addFineEntry(Stack<LRAbstractStackEntry> parseStack, AbstractToken lexicalToken, LRSyntaxEntry productionLHS, List<AbstractSyntaxToken> productionRHS) {
+    public void addFineEntry(Stack<LRAbstractStackEntry> parseStack, AbstractToken lexicalToken, LRSyntaxEntry productionLHS, List<LRAbstractStackEntry> productionRHS) {
 
         // New derivation list
         List<LRAbstractStackEntry> derivationClone = null;
 
-        // Replace derivation production
-        if(productionLHS != null && productionRHS != null && productionRHS.size() > 0) {
-            for (int i = 0; i < derivationList.size(); i++) {
-                if (derivationList.get(i) instanceof LRSyntaxEntry && ((LRSyntaxEntry) derivationList.get(i)).getSyntaxToken() == productionRHS.get(0)) {
-
-                    // Remove all RHS tokens
-                    for(int j=0; j < productionRHS.size(); ++j) {
-                        derivationList.remove(j);
-                    }
-
-                    // Add Non-terminal
-                    derivationList.add(i, productionLHS);
-                    break;
-                }
-            }
-
-            // Copy derivation list
-            derivationClone = new ArrayList<>(derivationList);
-        }
+        // Copy derivation list
+        derivationClone = new ArrayList<>(derivationList);
 
         // Clone stack
         List<LRAbstractStackEntry> stackList = new ArrayList<>(parseStack);

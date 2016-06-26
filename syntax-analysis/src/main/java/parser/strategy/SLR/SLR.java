@@ -1,6 +1,7 @@
 package parser.strategy.SLR;
 
 import grammar.Grammar;
+import helper.SyntaxHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import parser.strategy.LLPP.structure.table.LLPPTable;
@@ -16,6 +17,7 @@ import parser.strategy.SLR.structure.table.LRTable;
 import parser.strategy.SLR.structure.table.cell.*;
 import token.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
@@ -113,7 +115,7 @@ public class SLR extends ParseStrategy {
                 AbstractToken lexicalTokenIter = firstLexicalTokens;
                 while(lexicalTokenIter != null) {
                     LRLexicalEntry lexicalEntry = new LRLexicalEntry();
-                    lexicalEntry.setLexicalToken(lexicalToken);
+                    lexicalEntry.setLexicalToken(lexicalTokenIter);
                     lrData.getDerivationList().add(lexicalEntry);
                     lexicalTokenIter = lexicalTokenIter.getNext();
                 }
@@ -138,20 +140,31 @@ public class SLR extends ParseStrategy {
                     parserStack.push(lexicalEntry);
                     lexicalToken = lexicalToken.getNext();
 
+                    if(phase == 1) {
+                        lrData.addFineEntry(parserStack, lexicalToken);
+                    }
+
                 } else if(actionCell instanceof LRReduceCell) {
                     LRReduceCell reduceCell = (LRReduceCell) actionCell;
 
                     // Create parent token
                     NonTerminalToken parentToken = SyntaxTokenFactory.createNonTerminalToken(reduceCell.getItem().getLHS());
 
+                    // Prepare production RHS from the popped entries
+                    List<LRAbstractStackEntry> RHSEntries = new ArrayList<>();
+
                     // Get rule
                     List<AbstractSyntaxToken> rule = reduceCell.getItem().getRuleCopy();
                     for(int i=0; i < rule.size(); i++) {
                         if(rule.get(i) instanceof NonTerminalToken) {
-                            parentToken.addChild(((LRSyntaxEntry) parserStack.pop()).getSyntaxToken());
+                            LRSyntaxEntry syntaxEntry = (LRSyntaxEntry) parserStack.pop();
+                            RHSEntries.add(syntaxEntry);
+                            parentToken.addChild(syntaxEntry.getSyntaxToken());
 
                         } else if(rule.get(i) instanceof TerminalToken) {
-                            ((TerminalToken) rule.get(i)).setLexicalToken(((LRLexicalEntry) parserStack.pop()).getLexicalToken());
+                            LRLexicalEntry lexicalEntry = (LRLexicalEntry) parserStack.pop();
+                            RHSEntries.add(lexicalEntry);
+                            ((TerminalToken) rule.get(i)).setLexicalToken(lexicalEntry.getLexicalToken());
                             parentToken.addChild(rule.get(i));
 
                         } else if(rule.get(i) instanceof EpsilonToken) {
@@ -167,6 +180,10 @@ public class SLR extends ParseStrategy {
                         parserStack.pop();
                         treeRoot = parentToken;
 
+                        if(phase == 1) {
+                            lrData.addFineEntry(parserStack, lexicalToken);
+                        }
+
                     } else {
                         // Push LHS
                         LRSyntaxEntry syntaxEntry = new LRSyntaxEntry();
@@ -181,6 +198,10 @@ public class SLR extends ParseStrategy {
                         }
                         syntaxEntry.setNode(stateMachine.getNodes().get(goToNode));
                         parserStack.push(syntaxEntry);
+
+                        if(phase == 1) {
+                            lrData.addFineEntry(parserStack, lexicalToken, syntaxEntry, RHSEntries);
+                        }
                     }
                 } else if(actionCell instanceof LRErrorCell) {
 
@@ -199,12 +220,21 @@ public class SLR extends ParseStrategy {
                             syntaxEntry.setNode(errorCell.getItemNode());
                             parserStack.push(syntaxEntry);
                     }
+
+                    if(phase == 1) {
+                        // New data entry
+                        lrData.addErrorEntry(parserStack, lexicalToken, "Error found");
+                    }
                     error = true;
                 }
             }
         }
 
-        return error;
+        if(error) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
