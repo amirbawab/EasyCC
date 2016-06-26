@@ -122,7 +122,7 @@ public class SLR extends ParseStrategy {
                 lrData.addFineEntry(parserStack, lexicalToken);
             }
 
-            while (!parserStack.isEmpty()) {
+            while (!parserStack.isEmpty() && lexicalToken != null) {
 
                 // Get the top entry
                 LRItemNode topEntry = parserStack.peek().getNode();
