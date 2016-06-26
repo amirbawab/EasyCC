@@ -190,7 +190,7 @@ public class SLR extends ParseStrategy {
                         syntaxEntry.setSyntaxToken(parentToken);
 
                         // Set go to
-                        int goToNode = table.getGoToCell(topEntry.getId(), parentToken.getValue());
+                        int goToNode = table.getGoToCell(topEntry, parentToken.getValue());
                         if (goToNode == LRTable.GO_TO_EMPTY) {
                             String message = "GOTO[" + topEntry.getId() + "][" + parentToken.getValue() + "] result was not found. Please report this problem.";
                             l.fatal(message);
@@ -203,25 +203,29 @@ public class SLR extends ParseStrategy {
                             lrData.addFineEntry(parserStack, lexicalToken, syntaxEntry, RHSEntries);
                         }
                     }
-                } else if(actionCell instanceof LRErrorCell) {
+                } else {
 
-                    LRErrorCell errorCell = (LRErrorCell) actionCell;
-
-                    switch (errorCell.getDecision()) {
-                        case POP:
-                            parserStack.pop();
-                            break;
-                        case SCAN:
-                            lexicalToken = lexicalToken.getNext();
-                            break;
-                        case PUSH:
-                            LRSyntaxEntry syntaxEntry = new LRSyntaxEntry();
-                            syntaxEntry.setSyntaxToken(SyntaxTokenFactory.createNonTerminalToken(errorCell.getNonTerminal()));
-                            syntaxEntry.setNode(errorCell.getItemNode());
-                            parserStack.push(syntaxEntry);
+                    // Keep popping until finding goto options with entries in the map
+                    while(!parserStack.isEmpty() && table.getErrorRecoveryMapList().get(topEntry.getId()).isEmpty()) {
+                        topEntry = parserStack.pop().getNode();
                     }
 
-                    if(phase == 1) {
+                    // Keep scanning until finding a token in the map
+                    while(lexicalToken != null && table.getErrorRecovery(topEntry, lexicalToken) == null) {
+                        lexicalToken = lexicalToken.getNext();
+                    }
+
+                    if(lexicalToken != null && !parserStack.isEmpty()) {
+
+                        // Create and store the found value
+                        LRSyntaxEntry syntaxEntry = new LRSyntaxEntry();
+                        String nonTerminalSelected = table.getErrorRecovery(topEntry, lexicalToken);
+                        syntaxEntry.setSyntaxToken(SyntaxTokenFactory.createNonTerminalToken(nonTerminalSelected));
+                        syntaxEntry.setNode(stateMachine.getNodes().get(table.getGoToCell(topEntry, nonTerminalSelected)));
+                        parserStack.push(syntaxEntry);
+                    }
+
+                    if (phase == 1) {
                         // New data entry
                         lrData.addErrorEntry(parserStack, lexicalToken, "Error found");
                     }

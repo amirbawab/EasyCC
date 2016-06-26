@@ -27,6 +27,7 @@ public class LRTable {
     private Map<String, Integer> nonTerminalIndex;
     private List<LRReduceCell> reduceCellList;
     private Map<String, Integer> messageCellMap;
+    private List<Map<String, String>> errorRecoveryMapList;
     public static final int GO_TO_EMPTY = -1;
 
     public LRTable(LRStateMachine stateMachine) {
@@ -35,6 +36,7 @@ public class LRTable {
         nonTerminalIndex = new HashMap<>();
         reduceCellList = new ArrayList<>();
         messageCellMap = new HashMap<>();
+        errorRecoveryMapList = new ArrayList<>();
 
         // Assign indices for terminals
         for(String terminal : stateMachine.getGrammar().getTerminals()) {
@@ -116,50 +118,17 @@ public class LRTable {
         // Create entry for the default message
         messageCellMap.put(SyntaxConfig.getInstance().getSyntaxMessageConfig().getDefaultMessage(), messageCellMap.size());
 
-        // Add error cells
+        // Prepare error recovery map
         for(int nodeId=0; nodeId < action.length; nodeId++){
-            for(String terminal : stateMachine.getGrammar().getTerminals()) {
-                if(action[nodeId][terminalIndex.get(terminal)] == null) {
-
-                    LRErrorCell errorCell = null;
-
-                    // Terminal should pop the stack
-                    if (terminal.equals(SyntaxHelper.END_OF_STACK)) {
-                        errorCell = new LRErrorCell(LRErrorCell.Type.POP, null);
-                    } else {
-                        boolean goToFound = false;
-                        for(String nonTerminal : stateMachine.getGrammar().getNonTerminals()) {
-                            if(goTo[nodeId][nonTerminalIndex.get(nonTerminal)] != GO_TO_EMPTY) {
-                                goToFound = true;
-                                LRAbstractTableCell actionCell = action[goTo[nodeId][nonTerminalIndex.get(nonTerminal)]][terminalIndex.get(terminal)];
-
-                                // Shift and Reduce (Reduce includes Accept)
-                                if(actionCell instanceof LRShiftCell || actionCell instanceof LRReduceCell) {
-                                    errorCell = new LRErrorCell(LRErrorCell.Type.PUSH, null);
-                                    errorCell.setItemNode(stateMachine.getNodes().get(goTo[nodeId][nonTerminalIndex.get(nonTerminal)]));
-                                    errorCell.setNonTerminal(nonTerminal);
-                                    break;
-                                }
-                            }
-                        }
-
-                        // If cell was not assigned
-                        if(errorCell == null) {
-
-                            // If go to found but cell not assigned
-                            if (goToFound) {
-                                errorCell = new LRErrorCell(LRErrorCell.Type.SCAN, null);
-                            } else {
-                                errorCell = new LRErrorCell(LRErrorCell.Type.POP, null);
-                            }
+            errorRecoveryMapList.add(new HashMap<>());
+            for(String nonTerminal : stateMachine.getGrammar().getNonTerminals()) {
+                if(goTo[nodeId][nonTerminalIndex.get(nonTerminal)] != GO_TO_EMPTY) {
+                    for (String terminal : stateMachine.getGrammar().getTerminals()) {
+                        LRAbstractTableCell actionCell = action[goTo[nodeId][nonTerminalIndex.get(nonTerminal)]][terminalIndex.get(terminal)];
+                        if (actionCell instanceof LRShiftCell || actionCell instanceof LRReduceCell /* includes accept */) {
+                            errorRecoveryMapList.get(nodeId).putIfAbsent(terminal, nonTerminal);
                         }
                     }
-
-//                    String message = SyntaxConfig.getInstance().getMessage(nonTerminal, terminal);
-//                    messageCellMap.putIfAbsent(message, messageCellMap.size());
-
-                    // Add error cell
-                    action[nodeId][terminalIndex.get(terminal)] = errorCell;
                 }
             }
         }
@@ -180,12 +149,12 @@ public class LRTable {
 
     /**
      * Get goto cell by node and terminal
-     * @param nodeId
+     * @param node
      * @param nonTerminal
      * @return cell
      */
-    public int getGoToCell(int nodeId, String nonTerminal) {
-        return goTo[nodeId][nonTerminalIndex.get(nonTerminal)];
+    public int getGoToCell(LRItemNode node, String nonTerminal) {
+        return goTo[node.getId()][nonTerminalIndex.get(nonTerminal)];
     }
 
     /**
@@ -222,22 +191,31 @@ public class LRTable {
                 } else if(action[row][col] instanceof LRShiftCell) {
                     data[row][col + 1] = "S" + ((LRShiftCell)action[row][col]).getNodeId();
 
-                } else if(action[row][col] instanceof LRErrorCell) {
-                    LRErrorCell errorCell = (LRErrorCell) action[row][col];
-
-                    if(errorCell.getDecision() == LRErrorCell.Type.POP) {
-                        data[row][col + 1] = "Pop";
-
-                    } else if(errorCell.getDecision() == LRErrorCell.Type.PUSH) {
-                        data[row][col + 1] = "Push";
-
-                    } else if(errorCell.getDecision() == LRErrorCell.Type.SCAN) {
-                        data[row][col + 1] = "Scan";
-                    }
+                } else {
+                    data[row][col + 1] = "";
                 }
             }
         }
         return data;
+    }
+
+    /**
+     * Get list of map between terminal and non-terminal
+     * @return list of map for error recovery
+     */
+    public List<Map<String, String>> getErrorRecoveryMapList() {
+        return errorRecoveryMapList;
+    }
+
+    /**
+     * Get corresponding non-terminal
+     * @return corresponding non-terminal or null if not found
+     */
+    public String getErrorRecovery(LRItemNode node, AbstractToken terminal) {
+        if(terminal instanceof EndOfFileToken) {
+            return errorRecoveryMapList.get(node.getId()).get(SyntaxHelper.END_OF_STACK);
+        }
+        return errorRecoveryMapList.get(node.getId()).get(terminal.getToken());
     }
 
     /**
