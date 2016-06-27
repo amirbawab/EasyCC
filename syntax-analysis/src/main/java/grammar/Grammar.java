@@ -388,6 +388,9 @@ public class Grammar {
                     } else if(current.charAt(0) == '#' && current.charAt(current.length()-1) == '#') {
                         token = SyntaxTokenFactory.createActionToken(current);
 
+                    } else if(current.charAt(0) == '!' && current.charAt(current.length()-1) == '!') {
+                        token = SyntaxTokenFactory.createErrorToken(current);
+
                     } else {
                         token = SyntaxTokenFactory.createNonTerminalToken(current);
                     }

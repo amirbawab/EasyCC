@@ -50,6 +50,15 @@ public class SyntaxTokenFactory {
     }
 
     /**
+     * Create an error syntax token
+     * @param value
+     * @return A new error syntax token
+     */
+    public static ErrorToken createErrorToken(String value) {
+        return new ErrorToken(value);
+    }
+
+    /**
      * Create a dot syntax token
      * @return A new dot syntax token
      */

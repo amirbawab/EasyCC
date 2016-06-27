@@ -1,7 +1,7 @@
 package token;
 
 /**
- * Class representing an error lexicalToken
+ * Class representing an error token
  * Objects of this class should only be created for LR grammar
  */
 
