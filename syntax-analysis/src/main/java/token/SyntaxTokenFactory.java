@@ -54,8 +54,8 @@ public class SyntaxTokenFactory {
      * @param value
      * @return A new error syntax token
      */
-    public static ErrorToken createErrorToken(String value) {
-        return new ErrorToken(value);
+    public static ErrorKeyToken createErrorToken(String value) {
+        return new ErrorKeyToken(value);
     }
 
     /**

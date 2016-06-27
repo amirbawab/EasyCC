@@ -5,20 +5,20 @@ package token;
  * Objects of this class should only be created for LR grammar
  */
 
-public class ErrorToken extends AbstractSyntaxToken {
+public class ErrorKeyToken extends AbstractSyntaxToken {
     private AbstractToken lexicalToken;
 
-    public ErrorToken(String value) {
+    public ErrorKeyToken(String value) {
         super(value);
     }
 
     /**
      * Copy constructor
-     * @param errorToken
+     * @param errorKeyToken
      */
-    public ErrorToken(ErrorToken errorToken) {
-        super(errorToken);
-        this.lexicalToken = errorToken.lexicalToken;
+    public ErrorKeyToken(ErrorKeyToken errorKeyToken) {
+        super(errorKeyToken);
+        this.lexicalToken = errorKeyToken.lexicalToken;
     }
 
     public AbstractToken getLexicalToken() {
@@ -36,6 +36,6 @@ public class ErrorToken extends AbstractSyntaxToken {
 
     @Override
     public AbstractSyntaxToken copy() {
-        return new ErrorToken(this);
+        return new ErrorKeyToken(this);
     }
 }
