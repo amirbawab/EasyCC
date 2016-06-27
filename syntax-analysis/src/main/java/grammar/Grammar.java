@@ -121,6 +121,16 @@ public class Grammar {
                     // Calculate first set for each rule
                     Set<String> firstSet = ruleFirstSetMap.get(production);
 
+                    // Get last non-terminal, if the last token is a non-terminal and not a terminal or epsilon
+                    NonTerminalToken lastNonTerminal = null;
+                    for(int i=production.size()-1; i >= 0 && lastNonTerminal == null; --i) {
+                        if(production.get(i) instanceof EpsilonToken || production.get(i) instanceof TerminalToken) {
+                            break;
+                        } else if(production.get(i) instanceof NonTerminalToken) {
+                            lastNonTerminal = (NonTerminalToken) production.get(i);
+                        }
+                    }
+
                     // Loop on production tokens
                     for(AbstractSyntaxToken syntaxToken : production) {
 
@@ -135,7 +145,7 @@ public class Grammar {
                             Set<String> syntaxTokenFirstSet = getFirstSetOf(syntaxToken);
 
                             // If doesn't have epsilon, or last token in the production
-                            if(!syntaxTokenFirstSet.contains(SyntaxHelper.EPSILON) || syntaxToken == production.get(production.size()-1)) {
+                            if(!syntaxTokenFirstSet.contains(SyntaxHelper.EPSILON) || syntaxToken == lastNonTerminal) {
 
                                 // Superset
                                 firstSet.addAll(syntaxTokenFirstSet);
