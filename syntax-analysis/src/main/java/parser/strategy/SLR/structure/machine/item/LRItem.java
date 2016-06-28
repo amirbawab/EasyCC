@@ -1,6 +1,5 @@
 package parser.strategy.SLR.structure.machine.item;
 
-import org.apache.commons.lang3.StringUtils;
 import token.*;
 
 import java.util.ArrayList;
@@ -131,6 +130,44 @@ public class LRItem {
             }
         }
         return true;
+    }
+
+    /**
+     * Generate a key
+     * @return key
+     */
+    public String getItemKey() {
+        String key = "";
+        for(int i = 0; i < RHS.size() && !(RHS.get(i) instanceof DotToken); i++) {
+            key += "::" + RHS.get(i).getOriginalValue();
+        }
+        return key;
+    }
+
+    /**
+     * Get error token just after the dot (if any)
+     * @return error token
+     */
+    public ErrorKeyToken getErrorToken() {
+        AbstractSyntaxToken tokenBeforeDot = null;
+        for(int i = 0; i < RHS.size() && !(RHS.get(i) instanceof DotToken); i++) {
+            tokenBeforeDot = RHS.get(i);
+        }
+
+        // If initial item
+        if(tokenBeforeDot == null && rule.size() > 0) {
+            return rule.get(0) instanceof ErrorKeyToken ? (ErrorKeyToken) rule.get(0) : null;
+        }
+
+        if(tokenBeforeDot != null) {
+            for(int i=0; i < rule.size()-1; i++) {
+                if(rule.get(i) == tokenBeforeDot) {
+                    return rule.get(i+1) instanceof ErrorKeyToken ? (ErrorKeyToken) rule.get(i+1) : null;
+                }
+            }
+        }
+
+        return null;
     }
 
     @Override

@@ -34,19 +34,6 @@ public abstract class LRStateMachine {
     }
 
     /**
-     * Generate a key for an item
-     * @param item
-     * @return key
-     */
-    String generateItemKey(LRItem item) {
-        String key = "";
-        for(int i = 0; i < item.getRHS().size() && !(item.getRHS().get(i) instanceof DotToken); i++) {
-            key += "::" + item.getRHS().get(i).getOriginalValue();
-        }
-        return key;
-    }
-
-    /**
      * Get state machine grammar
      * @return grammar
      */

@@ -48,7 +48,7 @@ public class SLRStateMachine extends LRStateMachine {
             rootNode.addItem(new LRItem(grammar.getStart(), production));
         }
 
-        nodeMap.put(generateItemKey(rootNode.getItemList().get(0)), rootNode);
+        nodeMap.put(rootNode.getItemList().get(0).getItemKey(), rootNode);
         Queue<LRItemNode> nodeQueue = new LinkedList<>();
         nodeQueue.offer(rootNode);
 
@@ -81,7 +81,7 @@ public class SLRStateMachine extends LRStateMachine {
                         newTransition.setValue(tokenAfterDot);
 
                         // Check if node is already created
-                        String key = generateItemKey(cloneItem);
+                        String key = cloneItem.getItemKey();
                         if(!nodeMap.containsKey(key)) {
                             newTransition.setToItemNode(new LRItemNode());
                             nodeQueue.offer(newTransition.getToItemNode());
