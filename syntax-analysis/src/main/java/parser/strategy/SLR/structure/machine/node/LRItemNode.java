@@ -3,6 +3,7 @@ package parser.strategy.SLR.structure.machine.node;
 import parser.strategy.SLR.structure.machine.transition.LRTransition;
 import parser.strategy.SLR.structure.machine.item.LRItem;
 import token.AbstractSyntaxToken;
+import token.ErrorKeyToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +83,18 @@ public class LRItemNode {
      */
     public int getId() {
         return id;
+    }
+
+    /**
+     * Get list of error key tokens
+     * @return error key tokens for all items
+     */
+    public List<ErrorKeyToken> getErrorKeyTokens() {
+        List<ErrorKeyToken> errorKeyTokenList = new ArrayList<>();
+        for(LRItem item : itemList) {
+            errorKeyTokenList.addAll(item.getErrorTokens());
+        }
+        return errorKeyTokenList;
     }
 
     /**
