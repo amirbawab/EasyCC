@@ -16,11 +16,13 @@ public class LRItem {
     private List<AbstractSyntaxToken> RHS;
     private List<AbstractSyntaxToken> rule;
     private static AbstractSyntaxToken dotToken = SyntaxTokenFactory.createDotToken();
+    private int dotIndex;
 
     public LRItem(String LHS, List<AbstractSyntaxToken> rule) {
         this.rule = rule;
         this.LHS = LHS;
         RHS = new ArrayList<>();
+        dotIndex = 0;
         RHS.add(dotToken);
         for(AbstractSyntaxToken syntaxToken : rule) {
             if(syntaxToken instanceof TerminalToken || syntaxToken instanceof NonTerminalToken) {
@@ -36,7 +38,8 @@ public class LRItem {
     public LRItem(LRItem item) {
         LHS = item.LHS;
         rule = item.rule;
-        RHS = new ArrayList<>(item.getRHS());
+        dotIndex = item.dotIndex;
+        RHS = new ArrayList<>(item.RHS);
     }
 
     public String getLHS() {
@@ -62,23 +65,13 @@ public class LRItem {
         return rule.stream().map(AbstractSyntaxToken::copy).collect(Collectors.toList());
     }
 
-    public void setRule(List<AbstractSyntaxToken> rule) {
-        this.rule = rule;
-    }
-
-    public List<AbstractSyntaxToken> getRHS() {
-        return RHS;
-    }
-
     /**
      * Get syntax token positioned after the dot token
      * @return syntax token or null if dot is at the end of the list
      */
     public AbstractSyntaxToken getTokenAfterDot() {
-        for(int i=0; i < RHS.size()-1; i++) {
-            if(RHS.get(i) instanceof DotToken) {
-                return RHS.get(i+1);
-            }
+        if(dotIndex != RHS.size()-1) {
+            return RHS.get(dotIndex + 1);
         }
         return null;
     }
@@ -88,14 +81,12 @@ public class LRItem {
      * @return true if dot token shifted, false if it is at the end of the list
      */
     public boolean shiftDotRight() {
-        for(int i=0; i < RHS.size(); i++) {
-            AbstractSyntaxToken token = RHS.get(i);
-            if(token instanceof DotToken && i != RHS.size()-1) {
-                AbstractSyntaxToken tmp = token;
-                RHS.set(i, RHS.get(i+1));
-                RHS.set(i+1, tmp);
-                return true;
-            }
+
+        if(dotIndex != RHS.size()-1) {
+            RHS.set(dotIndex, RHS.get(dotIndex+1));
+            RHS.set(dotIndex+1, dotToken);
+            dotIndex++;
+            return true;
         }
         return false;
     }
@@ -119,13 +110,13 @@ public class LRItem {
         }
 
         // Compare RHS size
-        if(oItem.getRHS().size() != RHS.size()) {
+        if(oItem.RHS.size() != RHS.size()) {
             return false;
         }
 
         // Compare RHS tokens
         for(int i=0; i < RHS.size(); i++) {
-            if(oItem.getRHS().get(i) != RHS.get(i)) {
+            if(oItem.RHS.get(i) != RHS.get(i)) {
                 return false;
             }
         }
@@ -148,26 +139,33 @@ public class LRItem {
      * Get error token just after the dot (if any)
      * @return error token
      */
-    public ErrorKeyToken getErrorToken() {
+    public List<ErrorKeyToken> getErrorTokens() {
+        List<ErrorKeyToken> errorKeyTokenList = new ArrayList<>();
+
         AbstractSyntaxToken tokenBeforeDot = null;
-        for(int i = 0; i < RHS.size() && !(RHS.get(i) instanceof DotToken); i++) {
-            tokenBeforeDot = RHS.get(i);
+        if(dotIndex > 0) {
+            tokenBeforeDot = RHS.get(dotIndex-1);
         }
 
         // If initial item
-        if(tokenBeforeDot == null && rule.size() > 0) {
-            return rule.get(0) instanceof ErrorKeyToken ? (ErrorKeyToken) rule.get(0) : null;
-        }
+        if(tokenBeforeDot == null) {
+            int errorInt = 0;
+            while(errorInt < rule.size() && rule.get(errorInt) instanceof ErrorKeyToken) {
+                errorKeyTokenList.add((ErrorKeyToken) rule.get(errorInt++));
+            }
 
-        if(tokenBeforeDot != null) {
-            for(int i=0; i < rule.size()-1; i++) {
+        } else {
+            for(int i=0; i < rule.size(); i++) {
+                int errorInt = i+1;
                 if(rule.get(i) == tokenBeforeDot) {
-                    return rule.get(i+1) instanceof ErrorKeyToken ? (ErrorKeyToken) rule.get(i+1) : null;
+                    while(errorInt < rule.size() && rule.get(errorInt) instanceof ErrorKeyToken) {
+                        errorKeyTokenList.add((ErrorKeyToken) rule.get(errorInt++));
+                    }
                 }
             }
         }
 
-        return null;
+        return errorKeyTokenList;
     }
 
     @Override
