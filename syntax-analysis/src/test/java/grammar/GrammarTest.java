@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 
 public class GrammarTest {
 
-    private static Grammar grammar1, grammar2;
+    private static Grammar grammar1, grammar2, grammar3;
 
     private AbstractSyntaxToken N_A = new NonTerminalToken("A");
     private AbstractSyntaxToken N_B = new NonTerminalToken("B");
@@ -45,6 +45,7 @@ public class GrammarTest {
     public static void init() {
         grammar1 = new Grammar("/input/syntax-grammar1.cfg");
         grammar2 = new Grammar("/input/syntax-grammar2.cfg");
+        grammar3 = new Grammar("/input/syntax-grammar3.cfg");
     }
 
     @Test
@@ -77,6 +78,18 @@ public class GrammarTest {
         assertEquals(grammar2.getFirstSetOf(N_C), firstSetC);
         assertEquals(grammar2.getFirstSetOf(N_D), firstSetD);
         assertEquals(grammar2.getFirstSetOf(N_E), firstSetE);
+    }
+
+    @Test
+    public void test_firstSet_nonTerminals3() {
+
+        Set<String> firstSetA = new HashSet<>(Arrays.asList("b", "c", "EPSILON"));
+        Set<String> firstSetB = new HashSet<>(Arrays.asList("b", "EPSILON"));
+        Set<String> firstSetC = new HashSet<>(Arrays.asList("c", "EPSILON"));
+
+        assertEquals(grammar3.getFirstSetOf(N_A), firstSetA);
+        assertEquals(grammar3.getFirstSetOf(N_B), firstSetB);
+        assertEquals(grammar3.getFirstSetOf(N_C), firstSetC);
     }
 
     @Test
@@ -124,6 +137,11 @@ public class GrammarTest {
     }
 
     @Test
+    public void test_firstSet_epsilon3() {
+        assertEquals(grammar3.getFirstSetOf(EPSILON), null);
+    }
+
+    @Test
     public void test_followSet_nonTerminals1() {
 
         Set<String> followSetE = new HashSet<>(Arrays.asList("$", ")"));
@@ -156,6 +174,18 @@ public class GrammarTest {
     }
 
     @Test
+    public void test_followSet_nonTerminals3() {
+
+        Set<String> followSetA = new HashSet<>(Arrays.asList("$"));
+        Set<String> followSetB = new HashSet<>(Arrays.asList("$", "c"));
+        Set<String> followSetC = new HashSet<>(Arrays.asList("$"));
+
+        assertEquals(grammar3.getFollowSetOf(N_A), followSetA);
+        assertEquals(grammar3.getFollowSetOf(N_B), followSetB);
+        assertEquals(grammar3.getFollowSetOf(N_C), followSetC);
+    }
+
+    @Test
     public void test_followSet_terminals1() {
         assertEquals(grammar1.getFollowSetOf(T_plus), null);
         assertEquals(grammar1.getFollowSetOf(T_multiply), null);
@@ -185,6 +215,11 @@ public class GrammarTest {
     }
 
     @Test
+    public void test_followSet_epsilon3() {
+        assertEquals(grammar3.getFollowSetOf(EPSILON), null);
+    }
+
+    @Test
     public void test_getStart_success1() {
         assertEquals(grammar1.getStart(), "E");
     }
@@ -192,6 +227,11 @@ public class GrammarTest {
     @Test
     public void test_getStart_success2() {
         assertEquals(grammar2.getStart(), "A");
+    }
+
+    @Test
+    public void test_getStart_success3() {
+        assertEquals(grammar3.getStart(), "A");
     }
 
     @Test
@@ -209,6 +249,13 @@ public class GrammarTest {
     }
 
     @Test
+    public void test_getNonTerminals_success3() {
+        Set<String> nonTerminals = new HashSet<>(Arrays.asList("A", "B", "C"));
+
+        assertEquals(grammar3.getNonTerminals(), nonTerminals);
+    }
+
+    @Test
     public void test_getTerminals_success1() {
         Set<String> terminals = new HashSet<>(Arrays.asList("$", "+", "*", "(", ")", "id"));
 
@@ -220,5 +267,12 @@ public class GrammarTest {
         Set<String> terminals = new HashSet<>(Arrays.asList("$", "a", "b", "c", "d", "g", "f"));
 
         assertEquals(grammar2.getTerminals(), terminals);
+    }
+
+    @Test
+    public void test_getTerminals_success3() {
+        Set<String> terminals = new HashSet<>(Arrays.asList("$", "b", "c"));
+
+        assertEquals(grammar3.getTerminals(), terminals);
     }
 }
