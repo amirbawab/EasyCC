@@ -153,12 +153,14 @@ public class GuiIntegration implements DevGuiListener {
             if(llpp.getLlppData() != null && lexicalCompiles) {
                 return llpp.getLlppData().getErrorMessages();
             }
-            return new ArrayList<>();
 
         } else if(syntaxAnalyzer.getSyntaxParser().getParseStrategy() instanceof SLR) {
-            return new ArrayList<>();
+            SLR slr = (SLR) syntaxAnalyzer.getSyntaxParser().getParseStrategy();
+            if(slr.getLrData() != null && lexicalCompiles) {
+                return slr.getLrData().getErrorMessages();
+            }
         }
-        return null;
+        return new ArrayList<>();
     }
 
     @Override

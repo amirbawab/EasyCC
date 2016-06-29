@@ -1,6 +1,8 @@
 package parser.strategy.SLR;
 
 import grammar.Grammar;
+import helper.LexicalHelper;
+import helper.SyntaxHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import parser.strategy.ParseStrategy;
@@ -201,13 +203,21 @@ public class SLR extends ParseStrategy {
                             lrData.addFineEntry(parserStack, lexicalToken, syntaxEntry, RHSEntries);
                         }
                     }
-                } else {
+                } else if(actionCell instanceof LRErrorCell) {
+
+                    // Get error cell
+                    LRErrorCell errorCell = (LRErrorCell) actionCell;
 
                     // Keep popping until finding goto options with entries in the map
                     // Worst case, the root node will stay in the stack
                     while(table.getErrorRecoveryMapList().get(topEntry.getId()).isEmpty()) {
                         parserStack.pop();
                         topEntry = parserStack.peek().getNode();
+                    }
+
+                    if(phase == 1) {
+                        // New data entry
+                        lrData.addErrorEntry(parserStack, lexicalToken, LexicalHelper.messageReplace(errorCell.getMessage(), lexicalToken));
                     }
 
                     // Keep scanning until finding a token in the map
