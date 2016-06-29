@@ -56,7 +56,7 @@ public class SyntaxConfig {
 
         if(syntaxMessageConfig.getSyntaxMessagesLRConfig() != null) {
             for (SyntaxMessagesLRDataConfig data : syntaxMessageConfig.getSyntaxMessagesLRConfig().getMessages()) {
-                llMessagesMap.put(getMessageKey(data.getErrorKey(), data.getTerminal()), data.getMessage());
+                lrMessagesMap.put(getMessageKey(data.getErrorKey(), data.getTerminal()), data.getMessage());
             }
         }
     }

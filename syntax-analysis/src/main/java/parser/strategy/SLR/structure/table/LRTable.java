@@ -4,6 +4,8 @@ import com.bethecoder.ascii_table.ASCIITable;
 import core.config.SyntaxConfig;
 import helper.SyntaxHelper;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import parser.strategy.SLR.exceptions.LRException;
 import parser.strategy.SLR.structure.machine.LRStateMachine;
 import parser.strategy.SLR.structure.machine.item.LRItem;
@@ -20,6 +22,9 @@ import java.util.*;
 
 public class LRTable {
 
+    // Logger
+    private Logger l = LogManager.getFormatterLogger(getClass());
+
     private LRStateMachine stateMachine;
     private LRAbstractTableCell action[][];
     private int goTo[][];
@@ -35,7 +40,7 @@ public class LRTable {
         terminalIndex = new HashMap<>();
         nonTerminalIndex = new HashMap<>();
         reduceCellList = new ArrayList<>();
-        messageCellMap = new HashMap<>();
+        messageCellMap = new LinkedHashMap<>();
         errorRecoveryMapList = new ArrayList<>();
 
         // Assign indices for terminals
@@ -132,6 +137,33 @@ public class LRTable {
                 }
             }
         }
+
+        // Store error messages
+        for(int nodeId=0; nodeId < action.length; nodeId++) {
+
+            // Specific message
+            LRItemNode node = stateMachine.getNodes().get(nodeId);
+            for (String terminal : stateMachine.getGrammar().getTerminals()) {
+                int terminalId = terminalIndex.get(terminal);
+
+                // Specified message
+                for(ErrorKeyToken errorKeyToken : node.getErrorKeyTokens()) {
+                    if (action[nodeId][terminalId] == null) {
+                        String message = SyntaxConfig.getInstance().getLRMessage(errorKeyToken.getValue(), terminal);
+                        messageCellMap.putIfAbsent(message, messageCellMap.size());
+                        action[nodeId][terminalId] = new LRErrorCell(message);
+                    } else if (action[nodeId][terminalId] instanceof LRErrorCell) {
+                        l.warn("More than one error message is defined for the same node:terminal combination: " + node.getId() + ":" + terminal + ". First message will be used.");
+                    }
+                }
+
+                // Default message
+                if(action[nodeId][terminalId] == null) {
+                    action[nodeId][terminalId] = new LRErrorCell(SyntaxConfig.getInstance().getLRSyntaxMessageConfig().getDefaultMessage());
+                }
+            }
+
+        }
     }
 
     /**
@@ -191,8 +223,8 @@ public class LRTable {
                 } else if(action[row][col] instanceof LRShiftCell) {
                     data[row][col + 1] = "S" + ((LRShiftCell)action[row][col]).getNodeId();
 
-                } else {
-                    data[row][col + 1] = "";
+                } else if(action[row][col] instanceof LRErrorCell) {
+                    data[row][col + 1] = "e" + messageCellMap.get(((LRErrorCell) action[row][col]).getMessage());
                 }
             }
         }
@@ -267,6 +299,12 @@ public class LRTable {
         for(LRReduceCell reduceCell : reduceCellList) {
             output += reduceCell.getRuleId() + ": " + reduceCell.getItem().getLHS() + " => " + StringUtils.join(reduceCell.getItem().getRule(), " ") + "\n";
         }
+
+        output += "ERRORS:\n";
+        for(String message : messageCellMap.keySet()) {
+            output += messageCellMap.get(message) + ": " + message + "\n";
+        }
+
         return output;
     }
 }

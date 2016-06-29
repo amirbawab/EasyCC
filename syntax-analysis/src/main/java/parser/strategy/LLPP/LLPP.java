@@ -159,7 +159,7 @@ public class LLPP extends ParseStrategy {
 
                         if(phase == 1) {
                             // New data entry
-                            llppData.addErrorEntry(stackSyntax, lexicalToken, SyntaxHelper.tokenDefaultMessage(lexicalToken));
+                            llppData.addErrorEntry(stackSyntax, lexicalToken, SyntaxHelper.tokenDefaultMessageLL(lexicalToken));
 
                             // Grammar can be enhacned
                             l.warn("Compiler couldn't make the best decision because it expected a non-terminal and a terminal instead of two terminals");
@@ -216,7 +216,7 @@ public class LLPP extends ParseStrategy {
 
                         if(phase == 1) {
                             // New data entry
-                            llppData.addErrorEntry(stackSyntax, lexicalToken, SyntaxHelper.tokenMessage(nonTerminalToken, lexicalToken));
+                            llppData.addErrorEntry(stackSyntax, lexicalToken, SyntaxHelper.tokenMessageLL(nonTerminalToken, lexicalToken));
                         }
 
                         // Check decision
@@ -252,7 +252,7 @@ public class LLPP extends ParseStrategy {
         if(!(lexicalToken instanceof EndOfFileToken)){
 
             // New data entry
-            llppData.addErrorEntry(stackSyntax, lexicalToken, SyntaxHelper.tokenDefaultMessage(lexicalToken));
+            llppData.addErrorEntry(stackSyntax, lexicalToken, SyntaxHelper.tokenDefaultMessageLL(lexicalToken));
 
             // Error found
             error = true;
