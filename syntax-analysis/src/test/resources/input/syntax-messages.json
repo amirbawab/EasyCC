@@ -21,5 +21,28 @@
         "message" : "message three non-terminal terminal"
       }
     ]
+  },
+  "LR": {
+    "default": "Default message",
+    "messages": [
+      {
+        "error-key" : "one",
+        "message": "message one error-key"
+      },
+      {
+        "error-key": "two",
+        "terminal" : "two_prime",
+        "message" : "message two error-key terminal"
+      },
+      {
+        "error-key" : "three",
+        "message": "message three error-key"
+      },
+      {
+        "error-key": "three",
+        "terminal" : "three_prime",
+        "message" : "message three error-key terminal"
+      }
+    ]
   }
 }
