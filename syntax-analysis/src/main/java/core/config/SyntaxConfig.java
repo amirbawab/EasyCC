@@ -1,8 +1,7 @@
 package core.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import core.config.json.messages.SyntaxMessagesConfig;
-import core.config.json.messages.SyntaxMessagesDataConfig;
+import core.config.json.messages.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,13 +23,15 @@ public class SyntaxConfig {
 
     private SyntaxMessagesConfig syntaxMessageConfig;
 
-    private Map<String, String> messagesMap;
+    private Map<String, String> llMessagesMap;
+    private Map<String, String> lrMessagesMap;
 
     /**
      * Private constructor
      */
     private SyntaxConfig() {
-        messagesMap = new HashMap<>();
+        llMessagesMap = new HashMap<>();
+        lrMessagesMap = new HashMap<>();
     }
 
     /**
@@ -47,28 +48,36 @@ public class SyntaxConfig {
             l.error(e.getMessage());
         }
 
-        for(SyntaxMessagesDataConfig data : syntaxMessageConfig.getMessages()) {
-            messagesMap.put(getMessageKey(data.getNonTerminal(), data.getTerminal()), data.getMessage());
+        if(syntaxMessageConfig.getSyntaxMessagesLLConfig() != null) {
+            for (SyntaxMessagesLLDataConfig data : syntaxMessageConfig.getSyntaxMessagesLLConfig().getMessages()) {
+                llMessagesMap.put(getMessageKey(data.getNonTerminal(), data.getTerminal()), data.getMessage());
+            }
+        }
+
+        if(syntaxMessageConfig.getSyntaxMessagesLRConfig() != null) {
+            for (SyntaxMessagesLRDataConfig data : syntaxMessageConfig.getSyntaxMessagesLRConfig().getMessages()) {
+                llMessagesMap.put(getMessageKey(data.getErrorKey(), data.getTerminal()), data.getMessage());
+            }
         }
     }
 
     /**
-     * Generate a key given non-terminal and terminal
-     * @param nonTerminal
-     * @param terminal
+     * Generate a key given major and aminor strings
+     * @param major
+     * @param minor
      * @return key
      */
-    private String getMessageKey(String nonTerminal, String terminal) {
-        if(nonTerminal == null) {
-            l.error("Non terminal cannot be null");
+    private String getMessageKey(String major, String minor) {
+        if(major == null) {
+            l.error("Major key cannot be null");
             return null;
         }
 
-        if(terminal == null) {
-            return nonTerminal;
+        if(minor == null) {
+            return major;
         }
 
-        return nonTerminal + "::" + terminal;
+        return major + "::" + minor;
     }
 
     /**
@@ -80,28 +89,54 @@ public class SyntaxConfig {
     }
 
     /**
-     * Get message based on non-terminal and terminal
+     * Get LL message based on non-terminal and terminal
      * @param nonTerminal
      * @param terminal
      * @return custom message
      */
-    public String getMessage(String nonTerminal, String terminal) {
+    public String getLLMessage(String nonTerminal, String terminal) {
 
         String key = getMessageKey(nonTerminal, terminal);
-        if(messagesMap.containsKey(key))
-            return messagesMap.get(key);
+        if(llMessagesMap.containsKey(key))
+            return llMessagesMap.get(key);
 
-        if(messagesMap.containsKey(nonTerminal))
-            return messagesMap.get(nonTerminal);
+        if(llMessagesMap.containsKey(nonTerminal))
+            return llMessagesMap.get(nonTerminal);
 
-        return syntaxMessageConfig.getDefaultMessage();
+        return syntaxMessageConfig.getSyntaxMessagesLLConfig().getDefaultMessage();
     }
 
     /**
-     * Get message config
+     * Get LR message based on error key and terminal
+     * @param errorKey
+     * @param terminal
+     * @return custom message
+     */
+    public String getLRMessage(String errorKey, String terminal) {
+
+        String key = getMessageKey(errorKey, terminal);
+        if(lrMessagesMap.containsKey(key))
+            return lrMessagesMap.get(key);
+
+        if(lrMessagesMap.containsKey(errorKey))
+            return lrMessagesMap.get(errorKey);
+
+        return syntaxMessageConfig.getSyntaxMessagesLRConfig().getDefaultMessage();
+    }
+
+    /**
+     * Get message config for LL parser
      * @return message config
      */
-    public SyntaxMessagesConfig getSyntaxMessageConfig() {
-        return syntaxMessageConfig;
+    public SyntaxMessagesLLConfig getLLSyntaxMessageConfig() {
+        return syntaxMessageConfig.getSyntaxMessagesLLConfig();
+    }
+
+    /**
+     * Get message config for LR parser
+     * @return message config
+     */
+    public SyntaxMessagesLRConfig getLRSyntaxMessageConfig() {
+        return syntaxMessageConfig.getSyntaxMessagesLRConfig();
     }
 }

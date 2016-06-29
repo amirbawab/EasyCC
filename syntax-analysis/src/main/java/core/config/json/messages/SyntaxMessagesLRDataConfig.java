@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SyntaxMessagesDataConfig {
+public class SyntaxMessagesLRDataConfig {
 
-    @JsonProperty("non-terminal")
-    private String nonTerminal;
+    @JsonProperty("error-key")
+    private String errorKey;
 
     @JsonProperty("terminal")
     private String terminal;
@@ -15,8 +15,8 @@ public class SyntaxMessagesDataConfig {
     @JsonProperty("message")
     private String message;
 
-    public String getNonTerminal() {
-        return nonTerminal;
+    public String getErrorKey() {
+        return errorKey;
     }
 
     public String getTerminal() {

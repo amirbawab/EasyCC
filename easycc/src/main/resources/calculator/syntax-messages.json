@@ -1,4 +1,14 @@
 {
-  "default": "Error found at line ${lexical.line} column ${lexical.column}",
-  "messages": []
+  "LL": {
+    "default": "Error found",
+    "messages": []
+  },
+  "LR": {
+    "default": "Error found",
+    "messages": {
+      "error-key": "OP",
+      "terminal": "integer",
+      "message": "Expecting an operator instead of an integer"
+    }
+  }
 }

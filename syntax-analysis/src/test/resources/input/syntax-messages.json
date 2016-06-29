@@ -1,23 +1,25 @@
 {
-  "default": "Default message",
-  "messages": [
-    {
-      "non-terminal" : "one",
-      "message": "message one non-terminal"
-    },
-    {
-      "non-terminal": "two",
-      "terminal" : "two_prime",
-      "message" : "message two non-terminal terminal"
-    },
-    {
-      "non-terminal" : "three",
-      "message": "message three non-terminal"
-    },
-    {
-      "non-terminal": "three",
-      "terminal" : "three_prime",
-      "message" : "message three non-terminal terminal"
-    }
-  ]
+  "LL": {
+    "default": "Default message",
+    "messages": [
+      {
+        "non-terminal" : "one",
+        "message": "message one non-terminal"
+      },
+      {
+        "non-terminal": "two",
+        "terminal" : "two_prime",
+        "message" : "message two non-terminal terminal"
+      },
+      {
+        "non-terminal" : "three",
+        "message": "message three non-terminal"
+      },
+      {
+        "non-terminal": "three",
+        "terminal" : "three_prime",
+        "message" : "message three non-terminal terminal"
+      }
+    ]
+  }
 }

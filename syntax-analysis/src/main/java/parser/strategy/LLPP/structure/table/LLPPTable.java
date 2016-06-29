@@ -100,7 +100,7 @@ public class LLPPTable {
         }
 
         // Create entry for the default message
-        messageCellMap.put(SyntaxConfig.getInstance().getSyntaxMessageConfig().getDefaultMessage(), 0);
+        messageCellMap.put(SyntaxConfig.getInstance().getLLSyntaxMessageConfig().getDefaultMessage(), 0);
 
         // Put error message for all the remaining cells
         for(String nonTerminal : grammar.getNonTerminals()) {
@@ -114,7 +114,7 @@ public class LLPPTable {
                     if(terminal.equals(SyntaxHelper.END_OF_STACK) || grammar.getFollowSetMap().get(nonTerminal).contains(terminal))
                         decision = LLPPErrorCell.POP;
 
-                    String message = SyntaxConfig.getInstance().getMessage(nonTerminal, terminal);
+                    String message = SyntaxConfig.getInstance().getLLMessage(nonTerminal, terminal);
                     messageCellMap.putIfAbsent(message, messageCellMap.size());
 
                     table[nonTerminalIndexMap.get(nonTerminal)][terminalIndexMap.get(terminal)] = new LLPPErrorCell(decision, message);

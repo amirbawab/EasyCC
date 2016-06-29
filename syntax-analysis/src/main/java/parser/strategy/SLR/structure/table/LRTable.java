@@ -116,7 +116,7 @@ public class LRTable {
         }
 
         // Create entry for the default message
-        messageCellMap.put(SyntaxConfig.getInstance().getSyntaxMessageConfig().getDefaultMessage(), messageCellMap.size());
+        messageCellMap.put(SyntaxConfig.getInstance().getLRSyntaxMessageConfig().getDefaultMessage(), messageCellMap.size());
 
         // Prepare error recovery map
         for(int nodeId=0; nodeId < action.length; nodeId++){

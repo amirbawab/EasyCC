@@ -19,7 +19,7 @@ public class SyntaxHelper {
      * @return message
      */
     public static String tokenMessage(NonTerminalToken nonTerminalToken, AbstractToken lexicalToken) {
-        return LexicalHelper.messageReplace(SyntaxConfig.getInstance().getMessage(nonTerminalToken.getValue(), lexicalToken.getToken()), lexicalToken);
+        return LexicalHelper.messageReplace(SyntaxConfig.getInstance().getLLMessage(nonTerminalToken.getValue(), lexicalToken.getToken()), lexicalToken);
     }
 
     /**
@@ -28,6 +28,6 @@ public class SyntaxHelper {
      * @return message
      */
     public static String tokenDefaultMessage(AbstractToken lexicalToken) {
-        return LexicalHelper.messageReplace(SyntaxConfig.getInstance().getSyntaxMessageConfig().getDefaultMessage(), lexicalToken);
+        return LexicalHelper.messageReplace(SyntaxConfig.getInstance().getLLSyntaxMessageConfig().getDefaultMessage(), lexicalToken);
     }
 }
