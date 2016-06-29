@@ -1,6 +1,7 @@
 package parser.strategy.LLPP;
 
 import grammar.Grammar;
+import helper.LexicalHelper;
 import helper.SyntaxHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -216,7 +217,7 @@ public class LLPP extends ParseStrategy {
 
                         if(phase == 1) {
                             // New data entry
-                            llppData.addErrorEntry(stackSyntax, lexicalToken, SyntaxHelper.tokenMessageLL(nonTerminalToken, lexicalToken));
+                            llppData.addErrorEntry(stackSyntax, lexicalToken, LexicalHelper.messageReplace(errorCell.getMessage(), lexicalToken));
                         }
 
                         // Check decision

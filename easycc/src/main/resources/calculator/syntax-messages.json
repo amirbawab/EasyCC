@@ -1,7 +1,13 @@
 {
   "LL": {
     "default": "Error found",
-    "messages": []
+    "messages": [
+      {
+        "non-terminal": "M",
+        "terminal": "integer",
+        "message": "Expecting an operator instead of ${lexical.value}"
+      }
+    ]
   },
   "LR": {
     "default": "Error found",
