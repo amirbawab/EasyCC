@@ -208,16 +208,15 @@ public class SLR extends ParseStrategy {
                     // Get error cell
                     LRErrorCell errorCell = (LRErrorCell) actionCell;
 
+                    if(phase == 1) {
+                        lrData.addErrorEntry(parserStack, lexicalToken, LexicalHelper.messageReplace(errorCell.getMessage(), lexicalToken));
+                    }
+
                     // Keep popping until finding goto options with entries in the map
                     // Worst case, the root node will stay in the stack
                     while(table.getErrorRecoveryMapList().get(topEntry.getId()).isEmpty()) {
                         parserStack.pop();
                         topEntry = parserStack.peek().getNode();
-                    }
-
-                    if(phase == 1) {
-                        // New data entry
-                        lrData.addErrorEntry(parserStack, lexicalToken, LexicalHelper.messageReplace(errorCell.getMessage(), lexicalToken));
                     }
 
                     // Keep scanning until finding a token in the map
@@ -235,10 +234,6 @@ public class SLR extends ParseStrategy {
                         parserStack.push(syntaxEntry);
                     }
 
-                    if (phase == 1) {
-                        // New data entry
-                        lrData.addErrorEntry(parserStack, lexicalToken, "Error found");
-                    }
                     error = true;
                 }
             }

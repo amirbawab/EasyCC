@@ -8,7 +8,7 @@
     "messages": [
         {
           "error-key": "OP",
-          "terminal": "integer",
+          "terminal": "plus",
           "message": "Expecting an operator instead of an integer"
         }
       ]
