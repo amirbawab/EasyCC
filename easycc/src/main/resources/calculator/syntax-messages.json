@@ -5,10 +5,12 @@
   },
   "LR": {
     "default": "Error found",
-    "messages": {
-      "error-key": "OP",
-      "terminal": "integer",
-      "message": "Expecting an operator instead of an integer"
-    }
+    "messages": [
+        {
+          "error-key": "OP",
+          "terminal": "integer",
+          "message": "Expecting an operator instead of an integer"
+        }
+      ]
   }
 }
