@@ -3,6 +3,7 @@ package parser.strategy.SLR;
 import grammar.Grammar;
 import helper.LexicalHelper;
 import helper.SyntaxHelper;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import parser.strategy.ParseStrategy;
@@ -258,6 +259,7 @@ public class SLR extends ParseStrategy {
      * Check if the grammar is LR
      * Cond 1: Start non-terminal should have only one production of the form A -> B
      * Cond 2: No other production should call the start non-terminal
+     * Cond 3: Action tokens should only be placed at the end
      * TODO Check if action tokens should be allowed in initial production [Cond 1]
      */
     public void validate() {
@@ -270,12 +272,21 @@ public class SLR extends ParseStrategy {
             throw new SLRException(message);
         }
 
-        // Cond 2
         for(List<List<AbstractSyntaxToken>> productionList : grammar.getProductions().values()) {
             for(List<AbstractSyntaxToken> production : productionList) {
                 for(AbstractSyntaxToken syntaxToken : production) {
+
+                    // Cond 2
                     if(syntaxToken instanceof NonTerminalToken && syntaxToken.getValue().equals(grammar.getStart())) {
                         String message = "No production should include the starting non-terminal: " + grammar.getStart();
+                        l.error(message);
+                        throw new SLRException(message);
+                    }
+
+                    // Cond 3
+                    if(syntaxToken instanceof ActionToken && syntaxToken != production.get(production.size()-1)) {
+                        String message = "Action token should be placed at the end of the production: \n" +
+                                grammar.getStart() + " -> " + StringUtils.join(production, " ");
                         l.error(message);
                         throw new SLRException(message);
                     }
