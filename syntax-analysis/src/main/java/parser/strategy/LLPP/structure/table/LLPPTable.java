@@ -2,6 +2,7 @@ package parser.strategy.LLPP.structure.table;
 
 import com.bethecoder.ascii_table.ASCIITable;
 import core.config.SyntaxConfig;
+import core.config.json.messages.SyntaxMessagesLLDataConfig;
 import grammar.Grammar;
 import helper.SyntaxHelper;
 import org.apache.commons.lang3.StringUtils;
@@ -101,6 +102,9 @@ public class LLPPTable {
 
         // Create entry for the default message
         messageCellMap.put(SyntaxConfig.getInstance().getLLSyntaxMessageConfig().getDefaultMessage(), 0);
+        for(SyntaxMessagesLLDataConfig message : SyntaxConfig.getInstance().getLLSyntaxMessageConfig().getMessages()) {
+            messageCellMap.putIfAbsent(message.getMessage(), messageCellMap.size());
+        }
 
         // Put error message for all the remaining cells
         for(String nonTerminal : grammar.getNonTerminals()) {
@@ -115,8 +119,6 @@ public class LLPPTable {
                         decision = LLPPErrorCell.POP;
 
                     String message = SyntaxConfig.getInstance().getLLMessage(nonTerminal, terminal);
-                    messageCellMap.putIfAbsent(message, messageCellMap.size());
-
                     table[nonTerminalIndexMap.get(nonTerminal)][terminalIndexMap.get(terminal)] = new LLPPErrorCell(decision, message);
                 }
             }

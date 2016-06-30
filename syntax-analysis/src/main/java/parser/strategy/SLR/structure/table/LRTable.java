@@ -2,6 +2,7 @@ package parser.strategy.SLR.structure.table;
 
 import com.bethecoder.ascii_table.ASCIITable;
 import core.config.SyntaxConfig;
+import core.config.json.messages.SyntaxMessagesLRDataConfig;
 import helper.SyntaxHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -122,6 +123,9 @@ public class LRTable {
 
         // Create entry for the default message
         messageCellMap.put(SyntaxConfig.getInstance().getLRSyntaxMessageConfig().getDefaultMessage(), messageCellMap.size());
+        for(SyntaxMessagesLRDataConfig message : SyntaxConfig.getInstance().getLRSyntaxMessageConfig().getMessages()) {
+            messageCellMap.putIfAbsent(message.getMessage(), messageCellMap.size());
+        }
 
         // Prepare error recovery map
         for(int nodeId=0; nodeId < action.length; nodeId++){
@@ -150,7 +154,6 @@ public class LRTable {
                 for(ErrorKeyToken errorKeyToken : node.getErrorKeyTokens()) {
                     if (action[nodeId][terminalId] == null) {
                         String message = SyntaxConfig.getInstance().getLRMessage(errorKeyToken.getValue(), terminal);
-                        messageCellMap.putIfAbsent(message, messageCellMap.size());
                         action[nodeId][terminalId] = new LRErrorCell(message);
                     } else if (action[nodeId][terminalId] instanceof LRErrorCell) {
                         l.warn("More than one error message is defined for the same node:terminal combination: " + node.getId() + ":" + terminal + ". First message will be used.");
@@ -224,7 +227,7 @@ public class LRTable {
                     data[row][col + 1] = "S" + ((LRShiftCell)action[row][col]).getNodeId();
 
                 } else if(action[row][col] instanceof LRErrorCell) {
-                    data[row][col + 1] = "e" + messageCellMap.get(((LRErrorCell) action[row][col]).getMessage());
+                    data[row][col + 1] = "E" + messageCellMap.get(((LRErrorCell) action[row][col]).getMessage());
                 }
             }
         }
@@ -292,15 +295,15 @@ public class LRTable {
         String output = "ACTION TABLE:\n";
         output += ASCIITable.getInstance().getTable(prettifyActionHeader(), prettifyActionData());
 
-        output += "GOTO TABLE:\n";
+        output += "\nGOTO TABLE:\n";
         output += ASCIITable.getInstance().getTable(prettifyGoToHeader(), prettifyGoToData());
 
-        output += "REDUCE RULES:\n";
+        output += "\nREDUCE RULES:\n";
         for(LRReduceCell reduceCell : reduceCellList) {
             output += reduceCell.getRuleId() + ": " + reduceCell.getItem().getLHS() + " => " + StringUtils.join(reduceCell.getItem().getRule(), " ") + "\n";
         }
 
-        output += "ERRORS:\n";
+        output += "\nERRORS:\n";
         for(String message : messageCellMap.keySet()) {
             output += messageCellMap.get(message) + ": " + message + "\n";
         }

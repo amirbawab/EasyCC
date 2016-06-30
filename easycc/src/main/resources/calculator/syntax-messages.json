@@ -15,7 +15,7 @@
         {
           "error-key": "OP",
           "terminal": "plus",
-          "message": "Expecting an operator instead of an integer"
+          "message": "Expecting an integer instead of ${lexical.value}"
         }
       ]
   }
