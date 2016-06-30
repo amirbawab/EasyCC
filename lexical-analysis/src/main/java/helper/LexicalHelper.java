@@ -21,6 +21,7 @@ public class LexicalHelper {
     // Define End Of Line and End Of File symbols
     public static final char EOL = '\n';
     public static final char EOF = '\0';
+    public static final String END_OF_INPUT = "$";
 
     // Input regex
     private static final String LEXICAL_INPUT_REGEX = "\\$\\{(lexical(:?\\.(?:next|previous))*\\.(?:token|value|line|column))\\}";
