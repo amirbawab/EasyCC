@@ -46,6 +46,9 @@ public class LRActionToken extends ActionToken {
     public LRActionToken(LRActionToken lrActionToken) {
         super(lrActionToken);
         abstractSyntaxToken = lrActionToken.abstractSyntaxToken;
+        name = lrActionToken.name;
+        root = lrActionToken.root;
+        children = lrActionToken.children;
     }
 
     public AbstractSyntaxToken getAbstractSyntaxToken() {
