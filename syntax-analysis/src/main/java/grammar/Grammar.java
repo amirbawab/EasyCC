@@ -396,7 +396,10 @@ public class Grammar {
                         terminals.add(token.getValue());
 
                     } else if(current.charAt(0) == '#' && current.charAt(current.length()-1) == '#') {
-                        token = SyntaxTokenFactory.createActionToken(current);
+                        token = SyntaxTokenFactory.createLLActionToken(current);
+
+                    } else if(current.charAt(0) == '%' && current.charAt(current.length()-1) == '%') {
+                        token = SyntaxTokenFactory.createLRActionToken(current);
 
                     } else if(current.charAt(0) == '!' && current.charAt(current.length()-1) == '!') {
                         token = SyntaxTokenFactory.createErrorToken(current);

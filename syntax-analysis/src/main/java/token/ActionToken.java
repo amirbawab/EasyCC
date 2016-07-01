@@ -4,7 +4,7 @@ package token;
  * Class representing an action token
  */
 
-public class ActionToken extends AbstractSyntaxToken {
+public abstract class ActionToken extends AbstractSyntaxToken {
 
     private boolean stable;
     public ActionToken(String value) {
@@ -17,6 +17,7 @@ public class ActionToken extends AbstractSyntaxToken {
      */
     public ActionToken(ActionToken abstractSyntaxToken) {
         super(abstractSyntaxToken);
+        stable = abstractSyntaxToken.stable;
     }
 
     /**
@@ -38,10 +39,5 @@ public class ActionToken extends AbstractSyntaxToken {
     @Override
     public String getValue() {
         return getOriginalValue().substring(1, getOriginalValue().length()-1);
-    }
-
-    @Override
-    public AbstractSyntaxToken copy() {
-        return new ActionToken(this);
     }
 }

@@ -284,7 +284,7 @@ public class SLR extends ParseStrategy {
                     }
 
                     // Cond 3
-                    if(syntaxToken instanceof ActionToken && syntaxToken != production.get(production.size()-1)) {
+                    if(syntaxToken instanceof LRActionToken && syntaxToken != production.get(production.size()-1)) {
                         String message = "Action token should be placed at the end of the production: \n" +
                                 grammar.getStart() + " -> " + StringUtils.join(production, " ");
                         l.error(message);

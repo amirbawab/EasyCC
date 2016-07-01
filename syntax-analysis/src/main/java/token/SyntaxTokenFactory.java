@@ -23,12 +23,21 @@ public class SyntaxTokenFactory {
     }
 
     /**
-     * Create an action syntax token
+     * Create an LL action syntax token
      * @param value
      * @return A new action syntax token
      */
-    public static ActionToken createActionToken(String value) {
-        return new ActionToken(value);
+    public static ActionToken createLLActionToken(String value) {
+        return new LLActionToken(value);
+    }
+
+    /**
+     * Create an LR action syntax token
+     * @param value
+     * @return A new action syntax token
+     */
+    public static ActionToken createLRActionToken(String value) {
+        return new LRActionToken(value);
     }
 
     /**

@@ -123,11 +123,11 @@ public class LLPP extends ParseStrategy {
                 // Store top
                 AbstractSyntaxToken syntaxToken = stackSyntax.peek();
 
-                if(syntaxToken instanceof ActionToken) {
+                if(syntaxToken instanceof LLActionToken) {
 
                     // Call action
                     if(parseStrategyListener != null) {
-                        ((ActionToken) syntaxToken).setStable(stable);
+                        ((LLActionToken) syntaxToken).setStable(stable);
                         parseStrategyListener.actionCall(syntaxToken, lexicalToken.getPrevious(), phase);
                     }
 
