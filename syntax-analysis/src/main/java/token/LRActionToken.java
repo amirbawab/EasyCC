@@ -19,8 +19,11 @@ public class LRActionToken extends ActionToken {
         // Init components
         children = new ArrayList<>();
 
+        // Trim value
+        String trimValue = getValue();
+
         // Match the pattern name/root/child1,child2,...
-        String[] parts = value.split("/");
+        String[] parts = trimValue.split("/", -1);
         if(parts.length != 3) {
             throw new RuntimeException("Action token: " + value + " should be of the form %name/root/child1,child2,...%");
         }
@@ -31,7 +34,9 @@ public class LRActionToken extends ActionToken {
         try {
             root = Integer.parseInt(parts[1]);
             for (String child : parts[2].split(",")) {
-                children.add(Integer.parseInt(child));
+                if(!child.isEmpty()) {
+                    children.add(Integer.parseInt(child));
+                }
             }
         } catch (NumberFormatException e) {
             throw new RuntimeException("Action token root and children should be of type integer");
