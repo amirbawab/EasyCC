@@ -172,7 +172,11 @@ public class SLR extends ParseStrategy {
 
                         } else if(rule.get(i) instanceof LRActionToken) {
                             LRActionToken actionToken = (LRActionToken) rule.get(i);
+                            actionToken.setStable(stable);
                             actionToken.setNonTerminal(parentToken);
+
+                            // Reset stability
+                            stable = true;
                         }
                     }
 
@@ -238,6 +242,7 @@ public class SLR extends ParseStrategy {
                         parserStack.push(syntaxEntry);
                     }
 
+                    stable = false;
                     error = true;
                 }
             }
@@ -263,7 +268,6 @@ public class SLR extends ParseStrategy {
      * Cond 1: Start non-terminal should have only one production of the form A -> B
      * Cond 2: No other production should call the start non-terminal
      * Cond 3: Action tokens should only be placed at the end
-     * TODO Check if action tokens should be allowed in initial production [Cond 1]
      */
     public void validate() {
 
