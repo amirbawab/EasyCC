@@ -206,7 +206,7 @@ public class LLPP extends ParseStrategy {
                             if(! (ruleCopy.get(i) instanceof EpsilonToken)) {
                                 stackSyntax.push(ruleCopy.get(i));
                             }
-                            nonTerminalToken.addChild(ruleCopy.get(i));
+                            nonTerminalToken.getChildren().add(0, ruleCopy.get(i));
                         }
 
                         // Update stability

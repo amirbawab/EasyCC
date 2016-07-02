@@ -244,7 +244,7 @@ public class GuiIntegration implements DevGuiListener {
                 if(currentToken instanceof NonTerminalToken) {
                     NonTerminalToken currentNonTerminal =(NonTerminalToken) currentToken;
 
-                    for (int i=currentNonTerminal.getChildren().size()-1; i >= 0; i--) {
+                    for (int i=0; i < currentNonTerminal.getChildren().size(); i++) {
 
                         // Get token
                         AbstractSyntaxToken token = currentNonTerminal.getChildren().get(i);

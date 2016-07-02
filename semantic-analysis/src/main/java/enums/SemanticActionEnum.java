@@ -6,10 +6,7 @@ package enums;
  */
 
 public enum SemanticActionEnum {
-    OP("op"),
-    INTEGER("integer"),
-    RESULT("result"),
-    SYMBOL("symb")
+    PRINT("print")
     ;
 
     private String name;

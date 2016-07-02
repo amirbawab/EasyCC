@@ -10,6 +10,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import reflection.ObjectMethod;
 import token.ActionToken;
+import token.LLActionToken;
+import token.LRActionToken;
 import utils.StringUtilsPlus;
 
 import java.lang.reflect.InvocationTargetException;
@@ -92,9 +94,14 @@ public class CodeHandler {
      */
     public void handleCode(ActionToken actionToken, int phase, SemanticContext semanticContext, SymbolTableTree symbolTableTree) {
 
-        String key = StringUtilsPlus.generateMethodKey(actionToken.getValue(), phase);
+        String key = null;
+        if(actionToken instanceof LLActionToken) {
+            key = StringUtilsPlus.generateMethodKey(actionToken.getValue(), phase);
+        } else if(actionToken instanceof LRActionToken) {
+            key = StringUtilsPlus.generateMethodKey(((LRActionToken) actionToken).getName(), phase);
+        }
 
-        if(codeMethodMap.containsKey(key)) {
+        if(key != null && codeMethodMap.containsKey(key)) {
             ObjectMethod objectMethod = codeMethodMap.get(key);
             boolean codeClassStability = objectMethod.getObject().getClass().getAnnotation(Code.class).stableOnly();
 

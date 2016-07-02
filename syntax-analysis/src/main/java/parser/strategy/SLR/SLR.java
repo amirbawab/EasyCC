@@ -76,6 +76,9 @@ public class SLR extends ParseStrategy {
         // Int phases
         int phases = 1;
 
+        // Reset tree root
+        treeRoot = null;
+
         // If listener is set then update the number of parse phases
         if(parseStrategyListener != null) {
 
@@ -155,29 +158,38 @@ public class SLR extends ParseStrategy {
 
                     // Get rule
                     List<AbstractSyntaxToken> rule = reduceCell.getItem().getRuleCopy();
+
+                    // Prepare action token
+                    LRActionToken actionToken = null;
+
                     for(int i=rule.size()-1; i >= 0; --i) {
                         if(rule.get(i) instanceof NonTerminalToken) {
                             LRSyntaxEntry syntaxEntry = (LRSyntaxEntry) parserStack.pop();
                             RHSEntries.add(syntaxEntry);
-                            parentToken.addChild(syntaxEntry.getSyntaxToken());
+                            parentToken.getChildren().add(0, syntaxEntry.getSyntaxToken());
 
                         } else if(rule.get(i) instanceof TerminalToken) {
                             LRLexicalEntry lexicalEntry = (LRLexicalEntry) parserStack.pop();
                             RHSEntries.add(lexicalEntry);
                             ((TerminalToken) rule.get(i)).setLexicalToken(lexicalEntry.getLexicalToken());
-                            parentToken.addChild(rule.get(i));
+                            parentToken.getChildren().add(0, rule.get(i));
 
                         } else if(rule.get(i) instanceof EpsilonToken) {
-                            parentToken.addChild(rule.get(i));
+                            parentToken.getChildren().add(0, rule.get(i));
 
                         } else if(rule.get(i) instanceof LRActionToken) {
-                            LRActionToken actionToken = (LRActionToken) rule.get(i);
+                            actionToken = (LRActionToken) rule.get(i);
                             actionToken.setStable(stable);
                             actionToken.setNonTerminal(parentToken);
 
                             // Reset stability
                             stable = true;
                         }
+                    }
+
+                    // Call action
+                    if(actionToken != null) {
+                        parseStrategyListener.actionCall(actionToken, phase);
                     }
 
                     // Get the top entry

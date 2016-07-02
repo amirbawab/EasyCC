@@ -22,24 +22,34 @@ public class LRActionToken extends ActionToken {
         // Trim value
         String trimValue = getValue();
 
-        // Match the pattern name/root/child1,child2,...
         String[] parts = trimValue.split("/", -1);
-        if(parts.length != 3) {
-            throw new RuntimeException("Action token: " + value + " should be of the form %name/root/child1,child2,...%");
-        }
 
-        // Store the different parts
-        name = parts[0];
+        // Match the pattern %name%
+        if(parts.length == 1) {
 
-        try {
-            root = Integer.parseInt(parts[1]);
-            for (String child : parts[2].split(",")) {
-                if(!child.isEmpty()) {
-                    children.add(Integer.parseInt(child));
-                }
+            // Store action name
+            name = parts[0];
+            root = 0;
+        } else {
+
+            // Match the pattern %name/root/child1,child2,...%
+            if (parts.length != 3) {
+                throw new RuntimeException("Action token: " + value + " should be of the form %name/root/child1,child2,...%");
             }
-        } catch (NumberFormatException e) {
-            throw new RuntimeException("Action token root and children should be of type integer");
+
+            // Store the different parts
+            name = parts[0];
+
+            try {
+                root = Integer.parseInt(parts[1]);
+                for (String child : parts[2].split(",")) {
+                    if (!child.isEmpty()) {
+                        children.add(Integer.parseInt(child));
+                    }
+                }
+            } catch (NumberFormatException e) {
+                throw new RuntimeException("Action token root and children should be of type integer");
+            }
         }
     }
 

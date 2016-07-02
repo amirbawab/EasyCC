@@ -32,14 +32,6 @@ public class NonTerminalToken extends AbstractSyntaxToken {
     }
 
     /**
-     * Add a child syntax token
-     * @param abstractSyntaxToken
-     */
-    public void addChild(AbstractSyntaxToken abstractSyntaxToken) {
-        children.add(abstractSyntaxToken);
-    }
-
-    /**
      * Get children syntax tokens
      * @return children syntax tokens
      */

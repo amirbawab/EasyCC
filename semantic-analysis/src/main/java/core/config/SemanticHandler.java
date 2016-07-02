@@ -139,7 +139,7 @@ public class SemanticHandler {
 
             if(actionModel != null) {
                 modelMethodMap.put(actionModel.value().getName(), method);
-                l.info("Model method: " + method.getName() + " - Semantic: " + actionModel.value() + ", was registered");
+                l.info("Model method: " + method.getName() + " - Semantic: " + actionModel.value() + ", was registered!");
             }
         }
 
@@ -174,7 +174,7 @@ public class SemanticHandler {
      * @param phase
      */
     public void handleAction(ActionToken actionToken, int phase) {
-        String key = StringUtilsPlus.generateMethodKey(actionToken.getValue(), phase);
+        String key = null;
 
         try {
 
@@ -190,6 +190,9 @@ public class SemanticHandler {
 
                 // Check the type of parser
                 if(actionToken instanceof LLActionToken) {
+
+                    // Set key
+                    key = StringUtilsPlus.generateMethodKey(actionToken.getValue(), phase);
 
                     LLActionToken llActionToken = (LLActionToken) actionToken;
 
@@ -209,14 +212,12 @@ public class SemanticHandler {
                         entry.setModel(model);
                     }
 
-                    // Prepare a new semantic context
-                    semanticContext.setModel(model);
-                    semanticContext.setEntry(entry);
-                    semanticContext.setStable(actionToken.isStable());
-
                 } else if(actionToken instanceof LRActionToken) {
 
                     LRActionToken lrActionToken = (LRActionToken) actionToken;
+
+                    // Set key
+                    key = StringUtilsPlus.generateMethodKey(lrActionToken.getName(), phase);
 
                     // Create the corresponding model
                     if (modelMethodMap.containsKey(lrActionToken.getName())) {
@@ -230,30 +231,16 @@ public class SemanticHandler {
                          NonTerminalToken LHS = lrActionToken.getNonTerminalToken();
 
                         // Prepare lexical node
-                        LexicalNode rootLexicalNode = new LexicalNode();
+                        LexicalNode rootLexicalNode;
 
                         // Set root lexical token
                         AbstractSyntaxToken rootLexicalToken = LHS.getChildren().get(lrActionToken.getRoot());
                         if(rootLexicalToken instanceof TerminalToken) {
+                            rootLexicalNode = new LexicalNode();
                             rootLexicalNode.setLexicalToken((LexicalToken) ((TerminalToken) rootLexicalToken).getLexicalToken());
 
                         } else if(rootLexicalToken instanceof NonTerminalToken) {
-                            AbstractSyntaxToken tmpToken = rootLexicalToken;
-                            while(tmpToken instanceof NonTerminalToken) {
-                                NonTerminalToken nonTerminalToken = (NonTerminalToken) tmpToken;
-                                if(nonTerminalToken.getChildren().size() == 1) {
-                                    tmpToken = nonTerminalToken.getChildren().get(0);
-                                } else {
-                                    break;
-                                }
-                            }
-
-                            // If the series ended in a Terminal token
-                            if(tmpToken instanceof TerminalToken) {
-                                rootLexicalNode.setLexicalToken((LexicalToken) ((TerminalToken) tmpToken).getLexicalToken());
-                            } else {
-                                throw new RuntimeException("Action token: " + actionToken.getValue() + ", root token is a series of non-terminals that did not end in a terminal");
-                            }
+                            rootLexicalNode = ((NonTerminalToken) rootLexicalToken).getLexicalNode();
 
                         } else {
                             throw new RuntimeException("Action token: " + actionToken.getValue() + ", root token has to be a terminal or a series of non-terminal ending in a terminal");
@@ -280,6 +267,11 @@ public class SemanticHandler {
                     }
                 }
 
+                // Prepare a new semantic context
+                semanticContext.setModel(model);
+                semanticContext.setEntry(entry);
+                semanticContext.setStable(actionToken.isStable());
+
                 // Add to the queue for additional phases
                 semanticContextsQueue.offer(semanticContext);
             } else {
@@ -290,7 +282,7 @@ public class SemanticHandler {
             }
 
             // Check if semantic action is registered
-            if(actionMethodMap.containsKey(key)) {
+            if(key != null && actionMethodMap.containsKey(key)) {
                 ObjectMethod objectMethod = actionMethodMap.get(key);
                 boolean actionClassStability = objectMethod.getObject().getClass().getAnnotation(SemanticAction.class).stableOnly();
 
