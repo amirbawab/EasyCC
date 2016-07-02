@@ -1,11 +1,10 @@
 package parser.strategy;
 
-import token.AbstractSyntaxToken;
-import token.AbstractToken;
+import token.ActionToken;
 
 public interface ParseStrategyListener {
     void init();
-    void actionCall(AbstractSyntaxToken syntaxToken, AbstractToken lexicalToken, int phase);
+    void actionCall(ActionToken actionToken, int phase);
     int getParsePhase();
     void logSymbolTables();
 }

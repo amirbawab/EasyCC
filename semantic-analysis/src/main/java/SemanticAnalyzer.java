@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import parser.strategy.ParseStrategyListener;
 import token.AbstractSyntaxToken;
 import token.AbstractToken;
+import token.ActionToken;
 
 public class SemanticAnalyzer {
 
@@ -30,8 +31,8 @@ public class SemanticAnalyzer {
             }
 
             @Override
-            public void actionCall(AbstractSyntaxToken syntaxToken, AbstractToken lexicalToken, int phase) {
-                SemanticHandler.getInstance().handleAction(syntaxToken, lexicalToken, phase);
+            public void actionCall(ActionToken actionToken, int phase) {
+                SemanticHandler.getInstance().handleAction(actionToken, phase);
             }
 
             @Override

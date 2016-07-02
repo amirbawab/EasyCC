@@ -1,9 +1,6 @@
 package core.models;
 
-import token.AbstractToken;
-
-import java.util.ArrayList;
-import java.util.List;
+import token.structure.LexicalNode;
 
 /**
  * This class represents an Abstract Syntax Tree model which allows having a tree model of the
@@ -15,18 +12,13 @@ import java.util.List;
  */
 
 public class ASTModel extends GenericModel {
-    private AbstractToken lexicalToken;
-    protected List<ASTModel> childrenModels;
+    private LexicalNode lexicalNode;
 
-    public ASTModel() {
-        childrenModels = new ArrayList<>();
+    public LexicalNode getLexicalNode() {
+        return lexicalNode;
     }
 
-    public AbstractToken getLexicalToken() {
-        return lexicalToken;
-    }
-
-    public void setLexicalToken(AbstractToken lexicalToken) {
-        this.lexicalToken = lexicalToken;
+    public void setLexicalNode(LexicalNode lexicalNode) {
+        this.lexicalNode = lexicalNode;
     }
 }

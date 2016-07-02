@@ -2,7 +2,6 @@ package parser.strategy.SLR;
 
 import grammar.Grammar;
 import helper.LexicalHelper;
-import helper.SyntaxHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -170,6 +169,10 @@ public class SLR extends ParseStrategy {
 
                         } else if(rule.get(i) instanceof EpsilonToken) {
                             parentToken.addChild(rule.get(i));
+
+                        } else if(rule.get(i) instanceof LRActionToken) {
+                            LRActionToken actionToken = (LRActionToken) rule.get(i);
+                            actionToken.setNonTerminal(parentToken);
                         }
                     }
 

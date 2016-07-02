@@ -5,6 +5,7 @@ import core.annotations.ActionModel;
 import core.annotations.ParsePhase;
 import core.annotations.SemanticAction;
 import core.annotations.SymbolTableEntry;
+import core.models.ASTModel;
 import core.models.DataModel;
 import core.models.GenericModel;
 import core.structure.SemanticStack;
@@ -16,9 +17,8 @@ import creator.ModelsFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import reflection.ObjectMethod;
-import token.AbstractSyntaxToken;
-import token.AbstractToken;
-import token.ActionToken;
+import token.*;
+import token.structure.LexicalNode;
 import utils.StringUtilsPlus;
 
 import java.lang.reflect.InvocationTargetException;
@@ -170,40 +170,115 @@ public class SemanticHandler {
 
     /**
      * Handle a semantic action
-     * @param syntaxToken
-     * @param lexicalToken
+     * @param actionToken
      * @param phase
      */
-    public void handleAction(AbstractSyntaxToken syntaxToken, AbstractToken lexicalToken, int phase) {
-        ActionToken actionToken = (ActionToken) syntaxToken;
+    public void handleAction(ActionToken actionToken, int phase) {
         String key = StringUtilsPlus.generateMethodKey(actionToken.getValue(), phase);
 
         try {
+
+            // Common components
             SemanticContext semanticContext;
+            GenericModel model = null;
+            SymbolTableGenericEntry entry = null;
+
             if (phase == 1) {
-                // Create the corresponding model
-                GenericModel model = null;
-                if (modelMethodMap.containsKey(actionToken.getValue())) {
-                    model = (GenericModel) modelMethodMap.get(actionToken.getValue()).invoke(null);
-                }
 
-                // Set corresponding lexical token for data model
-                if (model != null && model instanceof DataModel) {
-                    ((DataModel) model).setLexicalToken(lexicalToken);
-                }
-
-                // Create symbol table entry
-                SymbolTableGenericEntry entry = null;
-                if (entryMethodMap.containsKey(actionToken.getValue())) {
-                    entry = (SymbolTableGenericEntry) entryMethodMap.get(actionToken.getValue()).invoke(null);
-                    entry.setModel(model);
-                }
-
-                // Prepare a new semantic context
+                // In first phase create a semantic context
                 semanticContext = new SemanticContext();
-                semanticContext.setModel(model);
-                semanticContext.setEntry(entry);
-                semanticContext.setStable(actionToken.isStable());
+
+                // Check the type of parser
+                if(actionToken instanceof LLActionToken) {
+
+                    LLActionToken llActionToken = (LLActionToken) actionToken;
+
+                    // Create the corresponding model
+                    if (modelMethodMap.containsKey(actionToken.getValue())) {
+                        model = (GenericModel) modelMethodMap.get(actionToken.getValue()).invoke(null);
+                    }
+
+                    // Set corresponding lexical token for data model
+                    if (model != null && model instanceof DataModel) {
+                        ((DataModel) model).setLexicalToken(llActionToken.getLexicalToken());
+                    }
+
+                    // Create symbol table entry
+                    if (entryMethodMap.containsKey(actionToken.getValue())) {
+                        entry = (SymbolTableGenericEntry) entryMethodMap.get(actionToken.getValue()).invoke(null);
+                        entry.setModel(model);
+                    }
+
+                    // Prepare a new semantic context
+                    semanticContext.setModel(model);
+                    semanticContext.setEntry(entry);
+                    semanticContext.setStable(actionToken.isStable());
+
+                } else if(actionToken instanceof LRActionToken) {
+
+                    LRActionToken lrActionToken = (LRActionToken) actionToken;
+
+                    // Create the corresponding model
+                    if (modelMethodMap.containsKey(lrActionToken.getName())) {
+                        model = (GenericModel) modelMethodMap.get(lrActionToken.getName()).invoke(null);
+                    }
+
+                    // Set corresponding lexical token for data model
+                    if (model != null && model instanceof ASTModel) {
+
+                        // Get LHS
+                         NonTerminalToken LHS = lrActionToken.getNonTerminalToken();
+
+                        // Prepare lexical node
+                        LexicalNode rootLexicalNode = new LexicalNode();
+
+                        // Set root lexical token
+                        AbstractSyntaxToken rootLexicalToken = LHS.getChildren().get(lrActionToken.getRoot());
+                        if(rootLexicalToken instanceof TerminalToken) {
+                            rootLexicalNode.setLexicalToken((LexicalToken) ((TerminalToken) rootLexicalToken).getLexicalToken());
+
+                        } else if(rootLexicalToken instanceof NonTerminalToken) {
+                            AbstractSyntaxToken tmpToken = rootLexicalToken;
+                            while(tmpToken instanceof NonTerminalToken) {
+                                NonTerminalToken nonTerminalToken = (NonTerminalToken) tmpToken;
+                                if(nonTerminalToken.getChildren().size() == 1) {
+                                    tmpToken = nonTerminalToken.getChildren().get(0);
+                                } else {
+                                    break;
+                                }
+                            }
+
+                            // If the series ended in a Terminal token
+                            if(tmpToken instanceof TerminalToken) {
+                                rootLexicalNode.setLexicalToken((LexicalToken) ((TerminalToken) tmpToken).getLexicalToken());
+                            } else {
+                                throw new RuntimeException("Action token: " + actionToken.getValue() + ", root token is a series of non-terminals that did not end in a terminal");
+                            }
+
+                        } else {
+                            throw new RuntimeException("Action token: " + actionToken.getValue() + ", root token has to be a terminal or a series of non-terminal ending in a terminal");
+                        }
+
+                        // Loop on children in action
+                        for(int childId : lrActionToken.getChildren()) {
+                            AbstractSyntaxToken child = LHS.getChildren().get(childId);
+                            if(child instanceof NonTerminalToken) {
+                                rootLexicalNode.getChildren().add(((NonTerminalToken) child).getLexicalNode());
+
+                            } else if(child instanceof TerminalToken) {
+                                LexicalNode terminalLexicalNode = new LexicalNode();
+                                rootLexicalNode.setLexicalToken((LexicalToken) ((TerminalToken) child).getLexicalToken());
+                                rootLexicalNode.getChildren().add(terminalLexicalNode);
+                            } else {
+                                throw new RuntimeException("Action token: " + child.getOriginalValue() + " is neither a terminal nor a non-terminal in " + actionToken.getValue());
+                            }
+                        }
+
+                        // Store root node in model and LHS
+                        ((ASTModel) model).setLexicalNode(rootLexicalNode);
+                        LHS.setLexicalNode(rootLexicalNode);
+                    }
+                }
 
                 // Add to the queue for additional phases
                 semanticContextsQueue.offer(semanticContext);
@@ -227,7 +302,7 @@ public class SemanticHandler {
                 }
 
             } else {
-                l.warn("Action: " + syntaxToken.getValue() + " at Phase: " + phase + " is not handled by any method.");
+                l.warn("Action: " + actionToken.getValue() + " at Phase: " + phase + " is not handled by any method.");
             }
 
             // Call code generation

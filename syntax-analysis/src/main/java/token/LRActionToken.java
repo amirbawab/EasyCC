@@ -8,7 +8,7 @@ import java.util.List;
  */
 
 public class LRActionToken extends ActionToken {
-    private AbstractSyntaxToken abstractSyntaxToken;
+    private NonTerminalToken nonTerminalToken;
     private String name;
     private int root;
     private List<Integer> children;
@@ -45,18 +45,18 @@ public class LRActionToken extends ActionToken {
 
     public LRActionToken(LRActionToken lrActionToken) {
         super(lrActionToken);
-        abstractSyntaxToken = lrActionToken.abstractSyntaxToken;
+        nonTerminalToken = lrActionToken.nonTerminalToken;
         name = lrActionToken.name;
         root = lrActionToken.root;
         children = lrActionToken.children;
     }
 
-    public AbstractSyntaxToken getAbstractSyntaxToken() {
-        return abstractSyntaxToken;
+    public NonTerminalToken getNonTerminalToken() {
+        return nonTerminalToken;
     }
 
-    public void setAbstractSyntaxToken(AbstractSyntaxToken abstractSyntaxToken) {
-        this.abstractSyntaxToken = abstractSyntaxToken;
+    public void setNonTerminal(NonTerminalToken nonTerminalToken) {
+        this.nonTerminalToken = nonTerminalToken;
     }
 
     public String getName() {
