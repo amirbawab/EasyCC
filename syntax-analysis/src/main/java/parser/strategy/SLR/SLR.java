@@ -165,17 +165,20 @@ public class SLR extends ParseStrategy {
                     for(int i=rule.size()-1; i >= 0; --i) {
                         if(rule.get(i) instanceof NonTerminalToken) {
                             LRSyntaxEntry syntaxEntry = (LRSyntaxEntry) parserStack.pop();
-                            RHSEntries.add(syntaxEntry);
+                            RHSEntries.add(0, syntaxEntry);
                             parentToken.getChildren().add(0, syntaxEntry.getSyntaxToken());
 
                         } else if(rule.get(i) instanceof TerminalToken) {
                             LRLexicalEntry lexicalEntry = (LRLexicalEntry) parserStack.pop();
-                            RHSEntries.add(lexicalEntry);
+                            RHSEntries.add(0, lexicalEntry);
                             ((TerminalToken) rule.get(i)).setLexicalToken(lexicalEntry.getLexicalToken());
                             parentToken.getChildren().add(0, rule.get(i));
 
                         } else if(rule.get(i) instanceof EpsilonToken) {
                             parentToken.getChildren().add(0, rule.get(i));
+                            LRSyntaxEntry syntaxEntry = new LRSyntaxEntry();
+                            syntaxEntry.setSyntaxToken(rule.get(i));
+                            RHSEntries.add(0, syntaxEntry);
 
                         } else if(rule.get(i) instanceof LRActionToken) {
                             actionToken = (LRActionToken) rule.get(i);
