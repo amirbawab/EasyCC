@@ -14,6 +14,7 @@ public class LexicalNode {
 
     private LexicalToken lexicalToken;
     private List<LexicalNode> children;
+    private boolean stable = true;
 
     public LexicalNode() {
         children = new ArrayList<>();
@@ -33,5 +34,13 @@ public class LexicalNode {
 
     public void setChildren(List<LexicalNode> children) {
         this.children = children;
+    }
+
+    public boolean isStable() {
+        return stable;
+    }
+
+    public void setStable(boolean stable) {
+        this.stable = stable;
     }
 }

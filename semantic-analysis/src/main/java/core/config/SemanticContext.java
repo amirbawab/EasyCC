@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
 public class SemanticContext {
     private GenericModel model;
     private SymbolTableGenericEntry entry;
-    private boolean stable;
+    private boolean stable = true;
 
     public GenericModel getModel() {
         return model;

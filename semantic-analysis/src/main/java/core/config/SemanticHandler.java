@@ -206,11 +206,8 @@ public class SemanticHandler {
                         ((DataModel) model).setLexicalToken(llActionToken.getLexicalToken());
                     }
 
-                    // Create symbol table entry
-                    if (entryMethodMap.containsKey(actionToken.getValue())) {
-                        entry = (SymbolTableGenericEntry) entryMethodMap.get(actionToken.getValue()).invoke(null);
-                        entry.setModel(model);
-                    }
+                    // Set stability
+                    semanticContext.setStable(actionToken.isStable());
 
                 } else if(actionToken instanceof LRActionToken) {
 
@@ -246,11 +243,22 @@ public class SemanticHandler {
                             throw new RuntimeException("Action token: " + actionToken.getValue() + ", root token has to be a terminal or a series of non-terminal ending in a terminal");
                         }
 
+                        // Check if stable
+                        rootLexicalNode.setStable(lrActionToken.isStable());
+
                         // Loop on children in action
                         for(int childId : lrActionToken.getChildren()) {
                             AbstractSyntaxToken child = LHS.getChildren().get(childId);
                             if(child instanceof NonTerminalToken) {
-                                rootLexicalNode.getChildren().add(((NonTerminalToken) child).getLexicalNode());
+                                NonTerminalToken nonTerminalChild = (NonTerminalToken) child;
+
+                                // If child doesn't have a node
+                                if(nonTerminalChild.getLexicalNode() == null) {
+                                    rootLexicalNode.setStable(false);
+                                } else {
+                                    rootLexicalNode.setStable(rootLexicalNode.isStable() && nonTerminalChild.getLexicalNode().isStable());
+                                }
+                                rootLexicalNode.getChildren().add(nonTerminalChild.getLexicalNode());
 
                             } else if(child instanceof TerminalToken) {
                                 LexicalNode terminalLexicalNode = new LexicalNode();
@@ -261,16 +269,24 @@ public class SemanticHandler {
                             }
                         }
 
+                        // Set stability
+                        semanticContext.setStable(rootLexicalNode.isStable());
+
                         // Store root node in model and LHS
                         ((ASTModel) model).setLexicalNode(rootLexicalNode);
                         LHS.setLexicalNode(rootLexicalNode);
                     }
                 }
 
+                // Create symbol table entry
+                if (entryMethodMap.containsKey(actionToken.getValue())) {
+                    entry = (SymbolTableGenericEntry) entryMethodMap.get(actionToken.getValue()).invoke(null);
+                    entry.setModel(model);
+                }
+
                 // Prepare a new semantic context
                 semanticContext.setModel(model);
                 semanticContext.setEntry(entry);
-                semanticContext.setStable(actionToken.isStable());
 
                 // Add to the queue for additional phases
                 semanticContextsQueue.offer(semanticContext);
