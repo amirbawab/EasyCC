@@ -12,6 +12,7 @@ public class LRActionToken extends ActionToken {
     private String name;
     private int root;
     private List<Integer> children;
+    private final int NONE = -1;
 
     public LRActionToken(String value) {
         super(value);
@@ -29,28 +30,43 @@ public class LRActionToken extends ActionToken {
 
             // Store action name
             name = parts[0];
-            root = 0;
-        } else {
+            root = NONE;
 
-            // Match the pattern %name/root/child1,child2,...%
-            if (parts.length != 3) {
-                throw new RuntimeException("Action token: " + value + " should be of the form %name/root/child1,child2,...%");
+        } else if(parts.length == 2)  {
+            name = parts[0];
+
+            try {
+                root = Integer.parseInt(parts[1]);
+            } catch (NumberFormatException e) {
+                throw new RuntimeException("Action token root should be of type integer: " + value);
             }
+
+        } else if(parts.length == 3) {
 
             // Store the different parts
             name = parts[0];
 
             try {
-                root = Integer.parseInt(parts[1]);
+                if(!parts[1].isEmpty()) {
+                    root = Integer.parseInt(parts[1]);
+                } else {
+                    root = NONE;
+                }
+
                 for (String child : parts[2].split(",")) {
                     if (!child.isEmpty()) {
                         children.add(Integer.parseInt(child));
                     }
                 }
             } catch (NumberFormatException e) {
-                throw new RuntimeException("Action token root and children should be of type integer");
+                throw new RuntimeException("Action token root and children should be of type integer: " + value);
             }
+        } else {
+            throw new RuntimeException("Action token: " + value + " should be of the form %name/root/child1,child2,...%");
         }
+
+        // Set silent if name was not specified
+        setSilent(name.trim().isEmpty());
     }
 
     public LRActionToken(LRActionToken lrActionToken) {

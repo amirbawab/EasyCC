@@ -6,7 +6,12 @@ package token;
 
 public abstract class ActionToken extends AbstractSyntaxToken {
 
+    // Stability marks if a syntax error occurred and can have consequences on the method attached to it
     private boolean stable;
+
+    // Silent actions will be processed but the method attached to it will not execute
+    private boolean silent;
+
     public ActionToken(String value) {
         super(value);
     }
@@ -39,5 +44,13 @@ public abstract class ActionToken extends AbstractSyntaxToken {
     @Override
     public String getValue() {
         return getOriginalValue().substring(1, getOriginalValue().length()-1);
+    }
+
+    public boolean isSilent() {
+        return silent;
+    }
+
+    public void setSilent(boolean silent) {
+        this.silent = silent;
     }
 }

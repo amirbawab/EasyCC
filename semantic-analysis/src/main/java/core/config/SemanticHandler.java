@@ -221,61 +221,67 @@ public class SemanticHandler {
                         model = (GenericModel) modelMethodMap.get(lrActionToken.getName()).invoke(null);
                     }
 
-                    // Set corresponding lexical token for data model
-                    if (model != null && model instanceof ASTModel) {
+                    // Get LHS
+                     NonTerminalToken LHS = lrActionToken.getNonTerminalToken();
 
-                        // Get LHS
-                         NonTerminalToken LHS = lrActionToken.getNonTerminalToken();
+                    // Prepare lexical node
+                    LexicalNode rootLexicalNode;
 
-                        // Prepare lexical node
-                        LexicalNode rootLexicalNode;
-
+                    // If root was set
+                    if(lrActionToken.getRoot() >= 0) {
                         // Set root lexical token
                         AbstractSyntaxToken rootLexicalToken = LHS.getChildren().get(lrActionToken.getRoot());
-                        if(rootLexicalToken instanceof TerminalToken) {
+                        if (rootLexicalToken instanceof TerminalToken) {
                             rootLexicalNode = new LexicalNode();
                             rootLexicalNode.setLexicalToken((LexicalToken) ((TerminalToken) rootLexicalToken).getLexicalToken());
 
-                        } else if(rootLexicalToken instanceof NonTerminalToken) {
+                        } else if (rootLexicalToken instanceof NonTerminalToken) {
                             rootLexicalNode = ((NonTerminalToken) rootLexicalToken).getLexicalNode();
 
                         } else {
                             throw new RuntimeException("Action token: " + actionToken.getValue() + ", root token has to be a terminal or a series of non-terminal ending in a terminal");
                         }
-
-                        // Check if stable
-                        rootLexicalNode.setStable(lrActionToken.isStable());
-
-                        // Loop on children in action
-                        for(int childId : lrActionToken.getChildren()) {
-                            AbstractSyntaxToken child = LHS.getChildren().get(childId);
-                            if(child instanceof NonTerminalToken) {
-                                NonTerminalToken nonTerminalChild = (NonTerminalToken) child;
-
-                                // If child doesn't have a node
-                                if(nonTerminalChild.getLexicalNode() == null) {
-                                    rootLexicalNode.setStable(false);
-                                } else {
-                                    rootLexicalNode.setStable(rootLexicalNode.isStable() && nonTerminalChild.getLexicalNode().isStable());
-                                }
-                                rootLexicalNode.getChildren().add(nonTerminalChild.getLexicalNode());
-
-                            } else if(child instanceof TerminalToken) {
-                                LexicalNode terminalLexicalNode = new LexicalNode();
-                                rootLexicalNode.setLexicalToken((LexicalToken) ((TerminalToken) child).getLexicalToken());
-                                rootLexicalNode.getChildren().add(terminalLexicalNode);
-                            } else {
-                                throw new RuntimeException("Action token: " + child.getOriginalValue() + " is neither a terminal nor a non-terminal in " + actionToken.getValue());
-                            }
-                        }
-
-                        // Set stability
-                        semanticContext.setStable(rootLexicalNode.isStable());
-
-                        // Store root node in model and LHS
-                        ((ASTModel) model).setLexicalNode(rootLexicalNode);
-                        LHS.setLexicalNode(rootLexicalNode);
+                    } else {
+                        rootLexicalNode = new LexicalNode();
                     }
+
+                    // Check if stable
+                    rootLexicalNode.setStable(lrActionToken.isStable());
+
+                    // Loop on children in action
+                    for(int childId : lrActionToken.getChildren()) {
+                        AbstractSyntaxToken child = LHS.getChildren().get(childId);
+                        if(child instanceof NonTerminalToken) {
+                            NonTerminalToken nonTerminalChild = (NonTerminalToken) child;
+
+                            // If child doesn't have a node
+                            if(nonTerminalChild.getLexicalNode() == null) {
+                                rootLexicalNode.setStable(false);
+                            } else {
+                                rootLexicalNode.setStable(rootLexicalNode.isStable() && nonTerminalChild.getLexicalNode().isStable());
+                            }
+                            rootLexicalNode.getChildren().add(nonTerminalChild.getLexicalNode());
+
+                        } else if(child instanceof TerminalToken) {
+                            LexicalNode terminalLexicalNode = new LexicalNode();
+                            rootLexicalNode.setLexicalToken((LexicalToken) ((TerminalToken) child).getLexicalToken());
+                            rootLexicalNode.getChildren().add(terminalLexicalNode);
+                        } else {
+                            throw new RuntimeException("Action token: " + child.getOriginalValue() + " is neither a terminal nor a non-terminal in " + actionToken.getValue());
+                        }
+                    }
+
+                    // Set stability
+                    semanticContext.setStable(rootLexicalNode.isStable());
+
+                    // Set corresponding lexical token for data model
+                    if (model != null && model instanceof ASTModel) {
+                        // Store root node in model
+                        ((ASTModel) model).setLexicalNode(rootLexicalNode);
+                    }
+
+                    // Update lexical node for LHS
+                    LHS.setLexicalNode(rootLexicalNode);
                 }
 
                 // Create symbol table entry
@@ -297,25 +303,28 @@ public class SemanticHandler {
                 semanticContextsQueue.offer(semanticContext);
             }
 
-            // Check if semantic action is registered
-            if(key != null && actionMethodMap.containsKey(key)) {
-                ObjectMethod objectMethod = actionMethodMap.get(key);
-                boolean actionClassStability = objectMethod.getObject().getClass().getAnnotation(SemanticAction.class).stableOnly();
+            if(!actionToken.isSilent()) {
 
-                // Call semantic action method
-                if(!actionClassStability || actionToken.isStable()) {
-                    objectMethod.getMethod().invoke(objectMethod.getObject(), semanticContext, semanticStack, symbolTableTree);
+                // Check if semantic action is registered
+                if (key != null && actionMethodMap.containsKey(key)) {
+                    ObjectMethod objectMethod = actionMethodMap.get(key);
+                    boolean actionClassStability = objectMethod.getObject().getClass().getAnnotation(SemanticAction.class).stableOnly();
+
+                    // Call semantic action method
+                    if (!actionClassStability || actionToken.isStable()) {
+                        objectMethod.getMethod().invoke(objectMethod.getObject(), semanticContext, semanticStack, symbolTableTree);
+                    } else {
+                        l.warn("Skipping semantic action call for '" + actionToken.getValue() + "' because the parser is in error recovery mode (unstable)");
+                    }
+
                 } else {
-                    l.warn("Skipping semantic action call for '" + actionToken.getValue() + "' because the parser is in error recovery mode (unstable)");
+                    l.warn("Action: " + actionToken.getValue() + " at Phase: " + phase + " is not handled by any method.");
                 }
 
-            } else {
-                l.warn("Action: " + actionToken.getValue() + " at Phase: " + phase + " is not handled by any method.");
-            }
-
-            // Call code generation
-            if(semanticHandlerListener != null) {
-                semanticHandlerListener.postSemanticHandler(actionToken, phase, semanticContext, symbolTableTree);
+                // Call code generation
+                if (semanticHandlerListener != null) {
+                    semanticHandlerListener.postSemanticHandler(actionToken, phase, semanticContext, symbolTableTree);
+                }
             }
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.getCause().printStackTrace();
