@@ -311,7 +311,7 @@ public class SemanticHandler {
                     boolean actionClassStability = objectMethod.getObject().getClass().getAnnotation(SemanticAction.class).stableOnly();
 
                     // Call semantic action method
-                    if (!actionClassStability || actionToken.isStable()) {
+                    if (!actionClassStability || semanticContext.isStable()) {
                         objectMethod.getMethod().invoke(objectMethod.getObject(), semanticContext, semanticStack, symbolTableTree);
                     } else {
                         l.warn("Skipping semantic action call for '" + actionToken.getValue() + "' because the parser is in error recovery mode (unstable)");
