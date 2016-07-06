@@ -13,18 +13,18 @@ import data.structure.ConsoleData;
 import helper.GuiHelper;
 import listener.DevGuiListener;
 import org.apache.commons.lang3.StringUtils;
-import parser.strategy.LLPP.LLPP;
-import parser.strategy.LLPP.data.LLPPDataEntry;
-import parser.strategy.LLPP.data.LLPPDataErrorEntry;
-import parser.strategy.LLPP.data.LLPPDataFineEntry;
-import parser.strategy.SLR.SLR;
-import parser.strategy.SLR.data.LRDataEntry;
-import parser.strategy.SLR.data.LRDataErrorEntry;
-import parser.strategy.SLR.data.LRDataFineEntry;
-import parser.strategy.SLR.structure.machine.item.LRItem;
-import parser.strategy.SLR.structure.machine.node.LRItemNode;
-import parser.strategy.SLR.structure.machine.SLRStateMachine;
-import parser.strategy.SLR.structure.machine.transition.LRTransition;
+import parser.strategy.LL.PP;
+import parser.strategy.LL.data.LLDataEntry;
+import parser.strategy.LL.data.LLDataErrorEntry;
+import parser.strategy.LL.data.LLDataFineEntry;
+import parser.strategy.LR.SLR;
+import parser.strategy.LR.data.LRDataEntry;
+import parser.strategy.LR.data.LRDataErrorEntry;
+import parser.strategy.LR.data.LRDataFineEntry;
+import parser.strategy.LR.structure.machine.item.LRItem;
+import parser.strategy.LR.structure.machine.node.LRItemNode;
+import parser.strategy.LR.structure.machine.SLRStateMachine;
+import parser.strategy.LR.structure.machine.transition.LRTransition;
 import token.*;
 import utils.StringUtilsPlus;
 
@@ -102,21 +102,21 @@ public class GuiIntegration implements DevGuiListener {
 
         ConsoleData<SyntaxAnalysisRow> rows = new ConsoleData<>();
         if(lexicalCompiles) {
-            if (syntaxAnalyzer.getSyntaxParser().getParseStrategy() instanceof LLPP) {
-                LLPP llpp = (LLPP) syntaxAnalyzer.getSyntaxParser().getParseStrategy();
+            if (syntaxAnalyzer.getSyntaxParser().getParseStrategy() instanceof PP) {
+                PP llpp = (PP) syntaxAnalyzer.getSyntaxParser().getParseStrategy();
                 if (llpp.getLlppData() != null) {
                     for (int row = 0; row < llpp.getLlppData().getEntryList().size(); row++) {
 
                         // Get current
-                        LLPPDataEntry entry = llpp.getLlppData().getEntryList().get(row);
+                        LLDataEntry entry = llpp.getLlppData().getEntryList().get(row);
 
                         // If error
-                        if (entry instanceof LLPPDataFineEntry) {
-                            LLPPDataFineEntry dataFineEntry = (LLPPDataFineEntry) entry;
+                        if (entry instanceof LLDataFineEntry) {
+                            LLDataFineEntry dataFineEntry = (LLDataFineEntry) entry;
                             rows.add(new SyntaxAnalysisRow(dataFineEntry.getStepNumber(), dataFineEntry.getStackContent(), dataFineEntry.getInputContent(), dataFineEntry.getProductionContent(), dataFineEntry.getDerivationContent()));
 
-                        } else if (entry instanceof LLPPDataErrorEntry) {
-                            LLPPDataErrorEntry dataErrorEntry = (LLPPDataErrorEntry) entry;
+                        } else if (entry instanceof LLDataErrorEntry) {
+                            LLDataErrorEntry dataErrorEntry = (LLDataErrorEntry) entry;
                             rows.add(new SyntaxAnalysisRow(dataErrorEntry.getStepNumber(), dataErrorEntry.getStackContent(), dataErrorEntry.getInputContent(), "", dataErrorEntry.getMessage()));
                         }
                     }
@@ -148,8 +148,8 @@ public class GuiIntegration implements DevGuiListener {
 
     @Override
     public List<String> getSyntaxErrorMessages() {
-        if(syntaxAnalyzer.getSyntaxParser().getParseStrategy() instanceof LLPP) {
-            LLPP llpp = (LLPP) syntaxAnalyzer.getSyntaxParser().getParseStrategy();
+        if(syntaxAnalyzer.getSyntaxParser().getParseStrategy() instanceof PP) {
+            PP llpp = (PP) syntaxAnalyzer.getSyntaxParser().getParseStrategy();
             if(llpp.getLlppData() != null && lexicalCompiles) {
                 return llpp.getLlppData().getErrorMessages();
             }
@@ -322,14 +322,14 @@ public class GuiIntegration implements DevGuiListener {
 
     @Override
     public void setLLPPTable(GenericTable genericTable) {
-        LLPP llpp = (LLPP) syntaxAnalyzer.getSyntaxParser().getParseStrategy();
+        PP llpp = (PP) syntaxAnalyzer.getSyntaxParser().getParseStrategy();
         genericTable.setHeader(StringUtilsPlus.convertStringArrayToObjectArray(llpp.getLlppTable().prettifyPPTableHeader()));
         genericTable.setData(StringUtilsPlus.convertStringTableToObjectTable(llpp.getLlppTable().prettifyPPTableData()));
     }
 
     @Override
     public void setLLPPTableRules(GenericTable genericTable) {
-        LLPP llpp = (LLPP) syntaxAnalyzer.getSyntaxParser().getParseStrategy();
+        PP llpp = (PP) syntaxAnalyzer.getSyntaxParser().getParseStrategy();
         Object data[][] = new Object[llpp.getLlppTable().getRulesList().size()][2];
         for(int i=0; i < data.length; i++) {
             data[i][0] = llpp.getLlppTable().getRulesList().get(i).getId();
@@ -341,7 +341,7 @@ public class GuiIntegration implements DevGuiListener {
 
     @Override
     public void setLLPPTableErrors(GenericTable genericTable) {
-        LLPP llpp = (LLPP) syntaxAnalyzer.getSyntaxParser().getParseStrategy();
+        PP llpp = (PP) syntaxAnalyzer.getSyntaxParser().getParseStrategy();
         Object data[][] = new Object[llpp.getLlppTable().getMessagesSet().size()][2];
 
         int i=0;
@@ -451,6 +451,6 @@ public class GuiIntegration implements DevGuiListener {
 
     @Override
     public boolean isLR() {
-        return ! (syntaxAnalyzer.getSyntaxParser().getParseStrategy() instanceof LLPP);
+        return ! (syntaxAnalyzer.getSyntaxParser().getParseStrategy() instanceof PP);
     }
 }
