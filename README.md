@@ -47,3 +47,14 @@ Lexical analysis is the first step in building a compiler. In this step the user
 * `LETTER` A-Za-z
 * `NONZERO` 1-9
 * `OTHER` Any character not covered by an out-edge from a state
+
+#### Auto-generate JSON
+
+Writting a JSON file manually can be difficult for large finite automaton. Therefore, a graphical user interface is developed to auto-generate the lexical JSON file by entering the states and the edges connecting them.
+
+To run the lexical generator:
+```
+./gradlew clean build run
+```
+
+*Note: The states on the GUI are displayed using the BFS algorthm assuming that the graph generated is connected. Therefore a state is only visible once it is connected to another visible state*
