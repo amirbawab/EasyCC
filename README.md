@@ -54,7 +54,7 @@ Writting a JSON file manually can be difficult for large finite automaton. There
 
 To run the lexical generator:
 ```
-./gradlew clean build run
+./gradlew :lexical-analysis:lexical-generator:build :lexical-analysis:lexical-generator:run
 ```
 
 *Note: The states on the GUI are displayed using the BFS algorthm assuming that the graph generated is connected. Therefore a state is only visible once it is connected to another visible state*
