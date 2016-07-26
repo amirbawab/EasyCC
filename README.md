@@ -78,9 +78,9 @@ D -> 'D'
 
 **Explanation:**  
 * Starting with `%` marks the line as a comment
-* First production is always the starting point for a grammar. (e.g. `A -> B 'C'`)
-* A non-terminal is a word without single quote (e.g. `A` and `B`)
-* A terminal is a word with single quote (e.g. `'B'` and `'C'`)
+* First production is always the starting point for a grammar. (e.g. `A -> B 'C' D`)
+* A non-terminal is a word without single quote (e.g. `A`, `B` and `D`)
+* A terminal is a word with single quote (e.g. `'B'`, `'C'` and `'D'`)
 * Multiple productions sharing the same left hand side can be written on one or more lines seperated by `|` symbol.
-* An epsilon is represented by the `EPSILON` word.
+* An epsilon is represented by the word `EPSILON`.
 * Spaces between words and symbols are important, otherwise an exception is thrown.
