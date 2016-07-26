@@ -8,4 +8,4 @@ branches:
     - master
 
 script:
-  - ./gradlew clean build
+  - ./gradlew clean build test
