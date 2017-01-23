@@ -216,6 +216,9 @@ public class Grammar {
                                 // Get the first set
                                 Set<String> firstSet = getFirstSetOf(nextToken);
 
+                                // FIXME: If firsSet is not ready yet, we should break and not evaluate the next token
+                                // Check EasyCC-CPP for details
+                                
                                 // If first set is defined
                                 if(firstSet != null) {
 
